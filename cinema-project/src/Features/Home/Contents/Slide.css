@@ -1,0 +1,38 @@
+.slide-image {
+    width: 100%;
+    color: #fff;
+    line-height: 200px;
+    text-align: center;
+    background-color: #264d79;
+    object-fit: cover;
+}
+
+.slide {
+    box-shadow: 0 14px 75px rgba(0, 0, 0, 0.3);
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+.slide-title {
+    padding: 12px 0px 10px 0px;
+    text-align: center;
+}
+
+.slide-title-text {
+    font-weight: bold;
+    border-bottom: 2px solid #697f93;
+}
+
+:where(.css-dev-only-do-not-override-14i19y2).ant-carousel .slick-arrow::after {
+    width: 45px;
+    height: 45px;
+}
+
+:where(.css-dev-only-do-not-override-14i19y2).ant-carousel .slick-next {
+    width: 50px;
+    height: 66px;
+}
+
+:where(.css-dev-only-do-not-override-14i19y2).ant-carousel .slick-prev {
+    height: 66px;
+}
