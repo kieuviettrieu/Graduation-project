@@ -1,11 +1,12 @@
 import '../Contents/Booking.css';
 import React from 'react';
 import SeatList from './SeatList';
+import DateCarousel from './DateSlider';
 
 export const Booking = () => {
   return (
     <div>
-      <div>Booking</div>
+      <DateCarousel />
       <SeatList />
     </div>
   )

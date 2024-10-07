@@ -84,7 +84,6 @@ const seatsPerRow = 7;
 const SeatList = () => {
     const [selectedSeats, setSelectedSeats] = useState([]);
 
-    // Xử lý chọn ghế
     const toggleSeat = (seat) => {
       if (seat.trangthai !== 'available') return; // Chỉ có thể chọn ghế available
       if (selectedSeats.includes(seat.id)) {

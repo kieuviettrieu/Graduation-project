@@ -1,5 +1,5 @@
 import { Header } from "../../Header/jsx/Header";
-import { Footer } from "../../Footer/jsx/Footer";
+import CustomFooter from "../../Footer/jsx/Footer";
 import { Outlet } from "react-router-dom";
 import "../Content/HomePage.css";
 import ChatBot from "../../ChatBot/jsx/ChatBot";
@@ -16,7 +16,7 @@ export function HomePage(props) {
         <div className="main">
           <Outlet />
         </div>
-        <Footer />
+        <CustomFooter />
         <ChatBot />
       </div>
     </div>
