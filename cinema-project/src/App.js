@@ -14,6 +14,7 @@ import { ManageTickets } from "./Features/Admin/ManageTickets/jsx/ManageTickets"
 import { FilmDetail } from "./Features/Film/jsx/FilmDetail";
 import { LoginPage } from "./Features/Common/LoginResgister/jsx/LoginPage";
 import PrivateRoute from "./Features/Common/PrivateRoute";
+import { Schedule } from './Features/Schedule/jsx/Schedule';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
           <Route path="/" element={<HomePage />}>
             <Route path="/login" element={<LoginPage />} />
             <Route index element={<Home />} />
-            <Route path="booking" element={<Booking />} />
+            <Route path="schedule" element={<Schedule />} />
             <Route path="film" element={<Film />} />
             <Route path="film/detail/:filmId" element={<FilmDetail />} />
             <Route path="corner" element={<Film />} />

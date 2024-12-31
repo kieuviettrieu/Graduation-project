@@ -5,7 +5,7 @@ export const ROUTER_PATHS = {
   FILM: "/film",
   FILM_DETAIL: "film/detail/{filmId}",
   //BOOKING
-  BOOKING: "/booking",
+  FILM_SCHEDULE: "/schedule",
   //CORNER
   CORNER: "/corner",
   //EVENT
@@ -22,4 +22,9 @@ export const generateUrl = (urlTemplate, params) => {
     url = url.replace(`{${key}}`, params[key]);
   }
   return url;
+};
+
+export const ACCOUNT_ROLE = {
+  ADMIN_ROLE: 1,
+  USER_ROLE: 2,
 };

@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginRegisterButton } from "../../LoginResgister/jsx/LoginRegisterButton";
 import { ThemeSwitch } from "../../ThemeSwitch/ThemeSwitch";
 import "../Contents/index.css";
-import { ROUTER_PATHS } from "../../Constant";
+import { ACCOUNT_ROLE, ROUTER_PATHS } from "../../Constant";
 
 const maps = [
-  { path: ROUTER_PATHS.HOME, name: "Nature Cinema" },
-  { path: ROUTER_PATHS.BOOKING, name: "Đặt vé" },
+  // { path: ROUTER_PATHS.HOME, name: "Nature Cinema" },
   { path: ROUTER_PATHS.FILM, name: "Phim" },
+  { path: ROUTER_PATHS.FILM_SCHEDULE, name: "Lịch chiếu" },
   { path: ROUTER_PATHS.CORNER, name: "Góc điện ảnh" },
   { path: ROUTER_PATHS.EVENT, name: "Sự kiện" },
 ];
@@ -16,6 +16,7 @@ const maps = [
 export function Header(props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropDownFilm, setIsDropDownFilm] = useState(false);
+  const [accountRole, setAccountRole] = useState(2);
   const navigate = useNavigate();
 
   const redirectToPath = (path) => {
@@ -50,17 +51,12 @@ export function Header(props) {
         <i
           id="nav-toggle"
           className="bi bi-x mobile-nav-toggle"
-          onClick={() => handleNavbarMobileToggle()} // Hàm đóng mở toàn bộ menu
+          onClick={() => handleNavbarMobileToggle()} 
         ></i>
         <ul>
           <li>
             <div onClick={() => redirectToPathMobile(ROUTER_PATHS.HOME)}>
-              <span>Trang Chủ</span>
-            </div>
-          </li>
-          <li>
-            <div onClick={() => redirectToPathMobile(ROUTER_PATHS.BOOKING)}>
-              <span>Đặt vé</span>
+              <span>Nature Cinema</span>
             </div>
           </li>
           <li>
@@ -79,6 +75,11 @@ export function Header(props) {
               </li>
             </>
           )}
+          <li>
+            <div onClick={() => redirectToPathMobile(ROUTER_PATHS.FILM_SCHEDULE)}>
+              <span>Lịch chiếu</span>
+            </div>
+          </li>
           <li>
             <div onClick={() => redirectToPathMobile(ROUTER_PATHS.CORNER)}>
               <span>Góc điện ảnh</span>
@@ -101,20 +102,21 @@ export function Header(props) {
   };
 
   const handleClose = () => {};
-  const navigations = [];
 
   return (
     <>
       {isMenuOpen && renderNavbar()}
       <header id="header" className="fixed-top pt-3 pb-2 position-relative">
         <div className="container d-flex align-items-center items-center mx-auto flex-between">
-          <i
-            id="nav-toggle"
-            className={`${
-              isMenuOpen ? "bi bi-x" : "bi bi-list"
-            } mobile-nav-toggle`}
-            onClick={handleNavbarMobileToggle}
-          ></i>
+          <div>
+            <i
+              id="nav-toggle"
+              className={`${
+                isMenuOpen ? "bi bi-x" : "bi bi-list"
+              } mobile-nav-toggle site`}
+              onClick={handleNavbarMobileToggle}
+            ></i>
+          </div>
           <h1 className="logo">
             <a href="/" className="site">
               Nature Cinema
@@ -125,7 +127,8 @@ export function Header(props) {
             className="navbar order-last order-lg-0 px-4 mx-auto mobile-cover"
           >
             {maps.map(({ path, name }) => {
-              const currentPath = "";
+              const url = window.location.href;
+              const currentPath = url.substring(url.lastIndexOf("/") + 1);
               const p = path.split("/")?.[1];
               return (
                 <div key={name} className="me-4 py-4">
@@ -141,11 +144,13 @@ export function Header(props) {
                 </div>
               );
             })}
-            <div className="mobile-cover">
-              <Link className={`dashboard-button active}`} to={ROUTER_PATHS.DASHBOARD}>
-                Dashboard
-              </Link>
-            </div>
+            { accountRole === ACCOUNT_ROLE.ADMIN_ROLE &&
+              <div className="mobile-cover">
+                <Link className={`dashboard-button active}`} to={ROUTER_PATHS.DASHBOARD}>
+                  Dashboard
+                </Link>
+              </div>
+            }
           </div>
           <LoginRegisterButton />
           <div className="mobile-cover">

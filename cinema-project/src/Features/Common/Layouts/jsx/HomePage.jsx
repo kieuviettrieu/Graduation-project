@@ -2,7 +2,6 @@ import { Header } from "../../Header/jsx/Header";
 import CustomFooter from "../../Footer/jsx/Footer";
 import { Outlet } from "react-router-dom";
 import "../Content/HomePage.css";
-import ChatBot from "../../ChatBot/jsx/ChatBot";
 
 
 export function HomePage(props) {
@@ -17,7 +16,6 @@ export function HomePage(props) {
           <Outlet />
         </div>
         <CustomFooter />
-        <ChatBot />
       </div>
     </div>
   );

@@ -18,7 +18,8 @@ export function Home(props) {
       genre: "Hành động, Phiêu lưu",
       duration: "120 phút",
       releaseDate: "01/09/2024",
-      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      imageUrl: "http://riocinemas.vn/Areas/Admin/Content/Fileuploads/images/poster%20web/T11/LINH%20MI%C3%8AU.jpg",
+      ageRating: "T16",
     },
     {
       id: 2,
@@ -26,7 +27,8 @@ export function Home(props) {
       genre: "Kinh dị, Viễn tưởng",
       duration: "105 phút",
       releaseDate: "15/09/2024",
-      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_104_100004.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 3,
@@ -34,7 +36,8 @@ export function Home(props) {
       genre: "Tình cảm, Lãng mạn",
       duration: "110 phút",
       releaseDate: "10/09/2024",
-      imageUrl: "https://example.com/movie3.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T13",
     },
     {
       id: 4,
@@ -42,7 +45,8 @@ export function Home(props) {
       genre: "Hài hước, Gia đình",
       duration: "95 phút",
       releaseDate: "20/09/2024",
-      imageUrl: "https://example.com/movie4.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T12",
     },
     {
       id: 5,
@@ -50,7 +54,8 @@ export function Home(props) {
       genre: "Hành động, Kinh dị",
       duration: "125 phút",
       releaseDate: "05/09/2024",
-      imageUrl: "https://example.com/movie5.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 6,
@@ -58,7 +63,8 @@ export function Home(props) {
       genre: "Hoạt hình, Phiêu lưu",
       duration: "100 phút",
       releaseDate: "12/09/2024",
-      imageUrl: "https://example.com/movie6.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "P",
     },
     {
       id: 7,
@@ -66,7 +72,8 @@ export function Home(props) {
       genre: "Khoa học viễn tưởng, Hành động",
       duration: "140 phút",
       releaseDate: "18/09/2024",
-      imageUrl: "https://example.com/movie7.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 8,
@@ -74,7 +81,8 @@ export function Home(props) {
       genre: "Kinh dị, Siêu nhiên",
       duration: "130 phút",
       releaseDate: "25/09/2024",
-      imageUrl: "https://example.com/movie8.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T16",
     },
     {
       id: 9,
@@ -82,7 +90,8 @@ export function Home(props) {
       genre: "Tâm lý, Chính kịch",
       duration: "115 phút",
       releaseDate: "08/09/2024",
-      imageUrl: "https://example.com/movie9.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T16",
     },
     {
       id: 10,
@@ -90,7 +99,8 @@ export function Home(props) {
       genre: "Lịch sử, Chiến tranh",
       duration: "150 phút",
       releaseDate: "30/09/2024",
-      imageUrl: "https://example.com/movie10.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 11,
@@ -98,7 +108,8 @@ export function Home(props) {
       genre: "Phiêu lưu, Thần thoại",
       duration: "135 phút",
       releaseDate: "02/10/2024",
-      imageUrl: "https://example.com/movie11.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T13",
     },
     {
       id: 12,
@@ -106,7 +117,8 @@ export function Home(props) {
       genre: "Hài hước, Phiêu lưu",
       duration: "90 phút",
       releaseDate: "12/10/2024",
-      imageUrl: "https://example.com/movie12.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "P",
     },
     {
       id: 13,
@@ -114,7 +126,8 @@ export function Home(props) {
       genre: "Hành động, Tội phạm",
       duration: "120 phút",
       releaseDate: "15/10/2024",
-      imageUrl: "https://example.com/movie13.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 14,
@@ -122,7 +135,8 @@ export function Home(props) {
       genre: "Kinh dị, Tâm lý",
       duration: "105 phút",
       releaseDate: "18/10/2024",
-      imageUrl: "https://example.com/movie14.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 15,
@@ -130,7 +144,8 @@ export function Home(props) {
       genre: "Thể thao, Tâm lý",
       duration: "115 phút",
       releaseDate: "25/10/2024",
-      imageUrl: "https://example.com/movie15.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T13",
     },
     {
       id: 16,
@@ -138,7 +153,8 @@ export function Home(props) {
       genre: "Hành động, Phiêu lưu",
       duration: "110 phút",
       releaseDate: "30/10/2024",
-      imageUrl: "https://example.com/movie16.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T16",
     },
     {
       id: 17,
@@ -146,7 +162,8 @@ export function Home(props) {
       genre: "Khoa học viễn tưởng, Phiêu lưu",
       duration: "125 phút",
       releaseDate: "01/11/2024",
-      imageUrl: "https://example.com/movie17.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 18,
@@ -154,7 +171,8 @@ export function Home(props) {
       genre: "Hoạt hình, Gia đình",
       duration: "95 phút",
       releaseDate: "10/11/2024",
-      imageUrl: "https://example.com/movie18.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "P",
     },
     {
       id: 19,
@@ -162,7 +180,8 @@ export function Home(props) {
       genre: "Kinh dị, Hành động",
       duration: "130 phút",
       releaseDate: "15/11/2024",
-      imageUrl: "https://example.com/movie19.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T18",
     },
     {
       id: 20,
@@ -170,9 +189,11 @@ export function Home(props) {
       genre: "Tâm lý, Chính kịch",
       duration: "120 phút",
       releaseDate: "20/11/2024",
-      imageUrl: "https://example.com/movie20.jpg",
+      imageUrl: "https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202408/11514_103_100003.jpg",
+      ageRating: "T16",
     },
   ];
+  
   
   const moviesForYou = {
     title: "Dành cho bạn",

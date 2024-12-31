@@ -27,11 +27,11 @@ export function ThemeSwitch() {
     <>
       {theme === 'dark' ? (
         <button className='theme-btn' onClick={() => handleChange('light')} title='btn-light'>
-          <i className='bi bi-sun'></i>
+          <i className='bi bi-sun site'></i>
         </button>
       ) : (
         <button className='theme-btn' onClick={() => handleChange('dark')} title='btn-dark'>
-          <i className='bi bi-moon'></i>
+          <i className='bi bi-moon site'></i>
         </button>
       )}
     </>
