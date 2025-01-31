@@ -57,7 +57,7 @@ const CustomFooter = () => {
                 </Col>
 
                 {/* CONTACT US Section */}
-                <Col span={5}>
+                {/* <Col span={5}>
                     <Typography.Title level={4} style={{ color: 'white' }}>CONTACT US</Typography.Title>
                     <Space size="middle">
                         <FaFacebook size="24px" color="white" />
@@ -71,7 +71,7 @@ const CustomFooter = () => {
                         <FaApple size="24px" color="white" />
                         <FaGooglePlay size="24px" color="white" />
                     </Space>
-                </Col>
+                </Col> */}
             </Row>
         </Footer>
     );

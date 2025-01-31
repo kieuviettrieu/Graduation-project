@@ -1,3 +1,128 @@
-.ant-tabs-nav-wrap {
-    justify-content: none !important;
+/* CSS for Film Detail Section */
+.film-detail-section {
+  position: relative;
+  padding: 110px 0 70px;
+}
+
+.auto-container {
+  position: static;
+  max-width: 1100px;
+  padding: 0 15px;
+  margin: 0 auto;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.images-column {
+  position: relative;
+}
+
+.film-detail-section .content-column .inner-column {
+    position: relative;
+    padding-left: var(--padding-left-40);
+}
+
+.images-column .inner-column {
+  position: relative;
+}
+
+.shop-gallery-tabs {
+  position: relative;
+}
+
+.gallery-tabs {
+  position: relative;
+  padding-left: var(--padding-left-120);
+}
+
+.tabs-content .tab {
+  display: none;
+}
+
+.tabs-content .tab.active-tab {
+  display: block;
+}
+
+.tabs-content .tab .content .image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.content-column {
+  position: relative;
+}
+
+.content-column .inner-column h4 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.content-column .inner-column p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.content-column .inner-column p span {
+  background: #ffe53d;
+  width: 35px;
+  height: 35px;
+  display: inline-block;
+  text-align: center;
+  line-height: 35px;
+  border-radius: 5px;
+  color: black;
+  font-weight: bold;
+  letter-spacing: 2px;
+  box-shadow: 1px 1px 5px 2px #4e4e54;
+}
+
+.shop-list {
+  margin-top: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+.shop-list li {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--main-color);
+  margin-bottom: 10px;
+}
+
+.shop-list li a {
+  color: #505050 !important;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.product-info-tabs {
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 1023px) {
+    .film-detail-section .images-column {
+        order: 2;
+    }
+}
+
+@media only screen and (max-width: 599px) {
+    .gallery-tabs {
+        padding-left: var(--padding-zero);
+    }
+}
+
+@media only screen and (max-width: 1140px) {
+    .shop-form .billing-inner, .film-detail-section .content-column .inner-column, .sidebar-page-container .sidebar-side .sidebar, .internet-section-three .image-column .inner-column, .internet-section-three .content-column .inner-column, .internet-section-two .content-column .inner-column, .service-block .inner-box .text {
+        padding: var(--padding-zero);
+    }
+  }
+
+  @media only screen and (max-width: 1023px) {
+    .shop-detail-section .content-column {
+        order: 1;
+        padding-bottom: var(--padding-bottom-30);
+    }
 }

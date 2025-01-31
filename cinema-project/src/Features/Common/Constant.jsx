@@ -6,14 +6,19 @@ export const ROUTER_PATHS = {
   FILM_DETAIL: "film/detail/{filmId}",
   //BOOKING
   FILM_SCHEDULE: "/schedule",
+  FILM_SCHEDULE_DETAIL: "/schedule/detail/{scheduleId}",
   //CORNER
   CORNER: "/corner",
   //EVENT
   EVENT: "/event",
   //USER
   USER_PROFILE: "user/profile/{userId}",
+  BOOKING: "/booking/{timeId}",
   //DASHBOARD
-  DASHBOARD: "/dashboard"
+  DASHBOARD: "/dashboard",
+
+  LOGIN: "/login",
+  REGISTER: "/register",
 };
 
 export const generateUrl = (urlTemplate, params) => {
@@ -24,7 +29,12 @@ export const generateUrl = (urlTemplate, params) => {
   return url;
 };
 
+export const getZoomBy = (width) => {
+  return window.innerWidth / width >= 1 ? 1 : window.innerWidth / width;
+}
+
 export const ACCOUNT_ROLE = {
-  ADMIN_ROLE: 1,
-  USER_ROLE: 2,
+  USER_ROLE: 1,
+  ADMIN_ROLE: 2,
+  SUPER_ADMIN: 3,
 };

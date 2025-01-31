@@ -7,8 +7,8 @@ export function Slide(props) {
   return (
     <div className='slide'>
       <Carousel arrows autoplay>
-        {props.images.map(item => {
-          return <div>
+        {props.images.map((item, index) => {
+          return <div key={index}>
             <img  src={item} className='slide-image' alt="..."></img>
           </div>
         })}

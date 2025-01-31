@@ -1,0 +1,107 @@
+.screen-thumb {
+  width: 100%;
+  max-width: 692px;
+  margin: 0 auto 30px;
+}
+
+h4.screen {
+  font-size: 28px;
+  margin: 0px auto;
+  position: relative;
+  text-align: center;
+  max-width: 350px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 5px;
+  color: #fc1b1b;
+}
+
+.list-seat p {
+  font-weight: bold;
+}
+
+.current_select {
+  background: url(../../../Media/img/selectedchair.png) !important;
+  background-size: contain !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+
+.note-color {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 30px;
+}
+
+.note-color .note-col {
+  padding: 2px;
+  float: left;
+  text-align: left;
+}
+
+.note-color .note-col p {
+  float: left;
+  padding: 3px;
+  line-height: 15px;
+  color: #333;
+}
+
+/* book-content */
+.book-content {
+  padding: 10px;
+  box-shadow: 0 0 5px #333;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background: #fff;
+}
+
+.book-content > div:first-child {
+  padding: 0;
+  width: 10%;
+  max-width: 100px;
+}
+
+.book-content > div:nth-child(2n) {
+  padding: 0;
+  padding-left: 5px;
+  width: 40%;
+}
+
+.book-content > div:nth-child(3n) {
+  padding: 0;
+  padding-left: 5px;
+  width: 35%;
+}
+
+.book-content > div:last-child {
+  padding: 0;
+  padding-left: 5px;
+  width: 15%;
+}
+
+/* book-content-mobile  */
+.book-content-mobile {
+  padding: 10px;
+  box-shadow: 0 0 5px #333;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background: #fff;
+  align-items: center;
+}
+
+@media only screen and (max-width: 599px) {
+}

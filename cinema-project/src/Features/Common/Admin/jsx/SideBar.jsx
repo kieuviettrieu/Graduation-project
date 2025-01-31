@@ -80,11 +80,11 @@ export function SideBar (props) {
         <header id='header' className='fixed-top pt-3 pb-2 position-relative'>
           <div className='container d-flex align-items-center items-center mx-auto flex-between'>
             <i id='nav-toggle' className='bi bi-list mobile-nav-toggle' onClick={handleNavbarMobileToggle}></i>
-            <h1 className='logo'>
+            <h3 className='logo'>
               <a href='/' className='site'>
                 Nature Cinema
               </a>
-            </h1>
+            </h3>
             <div id='navbar' className='navbar order-last order-lg-0 px-4 mx-auto mobile-cover'>
                 {maps.map(({ path, name }) => {
                   const currentPath = '';

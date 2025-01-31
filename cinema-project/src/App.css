@@ -7,6 +7,35 @@
   pointer-events: none;
 }
 
+
+.auto-container{
+	position:static;
+	max-width:1100px;
+	padding:0px 15px;
+	margin:0 auto;
+}
+
+.text, p {
+  position: relative;
+  line-height: 1.4em;
+  font-size: var(--font-12);
+  color: var(--dark-color);
+  font-family: var(--font-family-poppins);
+}
+
+
+button, a:hover, a:focus, a:visited {
+  text-decoration: none;
+  outline: none !important;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--main-color);
+}
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

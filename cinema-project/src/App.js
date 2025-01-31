@@ -11,10 +11,12 @@ import { ManageEmployees } from "./Features/Admin/ManageEmployees/jsx/ManageEmpl
 import { ManageCustomers } from "./Features/Admin/ManageCustomers/jsx/ManageCustomers";
 import { ManageFilms } from "./Features/Admin/ManageFilms/jsx/ManageFilms";
 import { ManageTickets } from "./Features/Admin/ManageTickets/jsx/ManageTickets";
-import { FilmDetail } from "./Features/Film/jsx/FilmDetail";
 import { LoginPage } from "./Features/Common/LoginResgister/jsx/LoginPage";
 import PrivateRoute from "./Features/Common/PrivateRoute";
 import { Schedule } from './Features/Schedule/jsx/Schedule';
+import FilmDetail from './Features/Film/jsx/FilmDetail';
+import ScheduleDetail from './Features/Schedule/jsx/ScheduleDetail';
+import RegisterForm from './Features/Common/LoginResgister/jsx/RegisterForm';
 
 function App() {
   return (
@@ -24,12 +26,15 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<HomePage />}>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterForm />} />
             <Route index element={<Home />} />
             <Route path="schedule" element={<Schedule />} />
+            <Route path="schedule/detail/:scheduleId" element={<ScheduleDetail />} />
             <Route path="film" element={<Film />} />
             <Route path="film/detail/:filmId" element={<FilmDetail />} />
             <Route path="corner" element={<Film />} />
             <Route path="event" element={<Event />} />
+            <Route path="booking/:timeId" element={<Booking />} />
           </Route>
         </Route>
 

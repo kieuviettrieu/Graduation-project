@@ -56,3 +56,11 @@
   transition: all 300ms ease;
 }
 
+@media only screen and (max-width: 599px) {
+  .card-section .price-block {
+      display: inline-block !important;
+      width: 50% !important;
+      float: left !important;
+      padding: 5px !important;
+  }
+}

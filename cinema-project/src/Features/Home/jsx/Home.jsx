@@ -212,9 +212,9 @@ export function Home(props) {
 
   useEffect(() => {
     if (window.someLibrary) {
-      window.someLibrary.init();
+      window?.someLibrary.init();
     } else {
-      console.error('someLibrary is not defined on the window object');
+      console.error('some Library is not defined on the window object');
     }
   }, []);
 
@@ -222,7 +222,7 @@ export function Home(props) {
   return (
     <>
       <Slide images={images}/>
-      <div className='pd-main'>
+      <div className='auto-container'>
         <div>
           <FilmHome moviesForYou={moviesForYou} showingMovies={showingMovies} upcomingMovies={upcomingMovies}/>
         </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import './../Content/index.css'
+import '../Content/index.css';
 
 const CinemaCard = ({ name, address, phone, imgUrl, link }) => {
   return (

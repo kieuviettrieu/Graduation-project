@@ -114,14 +114,14 @@ export function Header(props) {
               className={`${
                 isMenuOpen ? "bi bi-x" : "bi bi-list"
               } mobile-nav-toggle site`}
-              onClick={handleNavbarMobileToggle}
+              onClick={() => handleNavbarMobileToggle()}
             ></i>
           </div>
-          <h1 className="logo">
+          <h3 className="logo">
             <a href="/" className="site">
               Nature Cinema
             </a>
-          </h1>
+          </h3>
           <div
             id="navbar"
             className="navbar order-last order-lg-0 px-4 mx-auto mobile-cover"
@@ -136,7 +136,7 @@ export function Header(props) {
                     className={`nav-link scrollto ${
                       currentPath === p ? "active" : ""
                     }`}
-                    onClick={handleClose}
+                    onClick={() => handleClose()}
                     to={path}
                   >
                     {name}

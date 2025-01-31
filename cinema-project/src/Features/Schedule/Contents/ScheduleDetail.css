@@ -1,0 +1,87 @@
+.sidebar-page-container {
+    position: relative;
+    padding: 10px 0px 20px;
+}
+
+.sidebar-page-container .content-side,
+.sidebar-page-container .sidebar-side {
+  margin-bottom: 40px;
+}
+
+.sidebar-page-container .content-side {
+    padding: 0px;
+}
+
+.browse-option-box {
+  padding: 15px;
+  background: #f9f9f9 none repeat scroll 0 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.tabs.movies {
+    border: none;
+}
+
+/* .ui-widget.ui-widget-content {
+    border: 1px solid #e0e0e0;
+} */
+
+.ui-tabs {
+    position: relative;
+    padding: .2em;
+}
+
+.nav {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex
+;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.nav-pills > li {
+    float: left;
+    border: 1px solid #fc1b1b5c;
+    border-radius: 5px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #fc1b1b;
+}
+
+.nav-pills .nav-link {
+    -webkit-border-radius: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+.nav-link:hover, .nav-link:focus {
+    text-decoration: none;
+}
+
+.nav-link.active p {
+    color: #ffffff !important;
+}
+
+@media only screen and (max-width: 965px) {
+    .tv-tab {
+        overflow: scroll;
+    }
+
+    .nav.nav-pills.tv-tab-switch.schedule-list {
+        width: 1000px;
+        display: inline-block;
+    }
+}
+

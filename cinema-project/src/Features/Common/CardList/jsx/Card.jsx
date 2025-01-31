@@ -1,14 +1,28 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import "../Content/index.css";
-import { generateUrl, ROUTER_PATHS } from "../../Constant";
+import { generateUrl, getZoomBy, ROUTER_PATHS } from "../../Constant";
 
-export function Card(props) {
+const Card = (props) => {
+  const zoomLevelInit = getZoomBy(599);
+  const [zoomLevel, setZoomLevel] = useState(zoomLevelInit);
   const { data } = props;
+
+  useEffect(() => {
+      const handleResize = () => {
+        const zoom = getZoomBy(599);
+        setZoomLevel(zoom);
+      };
+      window.addEventListener("resize", handleResize);
+  
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
 
   return (
     <div
       className="price-block col-xl-3 col-lg-3 col-md-4 col-sm-6"
-      style={{ position: "relative", display: "block" }}
+      style={{ position: "relative", display: "block", zoom: zoomLevel }}
     >
       <div className="news-block-two">
         <div className="inner-box" style={{ boxShadow: "none" }}>
@@ -56,3 +70,5 @@ export function Card(props) {
     </div>
   );
 }
+
+export default Card;
