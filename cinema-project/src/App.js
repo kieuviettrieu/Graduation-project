@@ -10,12 +10,12 @@ import { ManageEmployees } from "./Features/Admin/ManageEmployees/jsx/ManageEmpl
 import { ManageCustomers } from "./Features/Admin/ManageCustomers/jsx/ManageCustomers";
 import { ManageFilms } from "./Features/Admin/ManageFilms/jsx/ManageFilms";
 import { ManageTickets } from "./Features/Admin/ManageTickets/jsx/ManageTickets";
-import { LoginPage } from "./Features/Common/LoginResgister/jsx/LoginPage";
+import LoginPage from "./Features/Common/LoginResgister/jsx/LoginPage";
 import PrivateRoute from "./Features/Common/PrivateRoute";
 import { Schedule } from './Features/Schedule/jsx/Schedule';
 import FilmDetail from './Features/Film/jsx/FilmDetail';
 import ScheduleDetail from './Features/Schedule/jsx/ScheduleDetail';
-import RegisterForm from './Features/Common/LoginResgister/jsx/RegisterForm';
+import RegisterForm from './Features/Common/LoginResgister/jsx/RegisterPage';
 import Film from './Features/Film/jsx/Film';
 
 function App() {

@@ -1,5 +1,5 @@
 import React from "react";
-import '../Contents/ScheduleCards.css';
+import "../Contents/ScheduleCards.css";
 
 const MovieItem = ({ movie }) => {
   return (
@@ -35,11 +35,15 @@ const MovieItem = ({ movie }) => {
         <div className="col-md-12 col-sm-12" style={{ padding: 0 }}>
           <hr className="space-1" />
           {movie.times.map((time, index) => (
-            <a style={{display: 'inline-flex', marginBottom: '10px'}}>
+            <a style={{ display: "inline-flex", marginBottom: "10px" }}>
               <span
                 key={index}
                 className="time past item"
-                style={{ display: "inline-flex", marginBottom: "10px", justifyContent: 'center' }}
+                style={{
+                  display: "inline-flex",
+                  marginBottom: "10px",
+                  justifyContent: "center",
+                }}
               >
                 {time}
               </span>
