@@ -1,5 +1,5 @@
 import { CardList } from "../../Common/CardList/jsx/CardList";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DndContext,
   PointerSensor,
@@ -15,6 +15,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Tabs } from "antd";
 import '../Contents/Film.css'
+import { callApi } from "../../Common/Constant";
+import { API_Film } from "../../Home/jsx/Constant";
 
 const DraggableTabNode = ({ className, ...props }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -34,7 +36,26 @@ const DraggableTabNode = ({ className, ...props }) => {
   });
 };
 
-export function Film() {
+const Film = () => {
+  const [moviesReal, setMoviesReal] = useState([]);
+
+  useEffect(() => {
+    // setLoading(true); 
+    const fetchMovies = async () => {
+      try {
+        const movieData = await callApi(API_Film.showingMovies, "GET");
+        setMoviesReal(movieData); 
+      } catch (err) {
+        console.error(err);
+      } finally {
+      }
+      fetchMovies();
+      // setLoading(false);
+    };
+
+    console.log("kkkk");
+    fetchMovies();
+  }, []);
 
   const movies = [
     {
@@ -217,6 +238,8 @@ export function Film() {
     // },
   ]);
 
+
+
   const sensor = useSensor(PointerSensor, {
     activationConstraint: {
       distance: 10,
@@ -261,3 +284,5 @@ export function Film() {
     </div>
   );
 }
+
+export default Film;

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "../Content/index.css";
-import { generateUrl, getZoomBy, ROUTER_PATHS } from "../../Constant";
+import {
+  formatDate,
+  generateUrl,
+  getZoomBy,
+  ROUTER_PATHS,
+} from "../../Constant";
 
 const Card = (props) => {
   const zoomLevelInit = getZoomBy(599);
@@ -8,16 +13,16 @@ const Card = (props) => {
   const { data } = props;
 
   useEffect(() => {
-      const handleResize = () => {
-        const zoom = getZoomBy(599);
-        setZoomLevel(zoom);
-      };
-      window.addEventListener("resize", handleResize);
-  
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }, []);
+    const handleResize = () => {
+      const zoom = getZoomBy(599);
+      setZoomLevel(zoom);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <div
@@ -32,7 +37,7 @@ const Card = (props) => {
                 filmId: data?.id,
               })}
             >
-              <img src={data?.imageUrl} alt={data?.title || "Movie Poster"} />
+              <img src={data?.image} alt={data?.name || "Movie Poster"} />
             </a>
             <p
               style={{
@@ -48,7 +53,7 @@ const Card = (props) => {
                 lineHeight: "25px",
               }}
             >
-              {data?.ageRating || "T18"}
+              {data?.ageRating || "P"}
             </p>
           </div>
           <div className="lower-content">
@@ -58,17 +63,17 @@ const Card = (props) => {
                   filmId: data?.id,
                 })}
               >
-                {data?.title || "Movie Title"}
+                {data?.name || "Movie Title"}
               </a>
             </h4>
             <p style={{ textAlign: "center" }}>
-              Khởi chiếu: {data?.releaseDate || "N/A"}
+              Khởi chiếu: {formatDate(data?.startDay) || "N/A"}
             </p>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Card;

@@ -133,6 +133,23 @@ img{
   padding: 0 !important;
 }
 
+.mg-l0 {
+  margin-left: 0 !important;
+}
+
+.mg-r0 {
+  margin-right: 0 !important;
+}
+
+.mg-b0 {
+  margin-bottom: 0 !important;
+}
+
+.mg-t0 {
+  margin-top: 0 !important;
+}
+
+
 /*--------------------------------------------------------------
   # Back to top button
   --------------------------------------------------------------*/

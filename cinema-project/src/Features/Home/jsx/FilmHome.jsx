@@ -1,5 +1,5 @@
 import { CardList } from "../../Common/CardList/jsx/CardList";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DndContext,
   PointerSensor,
@@ -14,17 +14,20 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Tabs } from "antd";
-import '../Contents/FilmHome.css'
+import "../Contents/FilmHome.css";
+import { callApi } from "../../Common/Constant";
+import { API_Film } from "./Constant";
 
 const DraggableTabNode = ({ className, ...props }) => {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: props['data-node-key'],
-  });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: props["data-node-key"],
+    });
   const style = {
     ...props.style,
     transform: CSS.Translate.toString(transform),
     transition,
-    cursor: 'move',
+    cursor: "move",
   };
   return React.cloneElement(props.children, {
     ref: setNodeRef,
@@ -36,24 +39,44 @@ const DraggableTabNode = ({ className, ...props }) => {
 
 export function FilmHome(props) {
   const { moviesForYou, showingMovies, upcomingMovies } = props;
+  const [moviesReal, setMoviesReal] = useState([]);
 
-  const [items, setItems] = useState([
-    {
-      key: "1",
-      label: moviesForYou.title,
-      children: <CardList movies={moviesForYou.data}/>,
-    },
-    {
-      key: "2",
-      label: showingMovies.title,
-      children: <CardList movies={showingMovies.data}/>,
-    },
-    {
-      key: "3",
-      label: upcomingMovies.title,
-      children: <CardList movies={upcomingMovies.data}/>,
-    },
-  ]);
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const movieData = await callApi(API_Film.showingMovies, "GET");
+        setMoviesReal(movieData);
+        console.log(movieData, "Movie Data");
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+      }
+    };
+
+    fetchMovies();
+  }, []);
+
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const newItems = [
+      {
+        key: "1",
+        label: moviesForYou.title,
+        children: <CardList movies={moviesReal} />,
+      },
+      {
+        key: "2",
+        label: showingMovies.title,
+        children: <CardList movies={moviesReal} />,
+      },
+      {
+        key: "3",
+        label: upcomingMovies.title,
+        children: <CardList movies={moviesReal} />,
+      },
+    ];
+    setItems(newItems);
+  }, [moviesReal]);
 
   const sensor = useSensor(PointerSensor, {
     activationConstraint: {

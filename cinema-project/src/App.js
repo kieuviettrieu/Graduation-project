@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from './Features/Common/Layouts/jsx/HomePage';
 import { Home } from './Features/Home/jsx/Home';
 import { Booking } from "./Features/Booking/jsx/Booking";
-import { Film } from "./Features/Film/jsx/Film";
 import { Event } from "./Features/Event/jsx/Event";
 import { AdminPage } from "./Features/Common/Layouts/jsx/AdminPage";
 import { Statistical } from "./Features/Admin/Statistical/jsx/Statistical";
@@ -17,6 +16,7 @@ import { Schedule } from './Features/Schedule/jsx/Schedule';
 import FilmDetail from './Features/Film/jsx/FilmDetail';
 import ScheduleDetail from './Features/Schedule/jsx/ScheduleDetail';
 import RegisterForm from './Features/Common/LoginResgister/jsx/RegisterForm';
+import Film from './Features/Film/jsx/Film';
 
 function App() {
   return (

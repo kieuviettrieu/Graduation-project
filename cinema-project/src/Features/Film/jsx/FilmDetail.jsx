@@ -1,45 +1,45 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import CardTheater from "./CardTheater";
-import '../Contents/Film.css';
+import "../Contents/Film.css";
+import { API_COMMON, callApi, formatDate, generateUrl } from "../../Common/Constant";
 
 const FilmDetail = () => {
   const [movieDetails, setMovieDetails] = useState(null);
   const [cinemas, setCinemas] = useState(null);
   const [tabs, setTabs] = useState(null);
+  const { filmId } = useParams();
 
   useEffect(() => {
-    // Gọi API bằng fetch
-    // fetch('https://api.example.com/movie-details') // Thay bằng URL API thật
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error('Network response was not ok');
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     setMovieDetails(data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error fetching movie details:', error);
-    //   });
-    const fakeData = {
-      posterUrl:
-        "http://riocinemas.vn/Areas/Admin/Content/Fileuploads/images/poster%20web/T12/Ch%E1%BB%8B%20D%C3%A2u.jpg",
-      title: "CHỊ DÂU",
-      genre: "Drama",
-      format: "2D",
-      rating: "T16",
-      director: "Khương Ngọc",
-      cast: [
-        "Việt Hương",
-        "Hồng Đào",
-        "Lê Khánh",
-        "Đinh Y Nhung",
-        "Ngọc Trinh",
-      ],
-      releaseDate: "20/12/2024",
-      duration: "1 giờ 40 phút",
+    const fetchMovies = async () => {
+      try {
+        const movieDetail = await callApi(generateUrl(API_COMMON.public.movieDetail, {id : filmId}), "GET");
+        setMovieDetails(movieDetail);
+        console.log(movieDetail, "Movie Data");
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+      }
     };
+
+    fetchMovies();
+    // const fakeData = {
+    //   posterUrl:
+    //     "http://riocinemas.vn/Areas/Admin/Content/Fileuploads/images/poster%20web/T12/Ch%E1%BB%8B%20D%C3%A2u.jpg",
+    //   title: "CHỊ DÂU",
+    //   genre: "Drama",
+    //   format: "2D",
+    //   rating: "T16",
+    //   director: "Khương Ngọc",
+    //   cast: [
+    //     "Việt Hương",
+    //     "Hồng Đào",
+    //     "Lê Khánh",
+    //     "Đinh Y Nhung",
+    //     "Ngọc Trinh",
+    //   ],
+    //   releaseDate: "20/12/2024",
+    //   duration: "1 giờ 40 phút",
+    // };
     const cinemas = [
       {
         name: "RIO Liên Chiểu Đà Nẵng",
@@ -115,11 +115,9 @@ const FilmDetail = () => {
       {
         id: "prod-details",
         title: "Mô tả",
-        content:
-          "Chuyện bắt đầu khi bà Nhị - con dâu cả của gia đình quyết định nhân dịp đám giỗ của mẹ chồng, tụ họp cả bốn chị em gái - con ruột trong nhà lại để thông báo chuyện sẽ tự bỏ tiền túi ra sửa sang căn nhà từ đường cũ kỹ trước khi bão về. Vấn đề này khiến cho nội bộ gia đình bắt đầu có những lục đục, chị dâu và các em chồng cũng xảy ra mâu thuẫn, bất hoà. Dần dà những sự thật đằng sau việc 'bằng mặt mà không bằng lòng' giữa các chị em cũng dần được hé lộ, những bí mật, nỗi đau sâu thẳm nhất trong mỗi cá nhân cũng dần được bóc tách. Liệu sợi dây liên kết vốn đã mong manh giữa các chị em có bị cắt đứt và liệu 'căn nhà' vốn đã dột nát ấy có còn nguyên vẹn sau cơn bão lớn?",
+        content: movieDetails?.description,
       },
     ];
-    setMovieDetails(fakeData);
     setCinemas(cinemas);
     setTabs(tabs);
   }, []);
@@ -142,8 +140,8 @@ const FilmDetail = () => {
                       <div className="content">
                         <div className="image">
                           <img
-                            src={movieDetails.posterUrl}
-                            alt={movieDetails.title}
+                            src={movieDetails.image}
+                            alt={movieDetails.name}
                           />
                         </div>
                       </div>
@@ -158,10 +156,10 @@ const FilmDetail = () => {
           <div className="content-column col-lg-8 col-md-8 col-sm-12">
             <div className="inner-column">
               <h4>
-                {movieDetails.title} <i style={{ fontSize: "13px" }}></i>
+                {movieDetails.name} <i style={{ fontSize: "13px" }}></i>
               </h4>
               <p>
-                {movieDetails.genre} - {movieDetails.format}
+                {movieDetails.movieTypes} - {movieDetails.movieStudios}
               </p>
               <p
                 style={{
@@ -177,30 +175,33 @@ const FilmDetail = () => {
                   boxShadow: "1px 1px 5px 2px #4e4e54",
                 }}
               >
-                {movieDetails.rating}
+                {movieDetails?.avgRating || "P"}
               </p>
               <hr />
 
               {/* Shop List */}
               <ul className="shop-list">
-                <li>
-                  Đạo diễn: <a>{movieDetails.director}</a>
+                <li className="mg-l0">
+                  Đạo diễn: <a>{movieDetails?.directors}</a>
                 </li>
-                <li>
-                  Diễn viên: <a>{movieDetails.cast.join(", ")}</a>
+                <li className="mg-l0">
+                  Diễn viên: <a>{movieDetails?.actors}</a>
                 </li>
-                <li>
-                  Ngày chiếu: <a>{movieDetails.releaseDate}</a>
+                <li className="mg-l0">
+                  Ngày chiếu: <a>{formatDate(movieDetails?.startDay)}</a>
                 </li>
-                <li>
-                  Thời lượng: <a>{movieDetails.duration}</a>
+                <li className="mg-l0">
+                  Thời lượng: <a>{movieDetails?.timeAmount} phút</a>
+                </li>
+                <li className="mg-l0">
+                  Ngôn ngữ: <a>{movieDetails?.language}</a>
                 </li>
               </ul>
             </div>
           </div>
         </div>
         <div className="product-info-tabs">
-          <CardTheater cinemas={cinemas} tabs={tabs}/>
+          <CardTheater cinemas={cinemas} tabs={tabs} />
         </div>
       </div>
     </div>
