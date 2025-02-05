@@ -15,8 +15,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Tabs } from "antd";
 import "../Contents/FilmHome.css";
-import { callApi } from "../../Common/Constant";
 import { API_Film } from "./Constant";
+import { callAPI } from "../../axios/axiosInstance";
 
 const DraggableTabNode = ({ className, ...props }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -44,7 +44,7 @@ export function FilmHome(props) {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const movieData = await callApi(API_Film.showingMovies, "GET");
+        const movieData = await callAPI("get", API_Film.showingMovies);
         setMoviesReal(movieData);
         console.log(movieData, "Movie Data");
       } catch (err) {

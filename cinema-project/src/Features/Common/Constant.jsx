@@ -4,62 +4,10 @@ export const API_BASE_URL_PUBLIC = "http://localhost:8080/api/public";
 export const API_COMMON = {
   public: {
     movieDetail: API_BASE_URL_PUBLIC + "/movie/detail/{id}",
+    login: API_BASE_URL_PUBLIC + "/login",
   }
   
 };
-
-export const callApi = async (url, method = "GET", body = null) => {
-  // const url = `${API_BASE_URL}${endpoint}`;
-  
-  const headers = {
-    "Content-Type": "application/json",
-    // Thêm header khác n?u c?n, ví d? Authorization: `Bearer ${token}`
-  };
-
-  const options = {
-    method: method,
-    headers: headers,
-  };
-
-  if (body) {
-    options.body = JSON.stringify(body); // N?u có body, chuy?n thành JSON
-  }
-
-  try {
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`API Error: ${errorMessage || "Không th? t?i d? li?u"}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("L?i khi g?i API:", error);
-    throw error; // Ném l?i ra ngoài d? x? lý ti?p ? noi g?i hàm
-  }
-};
-
-// Hàm g?i API GET (dùng cho các yêu c?u GET)
-// export const getMoviesOnShowing = async () => {
-//   return await callApi("/onShowing", "GET");
-// };
-
-// Hàm g?i API POST (dùng cho các yêu c?u POST)
-// export const createMovie = async (movieData) => {
-//   return await callApi("/create", "POST", movieData);
-// };
-
-// Hàm g?i API PUT (dùng cho các yêu c?u PUT)
-// export const updateMovie = async (movieId, movieData) => {
-//   return await callApi(`/update/${movieId}`, "PUT", movieData);
-// };
-
-// Hàm g?i API DELETE (dùng cho các yêu c?u DELETE)
-// export const deleteMovie = async (movieId) => {
-//   return await callApi(`/delete/${movieId}`, "DELETE");
-// };
 
 export const ROUTER_PATHS = {
   //HOME

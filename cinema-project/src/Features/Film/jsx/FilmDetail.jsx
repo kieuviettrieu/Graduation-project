@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CardTheater from "./CardTheater";
 import "../Contents/Film.css";
-import { API_COMMON, callApi, formatDate, generateUrl } from "../../Common/Constant";
+import { API_COMMON, formatDate, generateUrl } from "../../Common/Constant";
+import { callAPI } from "../../axios/axiosInstance";
 
 const FilmDetail = () => {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -13,7 +14,8 @@ const FilmDetail = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const movieDetail = await callApi(generateUrl(API_COMMON.public.movieDetail, {id : filmId}), "GET");
+        const movieDetail = await callAPI("get", generateUrl(API_COMMON.public.movieDetail, {id : filmId}));
+        // const movieDetail = await callApi(generateUrl(API_COMMON.public.movieDetail, {id : filmId}), "GET");
         setMovieDetails(movieDetail);
         console.log(movieDetail, "Movie Data");
       } catch (err) {

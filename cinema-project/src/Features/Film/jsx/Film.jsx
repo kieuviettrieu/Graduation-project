@@ -15,8 +15,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Tabs } from "antd";
 import '../Contents/Film.css'
-import { callApi } from "../../Common/Constant";
 import { API_Film } from "../../Home/jsx/Constant";
+import { callAPI } from "../../axios/axiosInstance";
 
 const DraggableTabNode = ({ className, ...props }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -43,7 +43,7 @@ const Film = () => {
     // setLoading(true); 
     const fetchMovies = async () => {
       try {
-        const movieData = await callApi(API_Film.showingMovies, "GET");
+        const movieData = await callAPI("get", API_Film.showingMovies);
         setMoviesReal(movieData); 
       } catch (err) {
         console.error(err);

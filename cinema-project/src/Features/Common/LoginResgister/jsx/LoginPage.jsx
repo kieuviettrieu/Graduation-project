@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginAction } from "../../../../Redux/Actions";
-import axios from "axios";
+import { callAPI } from "../../../axios/axiosInstance";
+import { API_COMMON } from "../../Constant";
+import { type } from "@testing-library/user-event/dist/type";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,25 +13,23 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("https://api.example.com/login", {
-        username,
-        password,
+      const response = await callAPI("post", API_COMMON.public.login, {
+        username: email,
+        password: password,
       });
 
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+      if (response.token) {
+        localStorage.setItem("token", response.token);
       }
-
-      const { username, role, email, profilePicture } = response.data;
+      const { username, roles, type } = response;
 
       const user = {
         username,
-        role, // 'admin' hoặc 'user'
-        email,
-        profilePicture,
+        roles,
+        type,
       };
       dispatch(loginAction(user));
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Login failed", error);
     }
@@ -53,7 +53,13 @@ const LoginPage = () => {
                       <u>tại đây</u>
                     </a>
                   </p>
-                  <form className="form" onSubmit={handleLogin}>
+                  <form
+                    className="form"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleLogin();
+                    }}
+                  >
                     <div className="mb-3">
                       <label
                         className="form-label text-dark fw-bold"
