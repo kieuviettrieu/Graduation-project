@@ -185,6 +185,15 @@ img{
   margin-top: 0 !important;
 }
 
+.ant-btn-color-primary {
+  background-color: var(--main-color);
+  color: white;
+}
+
+:where(.css-dev-only-do-not-override-ccdg5a).ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
+  background: var(--main-color) !important;
+  color: #fff;
+}
 
 /*--------------------------------------------------------------
   # Back to top button

@@ -1,35 +1,63 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { BiSolidUser } from "react-icons/bi";
 import "../Content/index.css";
 
-export function LoginRegisterButton() {
+const LoginRegisterButton = () => {
   const [button, setButton] = useState("");
+  const isLogin = false;
 
   return (
-    <>
-      {/* {!login && ( */}
-      <div className="login-register-switch">
-        <Link
-          className={`site btn-auth login-button ${
-            button === "register" ? "active" : ""
-          }`}
-          to="/register"
-          onClick={() => setButton("register")}
+    <div className="cart-box">
+      <div className="dropdown">
+        <button
+          className="cart-box-btn dropdown-toggle"
+          type="button"
+          id="dropdownMenu1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
         >
-          Register
-        </Link>
-        <span style={{ color: "white" }}>/</span>
-        <Link
-          className={`site btn-auth register-button ${
-            button === "login" ? "active" : ""
-          }`}
-          to="/login"
-          onClick={() => setButton("login")}
+          <BiSolidUser />
+        </button>
+        <ul
+          className="dropdown-menu cart-panel"
+          aria-labelledby="dropdownMenu1"
         >
-          Login
-        </Link>
+          <li>
+            <h5>
+              <a href="/thong-tin-tai-khoan.html">Kiều Việt Triều</a>
+            </h5>
+          </li>
+          {!isLogin ? (
+            <>
+              <li>
+                <a className="dropdown-item" href="/login">
+                  Đăng nhập
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="/register">
+                  Đăng ký
+                </a>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <a className="dropdown-item" href="/thong-tin-tai-khoan.html">
+                  Thông tin
+                </a>
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  Đăng xuất
+                </a>
+              </li>
+            </>
+          )}
+        </ul>
       </div>
-      {/* )} */}
-    </>
+    </div>
   );
-}
+};
+
+export default LoginRegisterButton;

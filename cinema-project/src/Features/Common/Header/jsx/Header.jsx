@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginRegisterButton } from "../../LoginResgister/jsx/LoginRegisterButton";
+import LoginRegisterButton from "../../LoginResgister/jsx/LoginRegisterButton";
 import { ThemeSwitch } from "../../ThemeSwitch/ThemeSwitch";
 import "../Contents/index.css";
 import { ACCOUNT_ROLE, ROUTER_PATHS } from "../../Constant";
@@ -36,7 +36,7 @@ export function Header(props) {
 
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden"; 
+      document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
@@ -51,7 +51,7 @@ export function Header(props) {
         <i
           id="nav-toggle"
           className="bi bi-x mobile-nav-toggle"
-          onClick={() => handleNavbarMobileToggle()} 
+          onClick={() => handleNavbarMobileToggle()}
         ></i>
         <ul>
           <li>
@@ -62,7 +62,12 @@ export function Header(props) {
           <li>
             <div onClick={() => setIsDropDownFilm(!isDropDownFilm)}>
               <span>Phim</span>
-              <i className={`bi ${isDropDownFilm ? 'bi-chevron-up' : 'bi-chevron-down'}`} style={{ marginLeft: '10px', fontSize: 'medium' }}></i>
+              <i
+                className={`bi ${
+                  isDropDownFilm ? "bi-chevron-up" : "bi-chevron-down"
+                }`}
+                style={{ marginLeft: "10px", fontSize: "medium" }}
+              ></i>
             </div>
           </li>
           {isDropDownFilm && (
@@ -76,7 +81,9 @@ export function Header(props) {
             </>
           )}
           <li>
-            <div onClick={() => redirectToPathMobile(ROUTER_PATHS.FILM_SCHEDULE)}>
+            <div
+              onClick={() => redirectToPathMobile(ROUTER_PATHS.FILM_SCHEDULE)}
+            >
               <span>Lịch chiếu</span>
             </div>
           </li>
@@ -144,18 +151,21 @@ export function Header(props) {
                 </div>
               );
             })}
-            { accountRole === ACCOUNT_ROLE.ADMIN_ROLE &&
+            {accountRole === ACCOUNT_ROLE.ADMIN_ROLE && (
               <div className="mobile-cover">
-                <Link className={`dashboard-button active}`} to={ROUTER_PATHS.DASHBOARD}>
+                <Link
+                  className={`dashboard-button active}`}
+                  to={ROUTER_PATHS.DASHBOARD}
+                >
                   Dashboard
                 </Link>
               </div>
-            }
+            )}
           </div>
           <LoginRegisterButton />
-          <div className="mobile-cover">
+          {/* <div className="mobile-cover">
             <ThemeSwitch />
-          </div>
+          </div> */}
         </div>
       </header>
     </>
