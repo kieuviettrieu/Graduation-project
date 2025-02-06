@@ -21,6 +21,10 @@ body {
   font-size: 14px;
 }
 
+.display {
+  padding: 50px 0px 0px 15px !important;
+}
+
 .form .form-control {
   font-size: 14px;
 }

@@ -86,29 +86,6 @@ export function SideBar(props) {
               Nature Cinema
             </a>
           </h3>
-          <div
-            id="navbar"
-            className="navbar order-last order-lg-0 px-4 mx-auto mobile-cover"
-          >
-            {maps.map(({ path, name }) => {
-              const url = window.location.href;
-              const currentPath = url.substring(url.lastIndexOf("/") + 1);
-              const p = path.split("/")?.pop();
-              return (
-                <div key={name} className="me-4 py-4">
-                  <Link
-                    className={`nav-link scrollto ${
-                      currentPath === p ? "active" : ""
-                    }`}
-                    onClick={() => handleClose()}
-                    to={path}
-                  >
-                    {name}
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
           <LoginRegisterButton />
           {/* <div className='mobile-cover'>
               <ThemeSwitch />

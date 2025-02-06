@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Space, Table, Tag, Input, Button } from "antd";
 import { IoMdPersonAdd } from "react-icons/io";
+import useCommonFunctions from "../../../Common/CommonFunction";
 const { Search } = Input;
 
 const columns = [
@@ -52,7 +53,7 @@ const columns = [
   },
 ];
 
-const data = [
+const items = [
   {
     key: "1",
     name: "John Brown",
@@ -74,13 +75,26 @@ const data = [
     address: "Sydney No. 1 Lake Park",
     tags: ["cool", "teacher"],
   },
-];
+  ];
+
 
 const ManageEmployees = () => {
+  const [currentPage, setCurrentPage] = useState(4);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalItems, setTotalItems] = useState(18);
+  const { updateItems } = useCommonFunctions();
+  const data = updateItems(items, pageSize, currentPage, totalItems);
+
+  const changePage = (page, size) => {
+    setCurrentPage(page);
+    setPageSize(size);
+  }
+
+
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
-        <div style={{ marginBottom: "10px", marginTop: "50px" }}>
+        <div>
           <Search
             placeholder="input search..."
             allowClear
@@ -94,7 +108,15 @@ const ManageEmployees = () => {
             <IoMdPersonAdd fontSize={16} />
           </Button>
         </div>
-        <Table columns={columns} dataSource={data} />;
+        <Table 
+          columns={columns} 
+          dataSource={data} 
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            onChange: (page, size) => changePage(page, size),
+          }}
+        />
       </div>
     </section>
   );

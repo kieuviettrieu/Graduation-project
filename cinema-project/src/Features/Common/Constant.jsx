@@ -81,7 +81,7 @@ export const ROUTER_PATHS = {
   //EVENT
   EVENT: "/event",
   //USER
-  USER_PROFILE: "user/profile/{userId}",
+  USER_PROFILE: "user/profile",
   BOOKING: "/booking/{timeId}",
   //DASHBOARD
   DASHBOARD: "/dashboard",

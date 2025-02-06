@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import {
-  AppstoreOutlined,
-  ContainerOutlined,
-  DesktopOutlined,
-  MailOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PieChartOutlined,
 } from '@ant-design/icons';
 import { Button, Menu } from 'antd';
 const items = [

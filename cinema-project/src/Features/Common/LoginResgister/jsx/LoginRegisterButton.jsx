@@ -4,7 +4,7 @@ import "../Content/index.css";
 
 const LoginRegisterButton = () => {
   const [button, setButton] = useState("");
-  const isLogin = false;
+  const isLogin = true;
 
   return (
     <div className="cart-box">
@@ -43,7 +43,7 @@ const LoginRegisterButton = () => {
           ) : (
             <>
               <li>
-                <a className="dropdown-item" href="/thong-tin-tai-khoan.html">
+                <a className="dropdown-item" href="/user/profile">
                   Thông tin
                 </a>
               </li>

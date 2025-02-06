@@ -17,6 +17,7 @@ import FilmDetail from './Features/Film/jsx/FilmDetail';
 import ScheduleDetail from './Features/Schedule/jsx/ScheduleDetail';
 import RegisterForm from './Features/Common/LoginResgister/jsx/RegisterPage';
 import Film from './Features/Film/jsx/Film';
+import UserProfile from './Features/Common/UserProfile/jsx/UserProfile';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="film/detail/:filmId" element={<FilmDetail />} />
             <Route path="corner" element={<Film />} />
             <Route path="event" element={<Event />} />
+            <Route path="user/profile" element={<UserProfile />} />
             <Route path="booking/:timeId" element={<Booking />} />
           </Route>
         </Route>
