@@ -15,6 +15,8 @@ const maps = [
   { path: "/dashboard/manage/customers", name: "QL khách hàng" },
   { path: "/dashboard/manage/films", name: "QL phim" },
   { path: "/dashboard/manage/tickets", name: "QL vé" },
+  { path: "/dashboard/manage/cinemas", name: "QL rạp" },
+  { path: "/dashboard/manage/cinema/create", name: "Tạo rạp chiếu" },
 ];
 
 // const items = [
@@ -77,11 +79,11 @@ const items = [
     label: "QL vé",
   },
   {
-    key: "sub1",
-    label: "Navigation One",
+    key: "QL rạp",
+    label: "QL rạp",
     icon: <MailOutlined />,
     children: [
-      { key: "Option 5", label: "Option 5" },
+      { key: "Tạo rạp chiếu", label: "Tạo rạp chiếu" },
       { key: "Option 6", label: "Option 6" },
     ],
   },

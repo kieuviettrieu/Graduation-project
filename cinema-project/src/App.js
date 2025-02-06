@@ -18,6 +18,7 @@ import ScheduleDetail from './Features/Schedule/jsx/ScheduleDetail';
 import RegisterForm from './Features/Common/LoginResgister/jsx/RegisterPage';
 import Film from './Features/Film/jsx/Film';
 import UserProfile from './Features/Common/UserProfile/jsx/UserProfile';
+import CinemaCreate from './Features/Admin/ManageCinema/jsx/CinemaCreate';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route path="manage/customers" element={<ManageCustomers />} />
             <Route path="manage/films" element={<ManageFilms />} />
             <Route path="manage/tickets" element={<ManageTickets />} />
+            <Route path="manage/cinema/create" element={<CinemaCreate />} />
           </Route>
         </Route>
       </Routes>

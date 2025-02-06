@@ -83,6 +83,7 @@ export const ROUTER_PATHS = {
   //USER
   USER_PROFILE: "user/profile",
   BOOKING: "/booking/{timeId}",
+  CINEMA_CREATE: "/manage/cinema/create",
   //DASHBOARD
   DASHBOARD: "/dashboard",
 
