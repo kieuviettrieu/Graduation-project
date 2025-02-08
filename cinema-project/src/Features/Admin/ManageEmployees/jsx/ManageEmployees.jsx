@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Space, Table, Tag, Input, Button } from "antd";
 import { IoMdPersonAdd } from "react-icons/io";
 import useCommonFunctions from "../../../Common/CommonFunction";
+import CreateEmployee from "./CreateEmployee";
 const { Search } = Input;
 
 const columns = [
@@ -82,12 +83,17 @@ const ManageEmployees = () => {
   const [currentPage, setCurrentPage] = useState(4);
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(18);
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
   const { updateItems } = useCommonFunctions();
   const data = updateItems(items, pageSize, currentPage, totalItems);
 
   const changePage = (page, size) => {
     setCurrentPage(page);
     setPageSize(size);
+  }
+
+  const handleCreateEmployee = (values) => {
+    console.log(values, "values");
   }
 
 
@@ -104,7 +110,7 @@ const ManageEmployees = () => {
               marginRight: "10px",
             }}
           />
-          <Button type="primary">
+          <Button type="primary" onClick={() => setIsOpenCreate(true)}>
             <IoMdPersonAdd fontSize={16} />
           </Button>
         </div>
@@ -118,6 +124,7 @@ const ManageEmployees = () => {
           }}
         />
       </div>
+      <CreateEmployee open={isOpenCreate} onClose={() => setIsOpenCreate(false)} onCreate={(values) => handleCreateEmployee(values)} />
     </section>
   );
 };

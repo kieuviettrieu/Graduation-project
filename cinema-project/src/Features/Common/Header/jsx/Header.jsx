@@ -113,7 +113,7 @@ export function Header(props) {
   return (
     <>
       {isMenuOpen && renderNavbar()}
-      <header id="header" className="fixed-top pt-3 pb-2 position-relative">
+      <header id="header" className="fixed-top pt-3 pb-2 position-relative" style={{zIndex: 999}}>
         <div className="container d-flex align-items-center items-center mx-auto flex-between">
           <div>
             <i

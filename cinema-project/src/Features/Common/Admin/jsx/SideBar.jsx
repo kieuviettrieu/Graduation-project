@@ -74,13 +74,13 @@ export function SideBar(props) {
 
   return (
     <>
-      <header id="header" className="fixed-top pt-3 pb-2 position-relative">
+      <header id="header" className="fixed-top pt-3 pb-2 position-relative" style={{zIndex: 999}}>
         <div className="container d-flex align-items-center items-center mx-auto flex-between">
-          <i
+          {/* <i
             id="nav-toggle"
             className="bi bi-list mobile-nav-toggle"
             onClick={handleNavbarMobileToggle}
-          ></i>
+          ></i> */}
           <h3 className="logo">
             <a href="/" className="site">
               Nature Cinema
