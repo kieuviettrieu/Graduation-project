@@ -46,7 +46,6 @@ export function FilmHome(props) {
       try {
         const movieData = await callAPI("get", API_Film.showingMovies);
         setMoviesReal(movieData);
-        console.log(movieData, "Movie Data");
       } catch (err) {
         console.error("Error fetching movies:", err);
       }

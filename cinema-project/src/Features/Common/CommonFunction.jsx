@@ -9,26 +9,30 @@ const useCommonFunctions = () => {
 
   const updateItems = (array, pageSize, currentPage, totalItems) => {
     const totalFakeItems = totalItems;
-    const fakeData = Array.from({ length: totalFakeItems }, (_, index) => ({
-      key: `fake-${index + 1}`,
-      name: `User ${index + 1}`,
-      age: 25 + (index % 10),
-      address: `Address ${index + 1}`,
-      tags: [index % 2 === 0 ? "developer" : "designer"],
-    }));
-  
+    const keys =
+      array.length > 0
+        ? Object.keys(array[0])
+        : ["key", "name", "age", "address", "tags"];
+
+    const fakeData = Array.from({ length: totalFakeItems }, (_, index) => {
+      return keys.reduce((obj, key) => {
+        obj[key] = key === "key" ? `fake-${index + 1}` : `Data ${index + 1}`;
+        return obj;
+      }, {});
+    });
+
     const fullData = [...fakeData];
-    console.log(fullData, "fake");
     const startIndex = (currentPage - 1) * pageSize;
     array.forEach((item, index) => {
-      fullData[startIndex + index] = item; 
+      fullData[startIndex + index] = item;
     });
-    
+
     return fullData;
-  }
+  };
 
   return {
-    redirectToPath, updateItems
+    redirectToPath,
+    updateItems,
   };
 };
 

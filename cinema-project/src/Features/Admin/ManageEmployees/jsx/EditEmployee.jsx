@@ -10,7 +10,6 @@ import {
   message,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import "../Contents/CreateEmployee.css";
 import dayjs from "dayjs";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_EMPLOYEE } from "./Constant";
@@ -18,33 +17,67 @@ import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
 
 const { Option } = Select;
-const CreateEmployee = ({ open, onClose, onCreate }) => {
+
+const EditEmployee = ({ open, onClose, onUpdate, id }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
   const [passWord, setPassWord] = useState(false);
   const [isPassWordConfirm, setIsPassWordConfirm] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [positions, setPositions] = useState([]);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchPositions = async () => {
       try {
         const data = await callAPI("get", API_EMPLOYEE.position);
         setPositions(data);
       } catch (err) {
-        console.error("Error fetching movies:", err);
+        console.error("Error fetching positions:", err);
       }
     };
 
-    fetchEmployees();
-  }, []);
+    const fetchEmployee = async () => {
+      try {
+        if (!id) return;
+        const data = await callAPI(
+          "get",
+          `${API_EMPLOYEE.getEmployee}/${id}`
+        );
+        form.setFieldsValue({
+          ...data,
+          birthday: dayjs(data.birthday),
+        });
+        form.setFieldsValue({
+            address: data.address,
+            birthday: dayjs(data.birthday),
+            cardId: data.cardId,
+            confirmPassword: data.account?.password, 
+            email: data.email,
+            fullName: data.fullName,
+            gender: String(data.gender),
+            password: data.account?.password,
+            phoneNumber: data.phoneNumber,
+            positionId: data.position?.id, // Đảm bảo lấy đúng ID của position
+            username: data.account?.username,
+          });
+        setImageUrl(data.image);
+      } catch (error) {
+        console.error("Error fetching employee:", error);
+      }
+    };
+
+    if (open) {
+      fetchPositions();
+      fetchEmployee();
+    }
+  }, [id, open, form]);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setImage(file);
     if (file) {
-      const url = URL.createObjectURL(file); // Tạo URL tạm thời từ file
+      const url = URL.createObjectURL(file);
       setImageUrl(url);
     }
   };
@@ -70,6 +103,7 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
       const imageLink = image
         ? await uploadImageToCloudinary(image, Cloud_Name, Upload_Preset)
         : "";
+
       const employee = {
         address,
         cardId,
@@ -77,15 +111,16 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
         email,
         fullName,
         gender,
+        image: imageLink,
         password,
         phoneNumber,
         position,
         username,
-        image: imageLink,
         birthday: birthdayValue,
+        id,
       };
-      onCreate(employee);
-      form.resetFields();
+
+      onUpdate(employee);
       onClose();
     } catch (error) {
       message.error("Đã có lỗi xảy ra!");
@@ -94,13 +129,9 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
     }
   };
 
-  const changePassConfirm = (e) => {
-    setIsPassWordConfirm(e.ta);
-  };
-
   return (
     <Drawer
-      title="Thêm nhân viên mới"
+      title="Chỉnh sửa nhân viên"
       width={680}
       onClose={onClose}
       open={open}
@@ -123,7 +154,7 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
             },
           ]}
         >
-          <Input placeholder="Nhập tài khoản" />
+          <Input placeholder="Nhập tài khoản" disabled />
         </Form.Item>
 
         <Form.Item
@@ -231,7 +262,7 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
             { max: 256, message: "Email không được quá 256 ký tự" },
           ]}
         >
-          <Input placeholder="Nhập email" />
+          <Input placeholder="Nhập email" disabled />
         </Form.Item>
 
         <Form.Item
@@ -242,7 +273,7 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
             { pattern: /^\d{9}$/, message: "CCCD phải có 9 chữ số" },
           ]}
         >
-          <Input placeholder="Nhập CCCD" />
+          <Input placeholder="Nhập CCCD" disabled/>
         </Form.Item>
 
         <Form.Item
@@ -266,10 +297,9 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
         >
           <Input.TextArea rows={3} placeholder="Nhập địa chỉ" />
         </Form.Item>
-
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
-            Thêm nhân viên
+            Cập nhật
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>
             Hủy
@@ -280,4 +310,4 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
   );
 };
 
-export default CreateEmployee;
+export default EditEmployee;

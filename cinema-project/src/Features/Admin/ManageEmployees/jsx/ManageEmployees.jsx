@@ -1,101 +1,149 @@
-import React, { useState } from "react";
-import { Space, Table, Tag, Input, Button } from "antd";
+import React, { useState, useEffect } from "react";
+import { Space, Table, Tag, Input, Button, message } from "antd";
 import { IoMdPersonAdd } from "react-icons/io";
 import useCommonFunctions from "../../../Common/CommonFunction";
+import { callAPI } from "../../../axios/axiosInstance";
+import { API_EMPLOYEE } from "./Constant";
 import CreateEmployee from "./CreateEmployee";
+import EditEmployee from "./EditEmployee";
 const { Search } = Input;
 
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+const ManageEmployees = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalItems, setTotalItems] = useState(0);
+  const [employees, setEmployees] = useState([]);
+  const [isOpenCreate, setIsOpenCreate] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [idEdit, setIdEdit] = useState(null);
+  const [isRender, setIsRender] = useState(false);
 
-const items = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Họ tên",
+      dataIndex: "fullName",
+      key: "fullName",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button type="dashed" onClick={() => handleEdit(record.id)}>
+            Chỉnh sửa
+          </Button>
+          <Button type="primary" onClick={() => handleDelete(record.id)}>
+            Xoá
+          </Button>
+        </Space>
+      ),
+    },
   ];
 
-
-const ManageEmployees = () => {
-  const [currentPage, setCurrentPage] = useState(4);
-  const [pageSize, setPageSize] = useState(5);
-  const [totalItems, setTotalItems] = useState(18);
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
   const { updateItems } = useCommonFunctions();
-  const data = updateItems(items, pageSize, currentPage, totalItems);
 
-  const changePage = (page, size) => {
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const data = await callAPI(
+          "get",
+          API_EMPLOYEE.showingEmployees + "?name=&positionId=-1&page=0"
+        );
+        const employeesData = updateItems(
+          data.content,
+          pageSize,
+          currentPage,
+          data.totalElements
+        );
+        setTotalItems(data.totalElements);
+        setEmployees(employeesData);
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+      }
+    };
+
+    fetchEmployees();
+  }, [isRender]);
+
+  const changePage = async (page, size) => {
+    try {
+      const data = await callAPI(
+        "get",
+        `${API_EMPLOYEE.showingEmployees}?name=&positionId=-1&page=${page - 1}`
+      );
+      const employeesData = updateItems(
+        data.content,
+        pageSize,
+        page,
+        data.totalElements
+      );
+      setTotalItems(data.totalElements);
+      setEmployees(employeesData);
+    } catch (err) {
+      console.error("Error fetching movies:", err);
+    }
     setCurrentPage(page);
     setPageSize(size);
+  };
+
+  const handleCreateEmployee = async (values) => {
+    try {
+      const respone = await callAPI("post", API_EMPLOYEE.addEmployee, values);
+      setIsRender(!isRender);
+      message.success("Nhân viên đã được tạo thành công!");
+    } catch (err) {
+      message.error("Đã có lỗi xảy ra!");
+      console.error("Error:", err);
+    }
+  };
+
+  const handleEditEmployee = async (values) => {
+    try {
+      const respone = await callAPI("put", API_EMPLOYEE.updateEmployee, values);
+      setIsRender(!isRender);
+      message.success("Nhân viên đã được cập nhật thành công!");
+    } catch (err) {
+      message.error("Đã có lỗi xảy ra!");
+      console.error("Error:", err);
+    }
+  };
+
+  const handleEdit = (id) => {
+    setIsOpenEdit(true);
+    setIdEdit(id);
   }
 
-  const handleCreateEmployee = (values) => {
-    console.log(values, "values");
-  }
-
+  const handleDelete = async (id) => {
+    try {
+      console.log(id, "id");
+      const response = await callAPI(
+        "delete",
+        `${API_EMPLOYEE.deleteEmployee}/${id}`
+      );
+      setCurrentPage(1);
+      setIsRender(!isRender);
+      message.success("Đã xoá thành công!");
+    } catch (err) {
+      message.error("Đã có lỗi xảy ra!");
+      console.error("Error:", err);
+    }
+  };
 
   return (
     <section className="sidebar-page-container">
@@ -114,9 +162,9 @@ const ManageEmployees = () => {
             <IoMdPersonAdd fontSize={16} />
           </Button>
         </div>
-        <Table 
-          columns={columns} 
-          dataSource={data} 
+        <Table
+          columns={columns}
+          dataSource={employees}
           pagination={{
             current: currentPage,
             pageSize: pageSize,
@@ -124,7 +172,17 @@ const ManageEmployees = () => {
           }}
         />
       </div>
-      <CreateEmployee open={isOpenCreate} onClose={() => setIsOpenCreate(false)} onCreate={(values) => handleCreateEmployee(values)} />
+      <CreateEmployee
+        open={isOpenCreate}
+        onClose={() => setIsOpenCreate(false)}
+        onCreate={(values) => handleCreateEmployee(values)}
+      />
+      <EditEmployee
+        open={isOpenEdit}
+        onClose={() => setIsOpenEdit(false)}
+        onUpdate={(values) => handleEditEmployee(values)}
+        id={idEdit}
+      />
     </section>
   );
 };

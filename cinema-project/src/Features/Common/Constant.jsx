@@ -5,6 +5,7 @@ export const Upload_Preset = "my-upload-preset";
 
 // API base URL
 export const API_BASE_URL_PUBLIC = "http://localhost:8080/api/public";
+export const API_BASE_URL_ADMIN = "http://localhost:8080/api/admin";
 
 export const API_COMMON = {
   public: {
