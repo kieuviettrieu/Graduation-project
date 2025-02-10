@@ -20,7 +20,8 @@ const { Option } = Select;
 
 const EditEmployee = ({ open, onClose, onUpdate, id }) => {
   const [form] = Form.useForm();
-  const [passWord, setPassWord] = useState(false);
+  const [passWord, setPassWord] = useState("");
+  const [confirmPassWord, setConfirmPassWord] = useState("");
   const [isPassWordConfirm, setIsPassWordConfirm] = useState(true);
   const [loading, setLoading] = useState(false);
   const [positions, setPositions] = useState([]);
@@ -171,7 +172,7 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
         >
           <Input.Password
             placeholder="Nhập mật khẩu"
-            onChange={(e) => setPassWord(e.target?.value)}
+            onChange={(e) => {setPassWord(e.target?.value); setIsPassWordConfirm(e.target?.value === confirmPassWord); }}
           />
         </Form.Item>
 
@@ -183,7 +184,7 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
         >
           <Input.Password
             placeholder="Xác nhận mật khẩu"
-            onChange={(e) => setIsPassWordConfirm(e.target.value === passWord)}
+            onChange={(e) => {setIsPassWordConfirm(e.target.value === passWord); setConfirmPassWord(e.target.value)}}
           />
         </Form.Item>
 

@@ -7,7 +7,7 @@ import Event from "./Features/Event/jsx/Event";
 import { AdminPage } from "./Features/Common/Layouts/jsx/AdminPage";
 import { Statistical } from "./Features/Admin/Statistical/jsx/Statistical";
 import ManageEmployees from "./Features/Admin/ManageEmployees/jsx/ManageEmployees";
-import { ManageCustomers } from "./Features/Admin/ManageCustomers/jsx/ManageCustomers";
+import ManageCustomers from "./Features/Admin/ManageCustomers/jsx/ManageCustomers";
 import { ManageFilms } from "./Features/Admin/ManageFilms/jsx/ManageFilms";
 import { ManageTickets } from "./Features/Admin/ManageTickets/jsx/ManageTickets";
 import LoginPage from "./Features/Common/LoginResgister/jsx/LoginPage";

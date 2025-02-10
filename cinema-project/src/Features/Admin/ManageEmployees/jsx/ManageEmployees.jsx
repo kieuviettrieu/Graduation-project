@@ -49,7 +49,7 @@ const ManageEmployees = () => {
             Chỉnh sửa
           </Button>
           <Popconfirm
-            title="Bạn có muốn xóa"
+            title={`Bạn có muốn xóa "${record.fullName}"?`}
             description="Hành động này không thể hoàn tác!"
             onConfirm={() => handleDelete(record.id)}
             okText="Xóa"
