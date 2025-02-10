@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Space, Table, Tag, Input, Button, message } from "antd";
+import { Space, Table, Tag, Input, Button, message, Popconfirm } from "antd";
 import { IoMdPersonAdd } from "react-icons/io";
 import useCommonFunctions from "../../../Common/CommonFunction";
 import { callAPI } from "../../../axios/axiosInstance";
@@ -48,9 +48,15 @@ const ManageEmployees = () => {
           <Button type="dashed" onClick={() => handleEdit(record.id)}>
             Chỉnh sửa
           </Button>
-          <Button type="primary" onClick={() => handleDelete(record.id)}>
-            Xoá
-          </Button>
+          <Popconfirm
+            title="Bạn có muốn xóa"
+            description="Hành động này không thể hoàn tác!"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <Button type="primary">Xoá</Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -127,11 +133,10 @@ const ManageEmployees = () => {
   const handleEdit = (id) => {
     setIsOpenEdit(true);
     setIdEdit(id);
-  }
+  };
 
   const handleDelete = async (id) => {
     try {
-      console.log(id, "id");
       const response = await callAPI(
         "delete",
         `${API_EMPLOYEE.deleteEmployee}/${id}`
@@ -148,6 +153,7 @@ const ManageEmployees = () => {
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
+        <h5 className="manage-title">Quản lý nhân viên</h5>
         <div>
           <Search
             placeholder="input search..."

@@ -26,6 +26,7 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
   const [positions, setPositions] = useState([]);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const [employee, setEmployee] = useState(null);
 
   useEffect(() => {
     const fetchPositions = async () => {
@@ -45,10 +46,6 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
           `${API_EMPLOYEE.getEmployee}/${id}`
         );
         form.setFieldsValue({
-          ...data,
-          birthday: dayjs(data.birthday),
-        });
-        form.setFieldsValue({
             address: data.address,
             birthday: dayjs(data.birthday),
             cardId: data.cardId,
@@ -62,6 +59,7 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
             username: data.account?.username,
           });
         setImageUrl(data.image);
+        setEmployee(data);
       } catch (error) {
         console.error("Error fetching employee:", error);
       }
@@ -104,7 +102,8 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
         ? await uploadImageToCloudinary(image, Cloud_Name, Upload_Preset)
         : "";
 
-      const employee = {
+      const employeeData = {
+        ...employee,
         address,
         cardId,
         confirmPassword,
@@ -120,7 +119,7 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
         id,
       };
 
-      onUpdate(employee);
+      onUpdate(employeeData);
       onClose();
     } catch (error) {
       message.error("Đã có lỗi xảy ra!");

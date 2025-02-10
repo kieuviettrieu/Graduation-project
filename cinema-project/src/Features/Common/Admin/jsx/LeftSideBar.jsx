@@ -16,46 +16,9 @@ const maps = [
   { path: "/dashboard/manage/films", name: "QL phim" },
   { path: "/dashboard/manage/tickets", name: "QL vé" },
   { path: "/dashboard/manage/cinemas", name: "QL rạp" },
-  { path: "/dashboard/manage/cinema/create", name: "Tạo rạp chiếu" },
+  { path: "/dashboard/manage/showtimes", name: "QL suất chiếu" },
 ];
 
-// const items = [
-//   {
-//     key: "1",
-//     icon: <MailOutlined />,
-//     label: "Quản lý Nhân viên",
-//     children: [
-//       { key: "11", label: "Danh sách Nhân viên" },
-//       { key: "12", label: "Thêm Nhân viên" },
-//     ],
-//   },
-//   {
-//     key: "2",
-//     icon: <AppstoreOutlined />,
-//     label: "Quản lý Khách hàng",
-//     children: [
-//       { key: "21", label: "Danh sách Khách hàng" },
-//       { key: "22", label: "Thêm Khách hàng" },
-//       {
-//         key: "23",
-//         label: "Cài đặt",
-//         children: [
-//           { key: "231", label: "Quyền truy cập" },
-//           { key: "232", label: "Báo cáo" },
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     key: "3",
-//     icon: <SettingOutlined />,
-//     label: "Cài đặt Hệ thống",
-//     children: [
-//       { key: "31", label: "Cấu hình chung" },
-//       { key: "32", label: "Bảo mật" },
-//     ],
-//   },
-// ];
 
 const items = [
   {
@@ -74,6 +37,11 @@ const items = [
     label: "QL phim",
   },
   {
+    key: "QL suất chiếu",
+    icon: <ContainerOutlined />,
+    label: "QL suất chiếu",
+  },
+  {
     key: "QL vé",
     icon: <MailOutlined />,
     label: "QL vé",
@@ -82,10 +50,6 @@ const items = [
     key: "QL rạp",
     label: "QL rạp",
     icon: <MailOutlined />,
-    children: [
-      { key: "Tạo rạp chiếu", label: "Tạo rạp chiếu" },
-      { key: "Option 6", label: "Option 6" },
-    ],
   },
 ];
 

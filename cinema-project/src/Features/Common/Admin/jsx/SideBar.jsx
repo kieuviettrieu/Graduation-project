@@ -9,6 +9,7 @@ const maps = [
   { path: "/dashboard/manage/customers", name: "QL khách hàng" },
   { path: "/dashboard/manage/films", name: "QL phim" },
   { path: "/dashboard/manage/tickets", name: "QL vé" },
+  { path: "/dashboard/manage/cinema", name: "QL rạp" },
 ];
 
 export function SideBar(props) {

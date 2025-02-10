@@ -1,0 +1,122 @@
+import React, { useState, useEffect } from "react";
+import { Drawer, Form, Input, Button, message } from "antd";
+import { uploadImageToCloudinary } from "../../../../uploadImage";
+import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
+import { API_EMPLOYEE } from "../../ManageEmployees/jsx/Constant";
+import { callAPI } from "../../../axios/axiosInstance";
+
+const EditCinema = ({ open, onClose, onUpdate, id }) => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [imgUrl, setImgUrl] = useState("");
+  const [cinema, setCinema] = useState(null);
+
+  useEffect( () => {
+    const fetchCinema = async () => {
+      try {
+        if (!id) return;
+        const cinema = await callAPI(
+          "get",
+          `${API_EMPLOYEE.getEmployee}/${id}`
+        );
+        form.setFieldsValue({
+          name: cinema?.name,
+          address: cinema?.address,
+          phone: cinema?.phone,
+          imgUrl: cinema?.imgUrl,
+        });
+        setCinema(cinema);
+        setImgUrl(cinema?.image);
+      } catch (error) {
+        console.error("Error fetching employee:", error);
+      }
+    };
+    if (open) {
+        fetchCinema();
+    }
+  }, [id, form, open]);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setImage(file);
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImgUrl(url);
+    }
+  };
+
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const { name, address, phone } = values;
+      const imageLink = image
+        ? await uploadImageToCloudinary(image, Cloud_Name, Upload_Preset)
+        : imgUrl;
+      const updatedCinema = {
+        ...cinema,
+        name,
+        address,
+        phone,
+        imgUrl: imageLink,
+      };
+      onUpdate(updatedCinema);
+      onClose();
+    } catch (error) {
+      message.error("Đã có lỗi xảy ra!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Drawer
+      title="Chỉnh sửa rạp chiếu phim"
+      width={680}
+      onClose={onClose}
+      open={open}
+    >
+      <Form layout="vertical" form={form} onFinish={handleSubmit}>
+        <Form.Item name="imgUrl" label="Hình ảnh" rules={[{ required: true, message: "Vui lòng chọn hình ảnh" }]}>
+          <input type="file" onChange={handleImageChange} />
+          {imgUrl && <img src={imgUrl} alt="Uploaded" width="300px" />}
+        </Form.Item>
+
+        <Form.Item
+          name="name"
+          label="Tên rạp"
+          rules={[{ required: true, message: "Vui lòng nhập tên rạp" }]}
+        >
+          <Input placeholder="Nhập tên rạp" />
+        </Form.Item>
+
+        <Form.Item
+          name="address"
+          label="Địa chỉ"
+          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+        >
+          <Input placeholder="Nhập địa chỉ" />
+        </Form.Item>
+
+        <Form.Item
+          name="phone"
+          label="Số điện thoại"
+          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+        >
+          <Input placeholder="Nhập số điện thoại" />
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading}>
+            Cập nhật rạp
+          </Button>
+          <Button onClick={onClose} style={{ marginLeft: 10 }}>
+            Hủy
+          </Button>
+        </Form.Item>
+      </Form>
+    </Drawer>
+  );
+};
+
+export default EditCinema;
