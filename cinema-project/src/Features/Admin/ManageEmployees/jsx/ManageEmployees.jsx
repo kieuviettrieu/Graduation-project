@@ -74,7 +74,7 @@ const ManageEmployees = () => {
         const employeesData = updateItems(
           data.content,
           pageSize,
-          currentPage,
+          1,
           data.totalElements
         );
         setTotalItems(data.totalElements);
@@ -85,7 +85,7 @@ const ManageEmployees = () => {
     };
 
     fetchEmployees();
-  }, [isRender]);
+  }, [isRender, updateItems, pageSize]);
 
   const changePage = async (page, size) => {
     try {
@@ -153,7 +153,7 @@ const ManageEmployees = () => {
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
-        <h5 className="manage-title">Quản lý nhân viên</h5>
+        <h5 className="manage-title">Danh sách nhân viên</h5>
         <div>
           <Search
             placeholder="input search..."

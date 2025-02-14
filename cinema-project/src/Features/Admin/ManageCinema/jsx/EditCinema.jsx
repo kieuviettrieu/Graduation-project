@@ -12,7 +12,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
   const [imgUrl, setImgUrl] = useState("");
   const [cinema, setCinema] = useState(null);
 
-  useEffect( () => {
+  useEffect(() => {
     const fetchCinema = async () => {
       try {
         if (!id) return;
@@ -33,7 +33,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
       }
     };
     if (open) {
-        fetchCinema();
+      fetchCinema();
     }
   }, [id, form, open]);
 
@@ -77,7 +77,11 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
       open={open}
     >
       <Form layout="vertical" form={form} onFinish={handleSubmit}>
-        <Form.Item name="imgUrl" label="Hình ảnh" rules={[{ required: true, message: "Vui lòng chọn hình ảnh" }]}>
+        <Form.Item
+          name="imgUrl"
+          label="Hình ảnh"
+          rules={[{ required: true, message: "Vui lòng chọn hình ảnh" }]}
+        >
           <input type="file" onChange={handleImageChange} />
           {imgUrl && <img src={imgUrl} alt="Uploaded" width="300px" />}
         </Form.Item>
@@ -85,7 +89,14 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         <Form.Item
           name="name"
           label="Tên rạp"
-          rules={[{ required: true, message: "Vui lòng nhập tên rạp" }]}
+          rules={[
+            { required: true, message: "Vui lòng nhập tên rạp" },
+            {
+              pattern:
+                /^[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+(\s[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+)*$/,
+              message: "Tên rạp không hợp lệ",
+            },
+          ]}
         >
           <Input placeholder="Nhập tên rạp" />
         </Form.Item>
@@ -93,7 +104,14 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         <Form.Item
           name="address"
           label="Địa chỉ"
-          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+          rules={[
+            { required: true, message: "Vui lòng nhập địa chỉ" },
+            {
+              pattern:
+                /^[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+(\s[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+)*$/,
+              message: "Địa chỉ không hợp lệ",
+            },
+          ]}
         >
           <Input placeholder="Nhập địa chỉ" />
         </Form.Item>
@@ -101,7 +119,10 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         <Form.Item
           name="phone"
           label="Số điện thoại"
-          rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
+          rules={[
+            { required: true, message: "Vui lòng nhập số điện thoại" },
+            { pattern: /^(0\d{9,10})$/, message: "Số điện thoại không hợp lệ" },
+          ]}
         >
           <Input placeholder="Nhập số điện thoại" />
         </Form.Item>

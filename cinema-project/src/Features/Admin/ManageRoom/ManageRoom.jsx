@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Space, Table, Input, Button, message, Popconfirm } from "antd";
+import { Space, Table, Tag, Input, Button, message, Popconfirm } from "antd";
 import { IoMdPersonAdd } from "react-icons/io";
 import useCommonFunctions from "../../../Common/CommonFunction";
 import { callAPI } from "../../../axios/axiosInstance";
-import { API_CUSTOMER } from "./Constant";
-import EditCustomer from "./EditCustomer";
-
+import { API_ROOM } from "./Constant";
+import CreateRoom from "./CreateRoom";
+// import EditRoom from "./EditRoom";
 const { Search } = Input;
 
-const ManageCustomers = () => {
+const ManageRoom = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
-  const [customers, setCustomers] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
@@ -20,46 +20,31 @@ const ManageCustomers = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      render: (_, __, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
-      title: "Họ tên",
-      dataIndex: "fullName",
-      key: "fullName",
+      title: "Tên phòng",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Giới tính",
-      dataIndex: "gender",
-      key: "gender",
-      render: (gender) => (gender ? "Nam" : "Nữ"),
+      title: "Màn hình",
+      dataIndex: "screen",
+      key: "screen",
     },
     {
-      title: "Ngày sinh",
-      dataIndex: "birthday",
-      key: "birthday",
-      render: (birthday) => new Date(birthday).toLocaleDateString("vi-VN"),
+      title: "Rạp phim",
+      dataIndex: "cinemaName",
+      key: "cinemaName",
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Số điện thoại",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
-    },
-    {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
-    },
-    {
-      title: "CCCD",
-      dataIndex: "cardId",
-      key: "cardId",
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      render: (status) => <Tag color={status === "active" ? "green" : "red"}>{status}</Tag>,
     },
     {
       title: "Action",
@@ -70,7 +55,7 @@ const ManageCustomers = () => {
             Chỉnh sửa
           </Button>
           <Popconfirm
-            title={`Bạn có muốn xóa "${record.fullName}"?`}
+            title={`Bạn có muốn xóa "${record.name}"?`}
             description="Hành động này không thể hoàn tác!"
             onConfirm={() => handleDelete(record.id)}
             okText="Xóa"
@@ -86,53 +71,49 @@ const ManageCustomers = () => {
   const { updateItems } = useCommonFunctions();
 
   useEffect(() => {
-    const fetchCustomers = async () => {
+    const fetchRooms = async () => {
       try {
-        const data = await callAPI("get", `${API_CUSTOMER.showingCustomers}?page=0`);
-        const customersData = updateItems(
-          data.content,
-          pageSize,
-          currentPage,
-          data.totalElements
-        );
+        const data = await callAPI("get", API_ROOM.showingRooms + "?name=&status=all&page=0");
+        const roomsData = updateItems(data.content, pageSize, 1, data.totalElements);
         setTotalItems(data.totalElements);
-        setCustomers(customersData);
+        setRooms(roomsData);
       } catch (err) {
-        console.error("Error fetching customers:", err);
+        console.error("Error fetching rooms:", err);
       }
     };
-    fetchCustomers();
-  }, [isRender]);
+
+    fetchRooms();
+  }, [isRender, updateItems, pageSize]);
 
   const changePage = async (page, size) => {
     try {
-      const data = await callAPI("get", `${API_CUSTOMER.showingCustomers}?search=&page=${page - 1}`);
-      const customersData = updateItems(data.content, pageSize, page, data.totalElements);
+      const data = await callAPI("get", `${API_ROOM.showingRooms}?name=&status=all&page=${page - 1}`);
+      const roomsData = updateItems(data.content, pageSize, page, data.totalElements);
       setTotalItems(data.totalElements);
-      setCustomers(customersData);
+      setRooms(roomsData);
     } catch (err) {
-      console.error("Error fetching customers:", err);
+      console.error("Error fetching rooms:", err);
     }
     setCurrentPage(page);
     setPageSize(size);
   };
 
-  const handleCreateCustomer = async (values) => {
+  const handleCreateRoom = async (values) => {
     try {
-      await callAPI("post", API_CUSTOMER.addCustomer, values);
+      await callAPI("post", API_ROOM.addRoom, values);
       setIsRender(!isRender);
-      message.success("Khách hàng đã được tạo thành công!");
+      message.success("Phòng đã được tạo thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
     }
   };
 
-  const handleEditCustomer = async (values) => {
+  const handleEditRoom = async (values) => {
     try {
-      await callAPI("put", API_CUSTOMER.updateCustomer, values);
+      await callAPI("put", API_ROOM.updateRoom, values);
       setIsRender(!isRender);
-      message.success("Khách hàng đã được cập nhật thành công!");
+      message.success("Phòng đã được cập nhật thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
@@ -146,7 +127,7 @@ const ManageCustomers = () => {
 
   const handleDelete = async (id) => {
     try {
-      await callAPI("delete", `${API_CUSTOMER.deleteCustomer}/${id}`);
+      await callAPI("delete", `${API_ROOM.deleteRoom}/${id}`);
       setCurrentPage(1);
       setIsRender(!isRender);
       message.success("Đã xoá thành công!");
@@ -159,16 +140,21 @@ const ManageCustomers = () => {
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
-        <h5 className="manage-title">Danh sách khách hàng</h5>
+        <h5 className="manage-title">Danh sách phòng</h5>
         <div>
-          <Search placeholder="Tìm kiếm khách hàng..." allowClear onSearch={() => {}} style={{ width: 200, marginRight: "10px" }} />
+          <Search
+            placeholder="Tìm kiếm phòng..."
+            allowClear
+            onSearch={() => {}}
+            style={{ width: 200, marginRight: "10px" }}
+          />
           <Button type="primary" onClick={() => setIsOpenCreate(true)}>
             <IoMdPersonAdd fontSize={16} />
           </Button>
         </div>
         <Table
           columns={columns}
-          dataSource={customers}
+          dataSource={rooms}
           pagination={{
             current: currentPage,
             pageSize: pageSize,
@@ -176,9 +162,10 @@ const ManageCustomers = () => {
           }}
         />
       </div>
-      <EditCustomer open={isOpenEdit} onClose={() => setIsOpenEdit(false)} onUpdate={(values) => handleEditCustomer(values)} id={idEdit} />
+      <CreateRoom open={isOpenCreate} onClose={() => setIsOpenCreate(false)} onCreate={handleCreateRoom} />
+      {/* <EditRoom open={isOpenEdit} onClose={() => setIsOpenEdit(false)} onUpdate={handleEditRoom} id={idEdit} /> */}
     </section>
   );
 };
 
-export default ManageCustomers;
+export default ManageRoom;

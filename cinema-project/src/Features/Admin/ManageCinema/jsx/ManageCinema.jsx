@@ -131,7 +131,7 @@ const ManageCinema = () => {
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
-      <h5 className="manage-title">Quản lý rạp</h5>
+      <h5 className="manage-title">Danh sách rạp</h5>
         <div>
           <Button type="primary" onClick={() => setIsOpenCreate(true)}>
             <IoMdAddCircle fontSize={16} /> Thêm rạp
