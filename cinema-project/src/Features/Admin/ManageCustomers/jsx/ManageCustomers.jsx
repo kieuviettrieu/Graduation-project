@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Space, Table, Input, Button, message, Popconfirm } from "antd";
-import { IoMdPersonAdd } from "react-icons/io";
 import useCommonFunctions from "../../../Common/CommonFunction";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_CUSTOMER } from "./Constant";
 import EditCustomer from "./EditCustomer";
+import ViewCustomer from "./ViewCustomer";
 
 const { Search } = Input;
 
@@ -13,16 +13,18 @@ const ManageCustomers = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const [customers, setCustomers] = useState([]);
-  const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
+  const [isOpenView, setIsOpenView] = useState(false);
+  const [idView, setIdView] = useState(null);
   const [isRender, setIsRender] = useState(false);
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      render: (_text, _record, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Họ tên",
@@ -69,7 +71,7 @@ const ManageCustomers = () => {
           <Button type="dashed" onClick={() => handleEdit(record.id)}>
             Chỉnh sửa
           </Button>
-          <Popconfirm
+          {/* <Popconfirm
             title={`Bạn có muốn xóa "${record.fullName}"?`}
             description="Hành động này không thể hoàn tác!"
             onConfirm={() => handleDelete(record.id)}
@@ -77,7 +79,8 @@ const ManageCustomers = () => {
             cancelText="Hủy"
           >
             <Button type="primary">Xoá</Button>
-          </Popconfirm>
+          </Popconfirm> */}
+          <Button type="primary" onClick={() => handleView(record.id)}>Chi tiết</Button>
         </Space>
       ),
     },
@@ -117,16 +120,6 @@ const ManageCustomers = () => {
     setPageSize(size);
   };
 
-  const handleCreateCustomer = async (values) => {
-    try {
-      await callAPI("post", API_CUSTOMER.addCustomer, values);
-      setIsRender(!isRender);
-      message.success("Khách hàng đã được tạo thành công!");
-    } catch (err) {
-      message.error("Đã có lỗi xảy ra!");
-      console.error("Error:", err);
-    }
-  };
 
   const handleEditCustomer = async (values) => {
     try {
@@ -142,6 +135,11 @@ const ManageCustomers = () => {
   const handleEdit = (id) => {
     setIsOpenEdit(true);
     setIdEdit(id);
+  };
+
+  const handleView = (id) => {
+    setIsOpenView(true);
+    setIdView(id);
   };
 
   const handleDelete = async (id) => {
@@ -162,9 +160,6 @@ const ManageCustomers = () => {
         <h5 className="manage-title">Danh sách khách hàng</h5>
         <div>
           <Search placeholder="Tìm kiếm khách hàng..." allowClear onSearch={() => {}} style={{ width: 200, marginRight: "10px" }} />
-          <Button type="primary" onClick={() => setIsOpenCreate(true)}>
-            <IoMdPersonAdd fontSize={16} />
-          </Button>
         </div>
         <Table
           columns={columns}
@@ -177,6 +172,7 @@ const ManageCustomers = () => {
         />
       </div>
       <EditCustomer open={isOpenEdit} onClose={() => setIsOpenEdit(false)} onUpdate={(values) => handleEditCustomer(values)} id={idEdit} />
+      <ViewCustomer open={isOpenView} onClose={() => setIsOpenView(false)} id={idView}/>
     </section>
   );
 };

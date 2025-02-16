@@ -6,6 +6,7 @@ import { callAPI } from "../../../axios/axiosInstance";
 import CreateCinema from "./CreateCinema";
 import EditCinema from "./EditCinema";
 import { API_CINEMA } from "./Constant";
+import Search from "antd/es/input/Search";
 
 const ManageCinema = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +20,12 @@ const ManageCinema = () => {
 
   const columns = [
     {
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      render: (_text, _record, index) => (currentPage - 1) * pageSize + index + 1,
+    },
+    {
       title: "Tên rạp",
       dataIndex: "name",
       key: "name",
@@ -30,14 +37,8 @@ const ManageCinema = () => {
     },
     {
       title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "phone",
-    },
-    {
-      title: "Hình ảnh",
-      dataIndex: "imgUrl",
-      key: "imgUrl",
-      render: (imgUrl) => <Image width={80} src={imgUrl} alt="Cinema Image" />,
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
     },
     {
       title: "Hành động",
@@ -60,7 +61,7 @@ const ManageCinema = () => {
   useEffect(() => {
     const fetchCinemas = async () => {
       try {
-        const data = await callAPI("get", `${API_CINEMA.showingCinema}?page=0`);
+        const data = await callAPI("get", `${API_CINEMA.showingCinema}?name=&?page=0`);
         const cinemaData = updateItems(
           data.content,
           pageSize,
@@ -128,11 +129,38 @@ const ManageCinema = () => {
     }
   };
 
+  const handleSearch = async (name) => {
+      setCurrentPage(1);
+      try {
+        const data = await callAPI("get", `${API_CINEMA.showingCinema}?name=${name.trim()}&page=0`
+        );
+        const cinemaData = updateItems(
+          data.content,
+          pageSize,
+          1,
+          data.totalElements
+        );
+        setTotalItems(data.totalElements);
+        setCinemas(cinemaData);
+      } catch (err) {
+        console.error("Error searching films:", err);
+      }
+    };
+
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
       <h5 className="manage-title">Danh sách rạp</h5>
         <div>
+        <Search
+            placeholder="tên rạp..."
+            allowClear
+            onSearch={(e) => {}}
+            style={{
+              width: 200,
+              marginRight: "10px",
+            }}
+          />
           <Button type="primary" onClick={() => setIsOpenCreate(true)}>
             <IoMdAddCircle fontSize={16} /> Thêm rạp
           </Button>

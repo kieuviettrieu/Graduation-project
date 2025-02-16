@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Form, Input, Button, Select, DatePicker, message } from "antd";
+import {
+  Drawer,
+  Form,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  message,
+  Upload,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import { callAPI } from "../../../axios/axiosInstance";
 import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
@@ -13,31 +23,44 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
   const [movieTypes, setMovieTypes] = useState([]);
   const [actors, setActors] = useState([]);
   const [directors, setDirectors] = useState([]);
+  const [studios, setStudios] = useState([]);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const languages = ["English", "Vietnamese", "French", "Spanish", "Chinese"];
 
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
-        const types = await callAPI("get", API_FILM.getMovieTypes);
         const actorList = await callAPI("get", API_FILM.getMovieActors);
         const directorList = await callAPI("get", API_FILM.getMovieDirectors);
+        const types = await callAPI("get", API_FILM.getMovieTypes);
+        const studioList = await callAPI("get", API_FILM.getMovieStudios);
         setMovieTypes(types);
         setActors(actorList);
         setDirectors(directorList);
+        setStudios(studioList);
       } catch (err) {
         console.error("Error fetching movie data:", err);
       }
     };
-    fetchMovieData();
-  }, []);
+    if (open) {
+      // form.resetFields();
+      // setImage(null);
+      // setImageUrl("");
+      fetchMovieData();
+    }
+  }, [open]);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
-    if (file) {
+  const handleImageChange = (info) => {
+    if (info.file && info.file instanceof File) {
+      const file = info.file;
+      setImage(file);
       const url = URL.createObjectURL(file);
       setImageUrl(url);
+      form.setFieldsValue({ image: file });
+    } else {
+      console.error("File không hợp lệ:", info.file);
+      message.error("Không thể xử lý tệp được tải lên.");
     }
   };
 
@@ -52,7 +75,9 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
         movieActor,
         movieType,
         movieDirector,
-        trailerLink,
+        trailer,
+        description,
+        language,
       } = values;
       const startDayValue = startDay.format("YYYY-MM-DD");
       const imageLink = image
@@ -68,9 +93,13 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
         movieActor,
         movieType,
         movieDirector,
-        trailerLink,
+        trailer,
+        description,
+        language,
       };
       onCreate(film);
+      setImage(null);
+      setImageUrl("");
       form.resetFields();
       onClose();
     } catch (error) {
@@ -88,7 +117,13 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
           label="Hình ảnh"
           rules={[{ required: true, message: "Vui lòng chọn hình ảnh" }]}
         >
-          <input type="file" onChange={handleImageChange} />
+          <Upload
+            beforeUpload={() => false}
+            showUploadList={false}
+            onChange={(e) => handleImageChange(e)}
+          >
+            <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
+          </Upload>
           {imageUrl && <img src={imageUrl} alt="Uploaded" width="300px" />}
         </Form.Item>
 
@@ -101,11 +136,31 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
         </Form.Item>
 
         <Form.Item
+          name="language"
+          label="Ngôn ngữ"
+          rules={[{ required: true, message: "Vui lòng chọn ngôn ngữ" }]}
+        >
+          <Select placeholder="Chọn ngôn ngữ">
+            {languages.map((lang) => (
+              <Option key={lang} value={lang}>
+                {lang}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
           name="movieStudio"
           label="Hãng phim"
-          rules={[{ required: true, message: "Vui lòng nhập hãng phim" }]}
+          rules={[{ required: true, message: "Vui lòng chọn hãng phim" }]}
         >
-          <Input placeholder="Nhập hãng phim" />
+          <Select mode="multiple" placeholder="Chọn hãng phim">
+            {studios.map((studio) => (
+              <Option key={studio.id} value={studio.id}>
+                {studio.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -125,14 +180,11 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
         </Form.Item>
 
         <Form.Item
-          name="trailerLink"
+          name="trailer"
           label="Link Trailer"
           rules={[
             { required: true, message: "Vui lòng nhập link trailer" },
-            {
-              type: "url",
-              message: "Vui lòng nhập đường dẫn hợp lệ",
-            },
+            { type: "url", message: "Vui lòng nhập đường dẫn hợp lệ" },
           ]}
         >
           <Input placeholder="Nhập link trailer (VD: https://www.youtube.com/...)" />
@@ -143,7 +195,7 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
           label="Thể loại phim"
           rules={[{ required: true, message: "Vui lòng chọn thể loại phim" }]}
         >
-          <Select placeholder="Chọn thể loại phim">
+          <Select mode="multiple" placeholder="Chọn thể loại phim">
             {movieTypes.map((item) => (
               <Option key={item.id} value={item.id}>
                 {item.name}
@@ -178,6 +230,14 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
               </Option>
             ))}
           </Select>
+        </Form.Item>
+
+        <Form.Item
+          name="description"
+          label="Mô tả"
+          rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+        >
+          <Input.TextArea rows={3} placeholder="Nhập mô tả" />
         </Form.Item>
 
         <Form.Item>

@@ -6,6 +6,7 @@ import { callAPI } from "../../../axios/axiosInstance";
 import { API_EMPLOYEE } from "./Constant";
 import CreateEmployee from "./CreateEmployee";
 import EditEmployee from "./EditEmployee";
+import ViewEmployee from "./ViewEmployee";
 const { Search } = Input;
 
 const ManageEmployees = () => {
@@ -16,14 +17,16 @@ const ManageEmployees = () => {
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
+  const [isOpenView, setIsOpenView] = useState(false);
+  const [idView, setIdView] = useState(null);
   const [isRender, setIsRender] = useState(false);
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-      render: (text) => <a>{text}</a>,
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      render: (_text, _record, index) => (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Họ tên",
@@ -48,6 +51,7 @@ const ManageEmployees = () => {
           <Button type="dashed" onClick={() => handleEdit(record.id)}>
             Chỉnh sửa
           </Button>
+          <Button type="dashed" onClick={() => handleView(record.id)}>Chi tiết</Button>
           <Popconfirm
             title={`Bạn có muốn xóa "${record.fullName}"?`}
             description="Hành động này không thể hoàn tác!"
@@ -85,7 +89,12 @@ const ManageEmployees = () => {
     };
 
     fetchEmployees();
-  }, [isRender, updateItems, pageSize]);
+  }, [isRender, pageSize]);
+
+  const handleView = (id) => {
+    setIsOpenView(true);
+    setIdView(id);
+  };
 
   const changePage = async (page, size) => {
     try {
@@ -156,7 +165,7 @@ const ManageEmployees = () => {
         <h5 className="manage-title">Danh sách nhân viên</h5>
         <div>
           <Search
-            placeholder="input search..."
+            placeholder="tên nhân viên..."
             allowClear
             onSearch={() => {}}
             style={{
@@ -189,6 +198,7 @@ const ManageEmployees = () => {
         onUpdate={(values) => handleEditEmployee(values)}
         id={idEdit}
       />
+      <ViewEmployee open={isOpenView} onClose={() => setIsOpenView(false)} id={idView}/>
     </section>
   );
 };

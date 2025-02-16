@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Space, Table, Input, Button, message, Popconfirm } from "antd";
+import { Space, Table, Input, Button, message, Popconfirm, Select } from "antd";
 import { IoMdAddCircle } from "react-icons/io";
+import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import useCommonFunctions from "../../../Common/CommonFunction";
 import { callAPI } from "../../../axios/axiosInstance";
 import CreateFilm from "./CreateFilm";
 import EditFilm from "./EditFilm";
 import { API_FILM } from "./Constant";
+import dayjs from "dayjs";
+import { Option } from "antd/es/mentions";
+import ViewFilm from "./ViewFilm";
 
 const { Search } = Input;
 
@@ -18,17 +22,26 @@ const ManageFilms = () => {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
   const [isRender, setIsRender] = useState(false);
-
   const { updateItems } = useCommonFunctions();
+  const [name, setName] = useState("");
+  const [studio, setStudio] = useState("");
+  const [timeDuration, setTimeDuration] = useState("");
+  const [isOpenView, setIsOpenView] = useState(false);
+  const [idView, setIdView] = useState(null);
 
   useEffect(() => {
     const fetchFilms = async () => {
       try {
         const data = await callAPI(
           "get",
-          `${API_FILM.getMovies}?name=&studio=&page=0`
+          `${API_FILM.getMovies}?name=&startDay=&studios=&timeAmount=&page=0`
         );
-        const filmsData = updateItems(data.content, pageSize, 1, data.totalElements);
+        const filmsData = updateItems(
+          data.content,
+          pageSize,
+          1,
+          data.totalElements
+        );
         setTotalItems(data.totalElements);
         setFilms(filmsData);
       } catch (err) {
@@ -37,9 +50,43 @@ const ManageFilms = () => {
     };
 
     fetchFilms();
-  }, [isRender, updateItems, pageSize]);
+  }, [isRender, pageSize]);
+
+  const handleReset = () => {
+    setName("");
+    setStudio("");
+    setTimeDuration("");
+    setIsRender(!isRender);
+  };
+
+  const handleSearch = async () => {
+    setCurrentPage(1);
+    try {
+      const data = await callAPI(
+        "get",
+        `${API_FILM.getMovies}?name=${name.trim()}&startDay=&studios=${studio.trim()}&timeAmount=${timeDuration}&page=0`
+      );
+      const filmsData = updateItems(
+        data.content,
+        pageSize,
+        1,
+        data.totalElements
+      );
+      setTotalItems(data.totalElements);
+      setFilms(filmsData);
+    } catch (err) {
+      console.error("Error searching films:", err);
+    }
+  };
 
   const columns = [
+    {
+      title: "#",
+      dataIndex: "index",
+      key: "index",
+      render: (_text, _record, index) =>
+        (currentPage - 1) * pageSize + index + 1,
+    },
     {
       title: "Tên phim",
       dataIndex: "name",
@@ -54,6 +101,7 @@ const ManageFilms = () => {
       title: "Ngày khởi chiếu",
       dataIndex: "startDay",
       key: "startDay",
+      render: (text) => dayjs(text).format("YYYY-MM-DD"),
     },
     {
       title: "Thời lượng (phút)",
@@ -68,6 +116,7 @@ const ManageFilms = () => {
           <Button type="dashed" onClick={() => handleEdit(record.id)}>
             Chỉnh sửa
           </Button>
+          <Button type="dashed" onClick={() => handleView(record.id)}>Chi tiết</Button>
           <Popconfirm
             title={`Bạn có muốn xóa "${record.name}"?`}
             description="Hành động này không thể hoàn tác!"
@@ -82,13 +131,23 @@ const ManageFilms = () => {
     },
   ];
 
+  const handleView = (id) => {
+    setIsOpenView(true);
+    setIdView(id);
+  };
+
   const changePage = async (page, size) => {
     try {
       const data = await callAPI(
         "get",
-        `${API_FILM.getMovies}?name=&studio=&page=${page - 1}`
+        `${API_FILM.getMovies}?name=${name.trim()}&startDay=&studios=${studio.trim()}&timeAmount=${timeDuration}&page=${page - 1}`
       );
-      const filmsData = updateItems(data.content, pageSize, page, data.totalElements);
+      const filmsData = updateItems(
+        data.content,
+        pageSize,
+        page,
+        data.totalElements
+      );
       setTotalItems(data.totalElements);
       setFilms(filmsData);
     } catch (err) {
@@ -142,16 +201,42 @@ const ManageFilms = () => {
       <div className="auto-container">
         <h5 className="manage-title">Danh sách phim</h5>
         <div>
-          <Search
-            placeholder="Tìm kiếm phim..."
-            allowClear
-            onSearch={() => {}}
-            style={{ width: 200, marginRight: "10px" }}
-          />
-          <Button type="primary" onClick={() => setIsOpenCreate(true)}>
-            <IoMdAddCircle fontSize={16}/>
-            Thêm phim
-          </Button>
+          <Space className="mb-3" wrap>
+            <Input
+              placeholder="Tên phim cần tìm"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              allowClear
+            />
+            <Input
+              placeholder="Hãng phim"
+              value={studio}
+              onChange={(e) => setStudio(e.target.value)}
+              allowClear
+            />
+            <Select
+              placeholder="Thời Lượng Phim"
+              value={timeDuration}
+              onChange={e => setTimeDuration(e)}
+              style={{ width: 180 }}
+              allowClear
+            >
+              <Option value="" default>Thời lượng phim</Option>
+              <Option value="60">Thời lượng dưới 60p</Option>
+              <Option value="90">Thời lượng 60-120p</Option>
+              <Option value="120">Thời lượng trên 120p</Option>
+            </Select>
+            <Button
+              type="primary"
+              icon={<SearchOutlined />}
+              onClick={() => handleSearch()}
+            />
+            <Button icon={<UndoOutlined />} onClick={() => handleReset()} />
+            <Button type="primary" onClick={() => setIsOpenCreate(true)} >
+              <IoMdAddCircle fontSize={16} />
+              Thêm phim
+            </Button>
+          </Space>
         </div>
         <Table
           columns={columns}
@@ -174,6 +259,7 @@ const ManageFilms = () => {
         onUpdate={handleEditFilm}
         id={idEdit}
       /> */}
+      <ViewFilm open={isOpenView} onClose={() => setIsOpenView(false)} id={idView}/>
     </section>
   );
 };

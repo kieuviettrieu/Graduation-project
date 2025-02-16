@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Drawer, Form, Input, Button, message } from "antd";
+import { Drawer, Form, Input, Button, message, Upload } from "antd";
 import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
+import { UploadOutlined } from "@ant-design/icons";
 
 const CreateCinema = ({ open, onClose, onCreate }) => {
   const [form] = Form.useForm();
@@ -9,12 +10,16 @@ const CreateCinema = ({ open, onClose, onCreate }) => {
   const [image, setImage] = useState(null);
   const [imgUrl, setImgUrl] = useState("");
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
-    if (file) {
+  const handleImageChange = (info) => {
+    if (info.file && info.file instanceof File) {
+      const file = info.file;
+      setImage(file);
       const url = URL.createObjectURL(file);
       setImgUrl(url);
+      form.setFieldsValue({ image: file });
+    } else {
+      console.error("File không hợp lệ:", info.file);
+      message.error("Không thể xử lý tệp được tải lên.");
     }
   };
 
@@ -28,11 +33,13 @@ const CreateCinema = ({ open, onClose, onCreate }) => {
       const cinema = {
         name,
         address,
-        phone,
-        imgUrl: imageLink,
+        phoneNumber: phone,
+        image: imageLink,
       };
       onCreate(cinema);
       form.resetFields();
+      setImage(null);
+      setImgUrl('');
       onClose();
     } catch (error) {
       message.error("Đã có lỗi xảy ra!");
@@ -50,11 +57,17 @@ const CreateCinema = ({ open, onClose, onCreate }) => {
     >
       <Form layout="vertical" form={form} onFinish={handleSubmit}>
         <Form.Item
-          name="imgUrl"
+          name="image"
           label="Hình ảnh"
           rules={[{ required: true, message: "Vui lòng chọn hình ảnh" }]}
         >
-          <input type="file" onChange={(e) => handleImageChange(e)} />
+          <Upload
+            beforeUpload={() => false}
+            showUploadList={false}
+            onChange={(e) => handleImageChange(e)}
+          >
+            <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
+          </Upload>
           {imgUrl && <img src={imgUrl} alt="Uploaded" width="300px" />}
         </Form.Item>
 
@@ -76,14 +89,7 @@ const CreateCinema = ({ open, onClose, onCreate }) => {
         <Form.Item
           name="address"
           label="Địa chỉ"
-          rules={[
-            { required: true, message: "Vui lòng nhập địa chỉ" },
-            {
-              pattern:
-                /^[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+(\s[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+)*$/,
-              message: "Địa chỉ không hợp lệ",
-            },
-          ]}
+          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
         >
           <Input placeholder="Nhập địa chỉ" />
         </Form.Item>

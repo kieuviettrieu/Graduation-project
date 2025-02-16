@@ -1,51 +1,78 @@
 import React, { useEffect, useState } from "react";
 import { Drawer, Form, Input, Button, Select, DatePicker, message } from "antd";
 import dayjs from "dayjs";
-import { uploadImageToCloudinary } from "../../../../uploadImage";
-import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
+import { callAPI } from "../../../axios/axiosInstance";
+import { API_CUSTOMER } from "./Constant";
 
 const { Option } = Select;
 
-const EditCustomer = ({ open, onClose, onUpdate, customerData }) => {
+const EditCustomer = ({ open, onClose, onUpdate, id }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(customerData?.image || "");
+  const [customer, setCustomer] = useState(null);
+  const [confirmPassWord, setConfirmPassWord] = useState("");
+  const [isPassWordConfirm, setIsPassWordConfirm] = useState(true);
+  const [passWord, setPassWord] = useState("");
 
   useEffect(() => {
-    if (customerData) {
-      form.setFieldsValue({
-        ...customerData,
-        birthday: customerData.birthday ? dayjs(customerData.birthday) : null,
-      });
-    }
-  }, [customerData, form]);
+    const fetchCustomer = async () => {
+      try {
+        if (!id) return;
+        const data = await callAPI("get", `${API_CUSTOMER.getCustomer}/${id}`);
+        form.setFieldsValue({
+          address: data.address,
+          birthday: dayjs(data.birthday),
+          cardId: data.cardId,
+          email: data.email,
+          fullName: data.fullName,
+          gender: String(data.gender),
+          phoneNumber: data.phoneNumber,
+          username: data.account?.username,
+        });
+        setCustomer(data);
+      } catch (error) {
+        console.error("Error fetching Customer:", error);
+      }
+    };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setImageUrl(url);
+    if (open) {
+      fetchCustomer();
     }
-  };
+  }, [id, open, form]);
 
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const { fullName, birthday, gender, email, phoneNumber, address } = values;
+      const {
+        fullName,
+        birthday,
+        gender,
+        email,
+        phoneNumber,
+        address,
+        password,
+        cardId,
+      } = values;
       const birthdayValue = birthday ? birthday.format("YYYY-MM-DD") : "";
-      const imageLink = image ? await uploadImageToCloudinary(image, Cloud_Name, Upload_Preset) : imageUrl;
+      console.log(password , "password !== '' ")
+      
+      const accountData = (password && password !== '') ? {
+        ...customer.account,
+        password,
+      } : {
+        ...customer.account,
+      };
 
       const updatedCustomer = {
-        ...customerData,
+        ...customer,
         fullName,
         birthday: birthdayValue,
         gender,
         email,
         phoneNumber,
         address,
-        image: imageLink,
+        cardId,
+        account: accountData,
       };
 
       onUpdate(updatedCustomer);
@@ -58,13 +85,13 @@ const EditCustomer = ({ open, onClose, onUpdate, customerData }) => {
   };
 
   return (
-    <Drawer title="Chỉnh sửa khách hàng" width={680} onClose={onClose} open={open}>
+    <Drawer
+      title="Chỉnh sửa khách hàng"
+      width={680}
+      onClose={onClose}
+      open={open}
+    >
       <Form layout="vertical" form={form} onFinish={handleSubmit}>
-        <Form.Item name="image" label="Hình ảnh">
-          <input type="file" onChange={handleImageChange} />
-          {imageUrl && <img src={imageUrl} alt="Uploaded" width="300px" />}
-        </Form.Item>
-
         <Form.Item
           name="fullName"
           label="Họ tên"
@@ -95,9 +122,15 @@ const EditCustomer = ({ open, onClose, onUpdate, customerData }) => {
         <Form.Item
           name="email"
           label="Email"
-          rules={[{ required: true, type: "email", message: "Vui lòng nhập email hợp lệ" }]}
+          rules={[
+            {
+              required: true,
+              type: "email",
+              message: "Vui lòng nhập email hợp lệ",
+            },
+          ]}
         >
-          <Input placeholder="Nhập email" />
+          <Input placeholder="Nhập email" disabled />
         </Form.Item>
 
         <Form.Item
@@ -114,6 +147,57 @@ const EditCustomer = ({ open, onClose, onUpdate, customerData }) => {
           rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
         >
           <Input.TextArea rows={3} placeholder="Nhập địa chỉ" />
+        </Form.Item>
+
+        <Form.Item
+          name="cardId"
+          label="CMND/CCCD"
+          rules={[{ required: true, message: "Vui lòng nhập CMND/CCCD" }]}
+        >
+          <Input placeholder="Nhập CMND/CCCD" disabled />
+        </Form.Item>
+
+        <Form.Item
+          name="username"
+          label="Tên đăng nhập"
+          rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập" }]}
+        >
+          <Input placeholder="Nhập tên đăng nhập" disabled />
+        </Form.Item>
+
+        <Form.Item
+          name="password"
+          label="Mật khẩu"
+          rules={[
+            {
+              pattern:
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+              message:
+                "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt",
+            },
+          ]}
+        >
+          <Input.Password
+            placeholder="Nhập mật khẩu"
+            onChange={(e) => {
+              setPassWord(e.target?.value);
+              setIsPassWordConfirm(e.target?.value === confirmPassWord);
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="confirmPassword"
+          label="Xác nhận mật khẩu"
+          help={!isPassWordConfirm ? "Mật khẩu xác nhận không khớp" : ""}
+        >
+          <Input.Password
+            placeholder="Xác nhận mật khẩu"
+            onChange={(e) => {
+              setIsPassWordConfirm(e.target.value === passWord);
+              setConfirmPassWord(e.target.value);
+            }}
+          />
         </Form.Item>
 
         <Form.Item>

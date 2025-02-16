@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BiSolidUser } from "react-icons/bi";
 import "../Content/index.css";
+import { logout } from "../../../axios/axiosInstance";
 
 const LoginRegisterButton = () => {
   const [button, setButton] = useState("");
@@ -48,7 +49,7 @@ const LoginRegisterButton = () => {
                 </a>
               </li>
               <li>
-                <a className="dropdown-item" href="#">
+                <a className="dropdown-item" href="#" onClick={() => logout()}>
                   Đăng xuất
                 </a>
               </li>
