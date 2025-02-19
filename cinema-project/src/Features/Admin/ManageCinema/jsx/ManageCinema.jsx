@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Space, Table, Button, message, Image } from "antd";
+import { Space, Table, Button, message, Image, Popconfirm } from "antd";
 import { IoMdAddCircle } from "react-icons/io";
 import useCommonFunctions from "../../../Common/CommonFunction";
 import { callAPI } from "../../../axios/axiosInstance";
@@ -17,6 +17,7 @@ const ManageCinema = () => {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
   const [isRender, setIsRender] = useState(false);
+  const [nameSearch, setNameSearch] = useState('');
 
   const columns = [
     {
@@ -48,9 +49,15 @@ const ManageCinema = () => {
           <Button type="dashed" onClick={() => handleEdit(record.id)}>
             Chỉnh sửa
           </Button>
-          <Button type="primary" danger onClick={() => handleDelete(record.id)}>
-            Xoá
-          </Button>
+          <Popconfirm
+            title={`Bạn có muốn xóa rạp"${record.name}"?`}
+            description="Hành động này không thể hoàn tác!"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <Button type="primary">Xoá</Button>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -79,7 +86,7 @@ const ManageCinema = () => {
 
   const changePage = async (page, size) => {
     try {
-      const data = await callAPI("get", `${API_CINEMA.showingCinema}?page=${page - 1}`);
+      const data = await callAPI("get", `${API_CINEMA.showingCinema}?name=${nameSearch.trim()}&page=${page - 1}`);
       const cinemaData = updateItems(data.content, size, page, data.totalElements);
       setTotalItems(data.totalElements);
       setCinemas(cinemaData);
@@ -103,7 +110,7 @@ const ManageCinema = () => {
 
   const handleEditCinema = async (values) => {
     try {
-      await callAPI("put", API_CINEMA.updateCinema, values);
+      await callAPI("put", API_CINEMA.updateCinema + "/" + idEdit, values);
       setIsRender(!isRender);
       message.success("Rạp chiếu phim đã được cập nhật thành công!");
     } catch (err) {
@@ -130,6 +137,7 @@ const ManageCinema = () => {
   };
 
   const handleSearch = async (name) => {
+      setNameSearch(name);
       setCurrentPage(1);
       try {
         const data = await callAPI("get", `${API_CINEMA.showingCinema}?name=${name.trim()}&page=0`
@@ -155,7 +163,7 @@ const ManageCinema = () => {
         <Search
             placeholder="tên rạp..."
             allowClear
-            onSearch={(e) => {}}
+            onSearch={(e) => handleSearch(e)}
             style={{
               width: 200,
               marginRight: "10px",

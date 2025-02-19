@@ -2,22 +2,26 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginAction } from "../../../../Redux/Actions";
 import { callAPI } from "../../../axios/axiosInstance";
-import { API_COMMON } from "../../Constant";
+import { API_COMMON, ROUTER_PATHS } from "../../Constant";
 import { type } from "@testing-library/user-event/dist/type";
+import { message } from "antd";
+import useCommonFunctions from "../../CommonFunction";
 
 const LoginPage = () => {
+  const { redirectToPath } = useCommonFunctions();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [isErrorLogin, setIsErrorLogin] = useState(false);
   const dispatch = useDispatch();
 
   const handleLogin = async () => {
     try {
       const response = await callAPI("post", API_COMMON.public.login, {
-        username: email,
-        password: password,
+        username: email.trim(),
+        password: password.trim(),
       });
 
+      setIsErrorLogin(false);
       if (response.token) {
         localStorage.setItem("token", response.token);
       }
@@ -28,9 +32,13 @@ const LoginPage = () => {
         roles,
         type,
       };
+      message.success("Đăng nhập thành công.");
+      redirectToPath(ROUTER_PATHS.HOME);
       dispatch(loginAction(user));
       return response;
     } catch (error) {
+      message.error("Thông tin đăng nhập không chính xác.");
+      setIsErrorLogin(true);
       console.error("Login failed", error);
     }
   };
@@ -97,6 +105,10 @@ const LoginPage = () => {
                         style={{ fontSize: "14px" }}
                       />
                     </div>
+
+                    {
+                      isErrorLogin && <div style={{color: "red"}}> Tài khoản hoặc mật khẩu không chính xác!</div>
+                    }
 
                     <div className="d-grid my-4">
                       <button className="btn btn-dark rounded-0" type="submit">

@@ -56,6 +56,7 @@ const ManageFilms = () => {
     setName("");
     setStudio("");
     setTimeDuration("");
+    setCurrentPage(1);
     setIsRender(!isRender);
   };
 

@@ -48,25 +48,6 @@ export const callApi = async (url, method = "GET", body = null) => {
   }
 };
 
-// H�m g?i API GET (d�ng cho c�c y�u c?u GET)
-// export const getMoviesOnShowing = async () => {
-//   return await callApi("/onShowing", "GET");
-// };
-
-// H�m g?i API POST (d�ng cho c�c y�u c?u POST)
-// export const createMovie = async (movieData) => {
-//   return await callApi("/create", "POST", movieData);
-// };
-
-// H�m g?i API PUT (d�ng cho c�c y�u c?u PUT)
-// export const updateMovie = async (movieId, movieData) => {
-//   return await callApi(`/update/${movieId}`, "PUT", movieData);
-// };
-
-// H�m g?i API DELETE (d�ng cho c�c y�u c?u DELETE)
-// export const deleteMovie = async (movieId) => {
-//   return await callApi(`/delete/${movieId}`, "DELETE");
-// };
 
 export const ROUTER_PATHS = {
   //HOME

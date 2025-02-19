@@ -20,6 +20,7 @@ const ManageEmployees = () => {
   const [isOpenView, setIsOpenView] = useState(false);
   const [idView, setIdView] = useState(null);
   const [isRender, setIsRender] = useState(false);
+  const [nameSearch, setNameSearch] = useState('');
 
   const columns = [
     {
@@ -91,16 +92,16 @@ const ManageEmployees = () => {
     fetchEmployees();
   }, [isRender, pageSize]);
 
-  const handleView = (id) => {
+  function handleView(id) {
     setIsOpenView(true);
     setIdView(id);
-  };
+  }
 
   const changePage = async (page, size) => {
     try {
       const data = await callAPI(
         "get",
-        `${API_EMPLOYEE.showingEmployees}?name=&positionId=-1&page=${page - 1}`
+        `${API_EMPLOYEE.showingEmployees}?name=${nameSearch.trim()}&positionId=-1&page=${page - 1}`
       );
       const employeesData = updateItems(
         data.content,
@@ -159,6 +160,28 @@ const ManageEmployees = () => {
     }
   };
 
+  const handleSearch = async (name) => {
+    setNameSearch(name);
+        setCurrentPage(1);
+        try {
+          const data = await callAPI(
+            "get",
+            `${API_EMPLOYEE.showingEmployees}?name=${name}&positionId=-1&page=0`
+          );
+
+          const employeeData = updateItems(
+            data.content,
+            pageSize,
+            1,
+            data.totalElements
+          );
+          setTotalItems(data.totalElements);
+          setEmployees(employeeData);
+        } catch (err) {
+          console.error("Error searching films:", err);
+        }
+      };
+
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
@@ -167,7 +190,7 @@ const ManageEmployees = () => {
           <Search
             placeholder="tên nhân viên..."
             allowClear
-            onSearch={() => {}}
+            onSearch={(e) => handleSearch(e)}
             style={{
               width: 200,
               marginRight: "10px",

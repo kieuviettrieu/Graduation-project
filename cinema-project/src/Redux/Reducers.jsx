@@ -1,9 +1,8 @@
-// reducers.js
 import { LOGIN, LOGOUT } from './Actions';
 
 const initialState = {
   isAuthenticated: false,
-  user: null, // Thông tin người dùng bao gồm: username, email, role, profilePicture
+  user: null, 
 };
 
 const authReducer = (state = initialState, action) => {

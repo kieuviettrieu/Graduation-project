@@ -4,6 +4,7 @@ import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
 import { API_EMPLOYEE } from "../../ManageEmployees/jsx/Constant";
 import { callAPI } from "../../../axios/axiosInstance";
+import { API_CINEMA } from "./Constant";
 
 const EditCinema = ({ open, onClose, onUpdate, id }) => {
   const [form] = Form.useForm();
@@ -18,13 +19,13 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         if (!id) return;
         const cinema = await callAPI(
           "get",
-          `${API_EMPLOYEE.getEmployee}/${id}`
+          `${API_CINEMA.getCinema}/${id}`
         );
         form.setFieldsValue({
           name: cinema?.name,
           address: cinema?.address,
-          phone: cinema?.phone,
-          imgUrl: cinema?.imgUrl,
+          phoneNumber: cinema?.phoneNumber,
+          imgUrl: cinema?.image,
         });
         setCinema(cinema);
         setImgUrl(cinema?.image);
@@ -49,7 +50,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
   const handleSubmit = async (values) => {
     setLoading(true);
     try {
-      const { name, address, phone } = values;
+      const { name, address, phoneNumber } = values;
       const imageLink = image
         ? await uploadImageToCloudinary(image, Cloud_Name, Upload_Preset)
         : imgUrl;
@@ -57,7 +58,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         ...cinema,
         name,
         address,
-        phone,
+        phoneNumber,
         imgUrl: imageLink,
       };
       onUpdate(updatedCinema);
@@ -83,7 +84,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
           rules={[{ required: true, message: "Vui lòng chọn hình ảnh" }]}
         >
           <input type="file" onChange={handleImageChange} />
-          {imgUrl && <img src={imgUrl} alt="Uploaded" width="300px" />}
+          {imgUrl && <img src={imgUrl} alt="Uploaded" width="300px" style={{marginTop: "15px"}} />}
         </Form.Item>
 
         <Form.Item
@@ -106,18 +107,13 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
           label="Địa chỉ"
           rules={[
             { required: true, message: "Vui lòng nhập địa chỉ" },
-            {
-              pattern:
-                /^[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+(\s[a-zA-Zàáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]+)*$/,
-              message: "Địa chỉ không hợp lệ",
-            },
           ]}
         >
           <Input placeholder="Nhập địa chỉ" />
         </Form.Item>
 
         <Form.Item
-          name="phone"
+          name="phoneNumber"
           label="Số điện thoại"
           rules={[
             { required: true, message: "Vui lòng nhập số điện thoại" },

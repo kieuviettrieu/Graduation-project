@@ -18,6 +18,7 @@ const ManageCustomers = () => {
   const [isOpenView, setIsOpenView] = useState(false);
   const [idView, setIdView] = useState(null);
   const [isRender, setIsRender] = useState(false);
+  const [nameSearch, setNameSearch] = useState('');
 
   const columns = [
     {
@@ -109,7 +110,7 @@ const ManageCustomers = () => {
 
   const changePage = async (page, size) => {
     try {
-      const data = await callAPI("get", `${API_CUSTOMER.showingCustomers}?search=&page=${page - 1}`);
+      const data = await callAPI("get", `${API_CUSTOMER.showingCustomers}?search=${nameSearch.trim()}&page=${page - 1}`);
       const customersData = updateItems(data.content, pageSize, page, data.totalElements);
       setTotalItems(data.totalElements);
       setCustomers(customersData);
@@ -154,12 +155,31 @@ const ManageCustomers = () => {
     }
   };
 
+  const handleSearch = async (name) => {
+      setNameSearch(name);
+          setCurrentPage(1);
+          try {
+            const data = await callAPI("get", `${API_CUSTOMER.showingCustomers}?search=${name.trim()}&page=0`);
+            const customerData = updateItems(
+              data.content,
+              pageSize,
+              1,
+              data.totalElements
+            );
+            setTotalItems(data.totalElements);
+            setCustomers(customerData);
+          } catch (err) {
+            console.error("Error searching films:", err);
+          }
+        };
+  
+
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
         <h5 className="manage-title">Danh sách khách hàng</h5>
         <div>
-          <Search placeholder="Tìm kiếm khách hàng..." allowClear onSearch={() => {}} style={{ width: 200, marginRight: "10px" }} />
+          <Search placeholder="Tìm kiếm khách hàng..." allowClear onSearch={(e) => handleSearch(e)} style={{ width: 200, marginRight: "10px" }} />
         </div>
         <Table
           columns={columns}

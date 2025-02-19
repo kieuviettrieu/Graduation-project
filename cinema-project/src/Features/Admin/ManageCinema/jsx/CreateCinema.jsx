@@ -68,7 +68,7 @@ const CreateCinema = ({ open, onClose, onCreate }) => {
           >
             <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
           </Upload>
-          {imgUrl && <img src={imgUrl} alt="Uploaded" width="300px" />}
+          {imgUrl && <img src={imgUrl} alt="Uploaded" width="300px" style={{marginLeft: "15px"}}/>}
         </Form.Item>
 
         <Form.Item

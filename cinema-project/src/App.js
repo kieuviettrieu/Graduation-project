@@ -9,7 +9,7 @@ import { Statistical } from "./Features/Admin/Statistical/jsx/Statistical";
 import ManageEmployees from "./Features/Admin/ManageEmployees/jsx/ManageEmployees";
 import ManageCustomers from "./Features/Admin/ManageCustomers/jsx/ManageCustomers";
 import ManageFilms from "./Features/Admin/ManageFilms/jsx/ManageFilms";
-import { ManageTickets } from "./Features/Admin/ManageTickets/jsx/ManageTickets";
+import ManageTickets from "./Features/Admin/ManageTickets/jsx/ManageTickets";
 import LoginPage from "./Features/Common/LoginResgister/jsx/LoginPage";
 import PrivateRoute from "./Features/Common/PrivateRoute";
 import { Schedule } from './Features/Schedule/jsx/Schedule';
