@@ -35,7 +35,8 @@ const useCommonFunctions = () => {
 
   const checkPageLogin = () => {
     const isLogin = isAuthenticated || user;
-    if (isLogin === false) {
+    console.log(isLogin, "isLogin");
+    if (!isLogin) {
       redirectToPath(ROUTER_PATHS.LOGIN);
     } 
   }

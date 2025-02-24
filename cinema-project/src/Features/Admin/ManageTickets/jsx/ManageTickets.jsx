@@ -156,7 +156,7 @@ const ManageTickets = () => {
         <h5 className="manage-title">Danh sách vé đã bán</h5>
         <div>
           <Search
-            placeholder="Tìm kiếm vé..."
+            placeholder="Tìm theo tên, mã khách hàng..."
             allowClear
             onSearch={(e) => handleSearch(e)}
             style={{ width: 200, marginRight: "10px" }}

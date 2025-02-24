@@ -9,11 +9,13 @@ const PrivateRoute = ({ requiredRoles = [] }) => {
     return <Outlet />;
 }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !user) {
     return <Navigate to="/login" />;
   }
+  console.log(user, "úe")
+  console.log(user?.roles.includes(requiredRoles[0]), "user?.roles.includes(requiredRoles[0])")
 
-  if (requiredRoles.length > 0 && !requiredRoles.includes(user?.roles)) {
+  if (requiredRoles.length > 0 && !user?.roles.includes(requiredRoles[0])) {
     return <Navigate to="/unauthorized" />;
   }
 

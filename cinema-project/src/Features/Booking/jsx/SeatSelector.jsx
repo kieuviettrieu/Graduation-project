@@ -23,7 +23,7 @@ import { saveTickeInfo } from "../../../Redux/Actions";
 const SeatSelector = ({ showTimeId }) => {
   const dispatch = useDispatch();
   // const ticketInfo = useSelector((state) => state.auth.ticketInfo);
-  const { redirectToPath } = useCommonFunctions();
+  const { redirectToPath, checkPageLogin } = useCommonFunctions();
   const zoomLevelInit = getZoomBy(820);
   const isMobileInit = window.matchMedia("(max-width: 1022px)").matches;
   const [showTime, setShowTime] = useState(null);
@@ -128,6 +128,7 @@ const SeatSelector = ({ showTimeId }) => {
   };
 
   useEffect(() => {
+    checkPageLogin();
     const fetchData = async () => {
       try {
         const showTimeData = await callAPI(

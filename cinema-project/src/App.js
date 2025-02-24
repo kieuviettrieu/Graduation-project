@@ -45,10 +45,11 @@ function App() {
         </Route>
 
         {/* Admin navigate */}
-        <Route element={<PrivateRoute requiredRoles={[ACCOUNT_ROLE_STR.ADMIN_ROLE]} />}>
+        <Route element={<PrivateRoute requiredRoles={[ACCOUNT_ROLE_STR.SUPER_ADMIN]} />}>
           <Route path="/dashboard/" element={<AdminPage />}>
-            <Route index element={<Statistical />} />
-            <Route path="manage/employees" element={<ManageEmployees />} />
+            <Route index element={<ManageEmployees />} />
+            <Route index path="manage/employees" element={<ManageEmployees />} />
+            <Route path="statistical" element={<Statistical />} />
             <Route path="manage/customers" element={<ManageCustomers />} />
             <Route path="manage/films" element={<ManageFilms />} />
             <Route path="manage/tickets" element={<ManageTickets />} />
