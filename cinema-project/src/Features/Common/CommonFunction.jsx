@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { ROUTER_PATHS } from "./Constant";
+import { useSelector } from 'react-redux';
 
 const useCommonFunctions = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const redirectToPath = (path) => {
@@ -30,9 +33,17 @@ const useCommonFunctions = () => {
     return fullData;
   };
 
+  const checkPageLogin = () => {
+    const isLogin = isAuthenticated || user;
+    if (isLogin === false) {
+      redirectToPath(ROUTER_PATHS.LOGIN);
+    } 
+  }
+
   return {
     redirectToPath,
     updateItems,
+    checkPageLogin,
   };
 };
 

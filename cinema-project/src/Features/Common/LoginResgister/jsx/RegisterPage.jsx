@@ -2,7 +2,6 @@ import React from "react";
 
 const RegisterPage = () => {
   const handleRegister = () => {
-    console.log("Đăng ký tài khoản");
     // Thêm logic xử lý đăng ký tại đây
   };
 

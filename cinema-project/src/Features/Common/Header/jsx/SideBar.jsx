@@ -77,7 +77,6 @@ const SideBar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
-    console.log(collapsed, "!collapsed")
   };
   return (
     <div

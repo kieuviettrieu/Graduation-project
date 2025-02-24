@@ -1,8 +1,9 @@
-import { LOGIN, LOGOUT } from './Actions';
+import { LOGIN, LOGOUT, SAVETICKET } from './Actions';
 
 const initialState = {
   isAuthenticated: false,
   user: null, 
+  ticketInfo: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -18,6 +19,12 @@ const authReducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: false,
         user: null,
+      };
+    case SAVETICKET:
+      return {
+        ...state,
+        isAuthenticated: false,
+        ticketInfo: action.payload,
       };
     default:
       return state;

@@ -144,6 +144,12 @@ label {
   margin-bottom: 10px;
 }
 
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .nav-pills > li {
   float: left;
 }

@@ -1,0 +1,11 @@
+.confirm-button {
+    max-width: 100%;
+    height: 40px;
+    border-radius: 25px;
+    margin: 0px;
+    background: rgb(252, 27, 27);
+    text-align: center;
+    top: 45%;
+    color: rgb(255, 255, 255);
+    padding: 21px;
+}

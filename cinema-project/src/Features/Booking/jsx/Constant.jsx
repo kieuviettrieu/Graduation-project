@@ -4,8 +4,8 @@ export const AvailableSeatType = {
   };
 
   export const SeatType = {
-    Sold: 0,
-    Normal: 1,
+    Normal: 0,
+    Sold: 1,
     Double: 2,
     Vip: 3,
     Selected: 4,

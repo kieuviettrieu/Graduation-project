@@ -19,6 +19,8 @@ import RegisterForm from './Features/Common/LoginResgister/jsx/RegisterPage';
 import Film from './Features/Film/jsx/Film';
 import UserProfile from './Features/Common/UserProfile/jsx/UserProfile';
 import ManageCinema from './Features/Admin/ManageCinema/jsx/ManageCinema';
+import { ACCOUNT_ROLE_STR } from './Features/Common/Constant';
+import ConfirmTicket from './Features/Booking/jsx/ConfirmTicket';
 
 function App() {
   return (
@@ -38,11 +40,12 @@ function App() {
             <Route path="event" element={<Event />} />
             <Route path="user/profile" element={<UserProfile />} />
             <Route path="booking/:timeId" element={<Booking />} />
+            <Route path="booking/confirm" element={<ConfirmTicket />} />
           </Route>
         </Route>
 
         {/* Admin navigate */}
-        <Route element={<PrivateRoute requiredRoles={[]} />}>
+        <Route element={<PrivateRoute requiredRoles={[ACCOUNT_ROLE_STR.ADMIN_ROLE]} />}>
           <Route path="/dashboard/" element={<AdminPage />}>
             <Route index element={<Statistical />} />
             <Route path="manage/employees" element={<ManageEmployees />} />

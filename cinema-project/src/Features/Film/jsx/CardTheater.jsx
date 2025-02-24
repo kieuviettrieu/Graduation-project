@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa6";
 import PropTypes from "prop-types";
 import "../Contents/CardTheater.css";
-import { generateUrl, ROUTER_PATHS } from "../../Common/Constant";
-import { useNavigate } from 'react-router-dom';
+import { API_COMMON, generateUrl, ROUTER_PATHS } from "../../Common/Constant";
+import { useNavigate } from "react-router-dom";
+import { callAPI } from "../../axios/axiosInstance";
 
-const CardTheater = ({ cinemas, tabs }) => {
+const CardTheater = ({ cinemas, tabs, filmId }) => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [showTimes, setShowTimes] = useState([]);
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || "");
   const navigate = useNavigate();
 
@@ -14,7 +16,41 @@ const CardTheater = ({ cinemas, tabs }) => {
     setActiveTab(tabId);
   };
 
-  const handleToggle = (index) => {
+  const formatShowTimes = (data) => {
+    const formattedData = {};
+  
+    data.forEach((show, index) => {
+      const dateObj = new Date(show.date);
+      const formattedDate = dateObj.toLocaleDateString("en-GB");
+  
+      if (!formattedData[formattedDate]) {
+        formattedData[formattedDate] = { date: formattedDate, times: [] };
+      }
+  
+      formattedData[formattedDate].times.push({
+        id: show.id,
+        time: show.startTime.split(":").slice(0, 2).join(":") 
+      });
+    });
+
+    Object.values(formattedData).forEach((entry) => {
+      entry.times.sort((a, b) => {
+        return a.time.localeCompare(b.time); 
+      });
+    });
+  
+    return Object.values(formattedData) ;
+  }
+
+  const handleToggle = async (cinemaId, index) => {
+    const showTimeData = await callAPI(
+      "get",
+      generateUrl(API_COMMON.public.getShowTimeByMovieAndCinema, {
+        idMovie: filmId,
+        idCinema: cinemaId,
+      })
+    );
+    setShowTimes(formatShowTimes(showTimeData));
     setActiveIndex(activeIndex === index ? null : index);
   };
 
@@ -54,13 +90,12 @@ const CardTheater = ({ cinemas, tabs }) => {
             >
               <div
                 className={`acc-btn ${activeIndex === index ? "active" : ""}`}
-                onClick={() => handleToggle(index)}
               >
-                <div className="icon-outer">
+                <div className="icon-outer" onClick={() => handleToggle(cinema?.id, index)}>
                   {/* <span className="icon icon-plus fa fa-plus"></span> */}
                   {/* <span className="icon icon-minus fa fa-minus"></span> */}
-                  <FaPlus className="icon icon-plus"/>
-                  <FaMinus className="icon icon-minus"/>
+                  <FaPlus className="icon icon-plus" />
+                  <FaMinus className="icon icon-minus" />
                 </div>
                 {cinema.name}
                 <br />
@@ -72,23 +107,24 @@ const CardTheater = ({ cinemas, tabs }) => {
                 className="acc-content"
                 style={{ display: activeIndex === index ? "block" : "none" }}
               >
-                {cinema.dates.map((date, i) => (
-                  <div className="content" key={`${date.date}-${i}`}>
-                    <span className="time date">{date.date}</span>
-                    {date.times.map((time) => (
-                      <a
-                        href={generateUrl(ROUTER_PATHS.BOOKING, {
-                            timeId: time?.id,
+                {showTimes &&
+                  showTimes.map((date, i) => (
+                    <div className="content" key={`${date.date}-${i}`}>
+                      <span className="time date" style={{backgroundColor: "#444444"}}>{date.date}</span>
+                      {date.times.map((time) => (
+                        <a
+                          href={generateUrl(ROUTER_PATHS.BOOKING, {
+                            timeId: time?.id
                           })}
-                        className="time-link"
-                        key={time.id}
-                      >
-                        <span className="time item">{time.time}</span>
-                      </a>
-                    ))}
-                    {i < cinema.dates.length - 1 && <hr />}
-                  </div>
-                ))}
+                          className="time-link"
+                          key={time.id}
+                        >
+                          <span className="time item">{time.time}</span>
+                        </a>
+                      ))}
+                      {i < showTimes.length - 1 && <hr />}
+                    </div>
+                  ))}
               </div>
             </li>
           ))}
@@ -96,27 +132,6 @@ const CardTheater = ({ cinemas, tabs }) => {
       </div>
     </div>
   );
-};
-
-CardTheater.propTypes = {
-  cinemas: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      filmName: PropTypes.string.isRequired,
-      dates: PropTypes.arrayOf(
-        PropTypes.shape({
-          date: PropTypes.string.isRequired,
-          times: PropTypes.arrayOf(
-            PropTypes.shape({
-              id: PropTypes.string.isRequired,
-              time: PropTypes.string.isRequired,
-            })
-          ).isRequired,
-        })
-      ).isRequired,
-    })
-  ).isRequired,
 };
 
 export default CardTheater;

@@ -20,18 +20,13 @@ export function SideBar(props) {
   // };
 
   const handleNavbarMobileToggle = () => {
-    console.log("nav", "nav");
     const nav = document.getElementById("navbar")?.classList;
-    console.log(nav, "nav");
     const navToggle = document.getElementById("nav-toggle")?.classList;
     if (nav?.contains("navbar-mobile")) {
       nav.remove("navbar-mobile");
-      console.log("A");
       navToggle?.replace("bi-x", "bi-list");
     } else {
       nav?.add("navbar-mobile");
-      console.log("B");
-
       navToggle?.replace("bi-list", "bi-x");
     }
   };

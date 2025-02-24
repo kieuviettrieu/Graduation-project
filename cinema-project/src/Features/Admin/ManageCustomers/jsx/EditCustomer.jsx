@@ -54,7 +54,6 @@ const EditCustomer = ({ open, onClose, onUpdate, id }) => {
         cardId,
       } = values;
       const birthdayValue = birthday ? birthday.format("YYYY-MM-DD") : "";
-      console.log(password , "password !== '' ")
       
       const accountData = (password && password !== '') ? {
         ...customer.account,

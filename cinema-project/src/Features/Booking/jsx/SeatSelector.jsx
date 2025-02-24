@@ -5,19 +5,155 @@ import vipchair from "../../../Media/img/vipchair.png";
 import soldchair from "../../../Media/img/soldchair.png";
 import selectedchair from "../../../Media/img/selectedchair.png";
 import screen from "../../../Media/img/screen.png";
-import { AvailableSeatType } from "./Constant";
+import { useDispatch, useSelector } from "react-redux";
+import { SeatType } from "./Constant";
 import "../Contents/SeatSelector.css";
-import { getZoomBy, ROUTER_PATHS } from "../../Common/Constant";
+import {
+  API_COMMON,
+  formatDateTime,
+  generateUrl,
+  getZoomBy,
+  ROUTER_PATHS,
+} from "../../Common/Constant";
 import useCommonFunctions from "../../Common/CommonFunction";
+import { callAPI } from "../../axios/axiosInstance";
+import "../Contents/Booking.css";
+import { saveTickeInfo } from "../../../Redux/Actions";
 
-const SeatSelector = ({ seats }) => {
+const SeatSelector = ({ showTimeId }) => {
+  const dispatch = useDispatch();
+  // const ticketInfo = useSelector((state) => state.auth.ticketInfo);
   const { redirectToPath } = useCommonFunctions();
   const zoomLevelInit = getZoomBy(820);
   const isMobileInit = window.matchMedia("(max-width: 1022px)").matches;
+  const [showTime, setShowTime] = useState(null);
+  const [room, setRoom] = useState(null);
+  const [ticKets, setTickets] = useState([]);
+  const [selecteds, setSelecteds] = useState([]);
   const [zoomLevel, setZoomLevel] = useState(zoomLevelInit);
   const [isMobile, setIsMobile] = useState(isMobileInit);
 
+  const convertTickets = (arr) => {
+    const groupedBookings = Object.values(
+      arr.reduce((acc, booking) => {
+        if (!booking.chairRoom || !booking.chairRoom.chair) return acc;
+
+        const chairName = booking.chairRoom.chair.name;
+        const groupKey = chairName.charAt(0);
+
+        if (!acc[groupKey]) {
+          acc[groupKey] = [];
+        }
+
+        acc[groupKey].push({
+          id: booking.id,
+          price: booking.price,
+          bookDateTime: booking.bookDateTime,
+          status: booking.status,
+          isDelete: booking.isDelete,
+          customer: booking.customer,
+          chairRoom: booking.chairRoom,
+        });
+
+        return acc;
+      }, {})
+    );
+    return groupedBookings;
+  };
+
+  const toggleIdInChair = (id) => {
+    setSelecteds((prevSelecteds) =>
+      prevSelecteds.includes(id)
+        ? prevSelecteds.filter((item) => item !== id)
+        : [...prevSelecteds, id]
+    );
+  };
+
   useEffect(() => {
+    const ticketData = ticKets.map((subArray) =>
+      subArray.map((item) => ({
+        ...item,
+        status: selecteds.includes(item.id) ? SeatType.Selected : item?.status === SeatType.Selected ? 0 : item?.status,
+      }))
+    )
+    setTickets(ticketData);
+  }, [selecteds]);
+
+  const getTotalCost = (arr) => {
+    return arr
+      ?.flat()
+      .reduce(
+        (total, item) => (item.status === 4 ? total + item.price : total),
+        0
+      );
+  };
+
+  const getChairSelected = () => {
+    const arr = ticKets?.flat();
+    const result = arr
+      .filter((item) => item?.status === SeatType.Selected)
+      .map((item) => ({
+        name: item?.chairRoom?.chair?.name,
+        price: item?.price,
+        id: item?.id,
+      }));
+    return result;
+  };
+
+  const getChairSelectedStr = () => {
+    const arr = ticKets?.flat();
+    const result = arr
+      .filter((item) => item?.status === SeatType.Selected)
+      .map((item) => item?.chairRoom?.chair?.name)
+      .join(", ");
+    return result;
+  };
+
+  const switchCaseChair = (chairType, id) => {
+    if (selecteds.includes(id)) {
+      return selectedchair;
+    }
+    switch (chairType) {
+      case SeatType.Sold:
+        return soldchair;
+      case SeatType.Double:
+        return doublechair;
+      case SeatType.Vip:
+        return vipchair;
+      case SeatType.Selected:
+        return selectedchair;
+      default:
+        return chair;
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const showTimeData = await callAPI(
+          "get",
+          generateUrl(API_COMMON.public.getShowTime, { id: showTimeId })
+        );
+        const roomData = await callAPI(
+          "get",
+          generateUrl(API_COMMON.public.getRoom, { idShowTime: showTimeId })
+        );
+        const ticketData = await callAPI(
+          "get",
+          generateUrl(API_COMMON.public.getTicketByRoomAndShowTime, {
+            idRoom: roomData?.id,
+            idShowTime: showTimeId,
+          })
+        );
+        setShowTime(showTimeData);
+        setRoom(roomData);
+        setTickets(convertTickets(ticketData));
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+      }
+    };
+
+    fetchData();
     const handleResize = () => {
       const zoom = getZoomBy(820);
       setIsMobile(window.matchMedia("(max-width: 1022px)").matches);
@@ -31,11 +167,19 @@ const SeatSelector = ({ seats }) => {
   }, []);
 
   const handleNextStep = (e) => {
-    const isLogin = false;
-    if (isLogin === true) {
-    } else {
-      redirectToPath(ROUTER_PATHS.REGISTER);
-    }
+    const ticketInfo = {
+      movie: {
+        title: showTime?.movie?.name,
+        image: showTime?.movie?.image,
+      },
+      cinema: room?.cinema?.name,
+      room: room?.name,
+      showtime: formatDateTime(showTime?.date, showTime?.startTime),
+      seats: getChairSelected(),
+      showTimeId: showTime?.id,
+    };
+    dispatch(saveTickeInfo({ infoConfirm: ticketInfo, selecteds: selecteds }));
+    redirectToPath(ROUTER_PATHS.BOOKING_CONFIRM);
   };
 
   const notes = [
@@ -47,8 +191,7 @@ const SeatSelector = ({ seats }) => {
   ];
 
   const handleSeatClick = (seat) => {
-    alert(`You selected seat ${seat.label}`);
-    // Thêm logic để xử lý khi chọn ghế ở đây
+    toggleIdInChair(seat?.id);
   };
 
   return (
@@ -71,48 +214,54 @@ const SeatSelector = ({ seats }) => {
           <img src={screen} alt="movie" />
         </div>
 
-        {seats.map((row, rowIndex) => (
-          <div
-            className="clearfix row"
-            key={rowIndex}
-            style={{
-              position: "relative",
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-            }}
-          >
-            {row.map((seat, seatIndex) => (
-              <p
-                key={seatIndex}
-                data-row={seat.row}
-                data-index={seat.index}
-                data-type={seat.available ? "True" : "False"}
-                className="chair"
-                style={{
-                  padding: "0px",
-                  margin: "3px",
-                  width: "35px",
-                  height: "35px",
-                  background: `${
-                    seat?.available == AvailableSeatType.UnAvailable
-                      ? "transparent"
-                      : `url(${chair})`
-                  }`,
-                  backgroundSize: "contain",
-                  color: "#333",
-                  textAlign: "center",
-                  fontSize: "xx-small",
-                  lineHeight: "35px",
-                  cursor: seat.available ? "pointer" : "default",
-                }}
-                onClick={() => seat.available && handleSeatClick(seat)}
-              >
-                {seat.label}
-              </p>
-            ))}
-          </div>
-        ))}
+        {ticKets &&
+          ticKets.map((row, rowIndex) => (
+            <div
+              className="clearfix row"
+              key={rowIndex}
+              style={{
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              {row.map((seat, seatIndex) => (
+                <p
+                  key={seatIndex}
+                  data-row={seat?.id}
+                  data-index={seat?.id}
+                  // data-type={seat.available ? "True" : "False"}
+                  className="chair"
+                  style={{
+                    padding: "0px",
+                    margin: "3px",
+                    width: "35px",
+                    height: "35px",
+                    background: `${`url(${
+                      selecteds.includes(seat?.id)
+                        ? selectedchair
+                        : switchCaseChair(seat?.status, seat?.id)
+                    }) 0% 0% / contain`}`,
+                    backgroundSize: "contain",
+                    color: "#333",
+                    textAlign: "center",
+                    fontSize: "xx-small",
+                    lineHeight: "35px",
+                    cursor:
+                      seat?.status == SeatType.Sold ? "not-allowed" : "pointer",
+                    userSelect:
+                      seat?.status == SeatType.Sold ? "none" : "default",
+                  }}
+                  onClick={() =>
+                    seat?.status != SeatType.Sold && handleSeatClick(seat)
+                  }
+                >
+                  {seat?.chairRoom?.chair?.name}
+                </p>
+              ))}
+            </div>
+          ))}
       </div>
       <div className="note-color">
         {notes.map((note, index) => (
@@ -132,50 +281,32 @@ const SeatSelector = ({ seats }) => {
       {!isMobile ? (
         <div className="col-lg-12 book-content">
           <div>
-            <img
-              src="http://riocinemas.vn/Areas/Admin/Content/Fileuploads/images/poster web/T12/Chị Dâu.jpg"
-              alt="Poster CHỊ DÂU"
-            />
+            <img src={showTime?.movie?.image} alt="Poster movie" />
           </div>
           <div>
             <ul>
               <li style={{ padding: "5px 0" }}>
-                <b>Phim:</b> CHỊ DÂU
+                <b>Phim:</b> {showTime?.movie?.name}
               </li>
               <li style={{ padding: "5px 0" }}>
-                <b>Rạp:</b> RIO Liên Chiểu Đà Nẵng
+                <b>Rạp:</b> {room?.cinema?.name}
               </li>
               <li style={{ padding: "5px 0" }}>
-                <b>Phòng:</b> 04
+                <b>Phòng:</b> {room?.name}
               </li>
               <li style={{ padding: "5px 0" }}>
-                <b>Suất:</b> 16:25 15/01/2025
-              </li>
-              <li style={{ padding: "5px 0" }}>
-                <b>Thể loại:</b> 2D
+                <b>Suất:</b>{" "}
+                {formatDateTime(showTime?.date, showTime?.startTime)}
               </li>
             </ul>
           </div>
           <div>
             <ul>
               <li style={{ padding: "5px 0" }}>
-                <b>Ghế:</b>
-                <p
-                  id="total_ticket"
-                  style={{
-                    display: "inline-block",
-                    maxWidth: "90%",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                ></p>
+                <b>Ghế: </b> {getChairSelectedStr()}
               </li>
               <li style={{ padding: "5px 0" }}>
-                <b>Tiền vé:</b>
-                <p
-                  id="total_seat_money"
-                  style={{ display: "inline-block" }}
-                ></p>
+                <b>Tiền vé: </b> {getTotalCost(ticKets)}
               </li>
               <li style={{ padding: "5px 0" }}>
                 <b>Combo:</b> 0
@@ -184,12 +315,11 @@ const SeatSelector = ({ seats }) => {
                 <b>Tiền Combo:</b> 0
               </li>
               <li style={{ padding: "5px 0" }}>
-                <b>Tổng Tiền:</b>
-                <p id="total_money" style={{ display: "inline-block" }}></p>
+                <b>Tổng Tiền:</b> {getTotalCost(ticKets)}
               </li>
             </ul>
           </div>
-          <div>
+          <div className={selecteds?.length > 0 ? "" : "disabled"}>
             <a href="#" onClick={(e) => handleNextStep(e)}>
               <p
                 style={{
@@ -218,7 +348,7 @@ const SeatSelector = ({ seats }) => {
           <div>
             <ul>
               <li style={{ padding: "5px 0" }}>
-                <b>Ghế:</b>
+                <b>Ghế:</b> {getChairSelectedStr()}
                 <p
                   id="total_ticket_mobile"
                   style={{
@@ -235,7 +365,7 @@ const SeatSelector = ({ seats }) => {
                 <b>Combo:</b> 0
               </li>
               <li style={{ padding: "5px 0" }}>
-                <b>Tổng Tiền:</b>
+                <b>Tổng Tiền:</b> {getTotalCost(ticKets)}
                 <p
                   id="total_money_mobile"
                   style={{
@@ -245,8 +375,8 @@ const SeatSelector = ({ seats }) => {
               </li>
             </ul>
           </div>
-          <div style={{ width: "100px" }}>
-            <a href="#" onClick={(e) => handleNextStep(e)}>
+          <div style={{ width: "100px" }} className={selecteds?.length > 0 ? "" : "disabled"}>
+            <a href="#" onClick={(e) => handleNextStep(e)} >
               <p
                 style={{
                   width: "100%",

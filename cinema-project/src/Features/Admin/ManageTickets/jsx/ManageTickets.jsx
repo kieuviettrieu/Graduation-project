@@ -127,7 +127,6 @@ const ManageTickets = () => {
     setCurrentPage(1);
     try {
       const data = await callAPI("get", `${API_TICKET.showingTicket}?nameSearch=${name.trim()}&page=0`);
-      console.log(data, "data");
       const ticketData = updateItems(data.content, pageSize, currentPage, data.totalElements);
       setTotalItems(data.totalElements);
       setTickets(ticketData);

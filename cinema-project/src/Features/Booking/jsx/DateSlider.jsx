@@ -20,7 +20,6 @@ const DateCarousel = () => {
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
-    console.log("Ngày đã chọn: ", date);
   };
 
   return (

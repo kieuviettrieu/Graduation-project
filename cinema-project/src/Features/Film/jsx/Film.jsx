@@ -53,7 +53,6 @@ const Film = () => {
       // setLoading(false);
     };
 
-    console.log("kkkk");
     fetchMovies();
   }, []);
 

@@ -1,3 +1,5 @@
+import useCommonFunctions from "./CommonFunction";
+
 export const Cloud_Name = "df7edl9v5";
 export const Upload_Preset = "my-upload-preset";
 
@@ -6,11 +8,21 @@ export const Upload_Preset = "my-upload-preset";
 // API base URL
 export const API_BASE_URL_PUBLIC = "http://localhost:8080/api/public";
 export const API_BASE_URL_ADMIN = "http://localhost:8080/api/admin";
+export const API_BASE_URL_ORIGIN = "http://localhost:8080/api";
 
 export const API_COMMON = {
   public: {
     movieDetail: API_BASE_URL_PUBLIC + "/movie/detail/{id}",
+    getCinemaByMovieId: API_BASE_URL_PUBLIC + "/cinemas-by-movie/{id}",
+    getShowTimeByMovieAndCinema: API_BASE_URL_PUBLIC + "/showtime/showtime-by-movie-cinema/{idMovie}/{idCinema}",
     login: API_BASE_URL_PUBLIC + "/login",
+    getShowTime: API_BASE_URL_ORIGIN + "/user/showtime/showtime-by-id/{id}", 
+    getRoom: API_BASE_URL_ORIGIN + "/user/room/check-room/{idShowTime}", 
+    getTicketByRoomAndShowTime: API_BASE_URL_ORIGIN + "/user/ticket/list-ticket-by-rom-showtime/{idRoom}/{idShowTime}",
+    getUser: API_BASE_URL_ORIGIN + "/user/findByUsername/{username}",
+    addTicketCheckList: API_BASE_URL_ORIGIN + "/ticket/addTicketCheckList/{ticketId}",
+    getClearTicketList: API_BASE_URL_ORIGIN + "/ticket/clearTicketCheckList",
+    bookingTicket: API_BASE_URL_ORIGIN + "/user/booking-ticket"
   }
   
 };
@@ -65,6 +77,7 @@ export const ROUTER_PATHS = {
   //USER
   USER_PROFILE: "user/profile",
   BOOKING: "/booking/{timeId}",
+  BOOKING_CONFIRM: "/booking/confirm",
   CINEMA_CREATE: "/manage/cinema/create",
   //DASHBOARD
   DASHBOARD: "/dashboard",
@@ -91,7 +104,31 @@ export const ACCOUNT_ROLE = {
   SUPER_ADMIN: 3,
 };
 
+export const ACCOUNT_ROLE_STR = {
+  USER_ROLE: "1",
+  ADMIN_ROLE: "2",
+  SUPER_ADMIN: "ROLE_ADMIN"
+,
+};
+
 export const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-GB"); // "en-GB" formats it as dd/MM/yyyy
 };
+
+export const formatDateTime = (dateString, startTime) => {
+  const date = new Date(dateString);
+
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); 
+  const year = date.getUTCFullYear();
+  const start = formatTime(startTime);
+
+  return `${start} ${day}/${month}/${year}`;
+}
+
+export const formatTime = (time) => {
+   return time?.split(":").slice(0, 2).join(":");
+}
+
+

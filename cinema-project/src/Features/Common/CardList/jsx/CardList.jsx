@@ -3,7 +3,6 @@ import Card from "./Card";
 import "../Content/index.css";
 
 export function CardList(props) {
-  console.log(props.movies, "props.movies")
   return (
     <>
       <section className="card-section">

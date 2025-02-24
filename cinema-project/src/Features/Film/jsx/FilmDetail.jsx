@@ -4,124 +4,38 @@ import CardTheater from "./CardTheater";
 import "../Contents/Film.css";
 import { API_COMMON, formatDate, generateUrl } from "../../Common/Constant";
 import { callAPI } from "../../axios/axiosInstance";
+import { useLoading } from "../../../LoadingProvider";
 
 const FilmDetail = () => {
   const [movieDetails, setMovieDetails] = useState(null);
   const [cinemas, setCinemas] = useState(null);
   const [tabs, setTabs] = useState(null);
   const { filmId } = useParams();
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
+        setLoading(true);
         const movieDetail = await callAPI("get", generateUrl(API_COMMON.public.movieDetail, {id : filmId}));
-        // const movieDetail = await callApi(generateUrl(API_COMMON.public.movieDetail, {id : filmId}), "GET");
+        const cinemaData = await callAPI("get", generateUrl(API_COMMON.public.getCinemaByMovieId, {id : filmId}));
         setMovieDetails(movieDetail);
-        console.log(movieDetail, "Movie Data");
+        setCinemas(cinemaData);
+        const tabs = [
+          {
+            id: "prod-details",
+            title: "Mô tả",
+            content: movieDetails?.description,
+          },
+        ];
+        setTabs(tabs);
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching movies:", err);
       }
     };
 
     fetchMovies();
-    // const fakeData = {
-    //   posterUrl:
-    //     "http://riocinemas.vn/Areas/Admin/Content/Fileuploads/images/poster%20web/T12/Ch%E1%BB%8B%20D%C3%A2u.jpg",
-    //   title: "CHỊ DÂU",
-    //   genre: "Drama",
-    //   format: "2D",
-    //   rating: "T16",
-    //   director: "Khương Ngọc",
-    //   cast: [
-    //     "Việt Hương",
-    //     "Hồng Đào",
-    //     "Lê Khánh",
-    //     "Đinh Y Nhung",
-    //     "Ngọc Trinh",
-    //   ],
-    //   releaseDate: "20/12/2024",
-    //   duration: "1 giờ 40 phút",
-    // };
-    const cinemas = [
-      {
-        name: "RIO Liên Chiểu Đà Nẵng",
-        address:
-          "403 Tôn Đức Thắng - Phường Hòa Minh - Quận Liên Chiểu - TP. Đà Nẵng",
-        filmName: "AVENGERS: ENDGAME",
-        dates: [
-          {
-            date: "09/01/2025",
-            times: [
-              { id: "time1", time: "15:55" },
-              { id: "time2", time: "18:30" },
-              { id: "time3", time: "20:00" },
-            ],
-          },
-          {
-            date: "10/01/2025",
-            times: [
-              { id: "time4", time: "09:00" },
-              { id: "time5", time: "14:00" },
-              { id: "time6", time: "19:30" },
-            ],
-          },
-        ],
-      },
-      {
-        name: "RIO Tam Kỳ Quảng Nam",
-        address:
-          "Trung tâm giải trí RIO: Đường Bạch Đằng, Phường Phước Hoà, TP. Tam Kỳ, Quảng Nam",
-        filmName: "THE BATMAN",
-        dates: [
-          {
-            date: "09/01/2025",
-            times: [
-              { id: "time7", time: "16:00" },
-              { id: "time8", time: "18:30" },
-            ],
-          },
-          {
-            date: "10/01/2025",
-            times: [
-              { id: "time9", time: "10:00" },
-              { id: "time10", time: "13:00" },
-            ],
-          },
-        ],
-      },
-      {
-        name: "RIO Hội An Quảng Nam",
-        address: "09 Trần Phú, Phường Minh An, Hội An, Quảng Nam",
-        filmName: "FAST & FURIOUS 9",
-        dates: [
-          {
-            date: "09/01/2025",
-            times: [
-              { id: "time11", time: "12:00" },
-              { id: "time12", time: "15:30" },
-              { id: "time13", time: "19:00" },
-            ],
-          },
-          {
-            date: "10/01/2025",
-            times: [
-              { id: "time14", time: "10:00" },
-              { id: "time15", time: "14:00" },
-            ],
-          },
-        ],
-      },
-    ];
-
-    const tabs = [
-      {
-        id: "prod-details",
-        title: "Mô tả",
-        content: movieDetails?.description,
-      },
-    ];
-    setCinemas(cinemas);
-    setTabs(tabs);
   }, []);
 
   if (!movieDetails) {
@@ -154,7 +68,6 @@ const FilmDetail = () => {
             </div>
           </div>
 
-          {/* Content Column */}
           <div className="content-column col-lg-8 col-md-8 col-sm-12">
             <div className="inner-column">
               <h4>
@@ -181,7 +94,6 @@ const FilmDetail = () => {
               </p>
               <hr />
 
-              {/* Shop List */}
               <ul className="shop-list">
                 <li className="mg-l0">
                   Đạo diễn: <a>{movieDetails?.directors}</a>
@@ -203,7 +115,7 @@ const FilmDetail = () => {
           </div>
         </div>
         <div className="product-info-tabs">
-          <CardTheater cinemas={cinemas} tabs={tabs} />
+          <CardTheater cinemas={cinemas} tabs={tabs} filmId={filmId}/>
         </div>
       </div>
     </div>
