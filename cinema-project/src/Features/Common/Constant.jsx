@@ -22,7 +22,9 @@ export const API_COMMON = {
     getUser: API_BASE_URL_ORIGIN + "/user/findByUsername/{username}",
     addTicketCheckList: API_BASE_URL_ORIGIN + "/ticket/addTicketCheckList/{ticketId}",
     getClearTicketList: API_BASE_URL_ORIGIN + "/ticket/clearTicketCheckList",
-    bookingTicket: API_BASE_URL_ORIGIN + "/user/booking-ticket"
+    bookingTicket: API_BASE_URL_ORIGIN + "/user/booking-ticket",
+    getTicketHistory: API_BASE_URL_ORIGIN + "/user/ticket",
+    getPointHistory: API_BASE_URL_ORIGIN + "/user/point"
   }
   
 };
@@ -75,7 +77,7 @@ export const ROUTER_PATHS = {
   //EVENT
   EVENT: "/event",
   //USER
-  USER_PROFILE: "user/profile",
+  USER_PROFILE: "/user/profile",
   BOOKING: "/booking/{timeId}",
   BOOKING_CONFIRM: "/booking/confirm",
   CINEMA_CREATE: "/manage/cinema/create",

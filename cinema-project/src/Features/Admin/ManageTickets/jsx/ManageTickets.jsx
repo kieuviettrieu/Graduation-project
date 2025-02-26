@@ -11,16 +11,22 @@ const ManageTickets = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [tickets, setTickets] = useState([]);
   const [isRender, setIsRender] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  
+  const [searchTerm, setSearchTerm] = useState("");
+
   const { updateItems } = useCommonFunctions();
+
+  const isValidDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return !isNaN(date.getTime()); // Kiểm tra xem có phải ngày hợp lệ không
+  };
 
   const columns = [
     {
       title: "#",
       dataIndex: "index",
       key: "index",
-      render: (_text, _record, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (_text, _record, index) =>
+        (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Mã đặt vé",
@@ -37,7 +43,9 @@ const ManageTickets = () => {
       dataIndex: "bookDateTime",
       render: (_, record) => {
         const bookDateTime = record?.bookDateTime || null;
-        const formattedDate = bookDateTime ? new Date(bookDateTime).toISOString().split("T")[0] : "";
+        const formattedDate = isValidDate(bookDateTime)
+          ? new Date(bookDateTime).toISOString().split("T")[0]
+          : "";
         return <span>{formattedDate}</span>;
       },
     },
@@ -51,16 +59,16 @@ const ManageTickets = () => {
     {
       title: "Họ tên",
       key: "customer",
-      render: (_, record) => (
-        <span>{record?.customer?.fullName || ""}</span>
-      ),
+      render: (_, record) => <span>{record?.customer?.fullName || ""}</span>,
     },
     {
       title: "Ngày chiếu",
       key: "dateShowTime",
       render: (_, record) => {
         const dateShowTime = record?.showTime?.date || null;
-        const formattedDate = dateShowTime ? new Date(dateShowTime).toISOString().split("T")[0] : "";
+        const formattedDate = dateShowTime
+          ? new Date(dateShowTime).toISOString().split("T")[0]
+          : "";
         return <span>{formattedDate}</span>;
       },
     },
@@ -68,9 +76,11 @@ const ManageTickets = () => {
       title: "Suất chiếu",
       key: "showTime",
       render: (_, record) => {
-        const startTime = record?.showTime?.startTime || ""; 
-        const formattedTime = startTime ? startTime.split(":").slice(0, 2).join(":") : "";
-    
+        const startTime = record?.showTime?.startTime || "";
+        const formattedTime = startTime
+          ? startTime.split(":").slice(0, 2).join(":")
+          : "";
+
         return <span>{formattedTime}</span>;
       },
     },
@@ -103,8 +113,16 @@ const ManageTickets = () => {
 
   const fetchTickets = async () => {
     try {
-      const data = await callAPI("get", `${API_TICKET.showingTicket}?nameSearch=${searchTerm.trim()}&page=0`);
-      const ticketData = updateItems(data.content, pageSize, currentPage, data.totalElements);
+      const data = await callAPI(
+        "get",
+        `${API_TICKET.showingTicket}?nameSearch=${searchTerm.trim()}&page=0`
+      );
+      const ticketData = updateItems(
+        data.content,
+        pageSize,
+        currentPage,
+        data.totalElements
+      );
       setTotalItems(data.totalElements);
       setTickets(ticketData);
     } catch (err) {
@@ -126,8 +144,16 @@ const ManageTickets = () => {
     setSearchTerm(name);
     setCurrentPage(1);
     try {
-      const data = await callAPI("get", `${API_TICKET.showingTicket}?nameSearch=${name.trim()}&page=0`);
-      const ticketData = updateItems(data.content, pageSize, currentPage, data.totalElements);
+      const data = await callAPI(
+        "get",
+        `${API_TICKET.showingTicket}?nameSearch=${name.trim()}&page=0`
+      );
+      const ticketData = updateItems(
+        data.content,
+        pageSize,
+        currentPage,
+        data.totalElements
+      );
       setTotalItems(data.totalElements);
       setTickets(ticketData);
     } catch (err) {
@@ -138,17 +164,27 @@ const ManageTickets = () => {
   };
 
   const changePage = async (page, size) => {
-      try {
-        const data = await callAPI("get", `${API_TICKET.showingTicket}?nameSearch=${searchTerm.trim()}&page=${page - 1}`);
-        const ticketData = updateItems(data.content, pageSize, currentPage, data.totalElements);
-        setTotalItems(data.totalElements);
-        setTickets(ticketData);
-      } catch (err) {
-        console.error("Error fetching cinemas:", err);
-      }
-      setCurrentPage(page);
-      setPageSize(size);
-    };
+    try {
+      const data = await callAPI(
+        "get",
+        `${API_TICKET.showingTicket}?nameSearch=${searchTerm.trim()}&page=${
+          page - 1
+        }`
+      );
+      const ticketData = updateItems(
+        data.content,
+        pageSize,
+        page,
+        data.totalElements
+      );
+      setTotalItems(data.totalElements);
+      setTickets(ticketData);
+    } catch (err) {
+      console.error("Error fetching cinemas:", err);
+    }
+    setCurrentPage(page);
+    setPageSize(size);
+  };
 
   return (
     <section className="sidebar-page-container">

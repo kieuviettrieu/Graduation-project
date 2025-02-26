@@ -93,6 +93,7 @@ const ConfirmTicket = () => {
           API_COMMON.public.bookingTicket, ticketIds
         );
         message.success("Đặt vé thành công");
+        redirectToPath(ROUTER_PATHS.USER_PROFILE);
       } else {
         message.error("Thanh toán chưa hoàn tất. Vui lòng thử lại!");
       }

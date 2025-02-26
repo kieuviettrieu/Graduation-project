@@ -1,6 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
+import TicketHistory from "./TicketHistory";
+import PointHistory from "./PointHistory";
+import AccountInfo from "./AccountInfo";
 
 const UserProfile = () => {
+  const [choose, setChoose] = useState(3);
+  const switchModule = (value) => {
+    switch (value) {
+      case 1:
+        return 
+          <AccountInfo />
+
+      case 2:
+        return <AccountInfo />;
+      case 3:
+        return <div className="card p-4 shadow-sm">
+        <h4 className="fw-bold mb-3">Lịch sử giao dịch</h4>
+        <div className="table-responsive">
+          <TicketHistory />
+        </div>
+      </div>;
+      case 4:
+        return <div className="card p-4 shadow-sm">
+        <h4 className="fw-bold mb-3">Lịch sử điểm thưởng</h4>
+        <div className="table-responsive">
+          <PointHistory />
+        </div>
+      </div>;
+      default:
+        return ;
+    }
+  }
+
   return (
     <section className="py-5 bg-light">
       <div className="container">
@@ -24,40 +55,17 @@ const UserProfile = () => {
               </div>
 
               <div className="mt-3">
-                <a href="/doi-mat-khau.html" className="btn btn-outline-secondary w-100 mb-2">Đổi mật khẩu</a>
-                <a href="/cap-nhat-tai-khoan.html" className="btn btn-outline-secondary w-100 mb-2">Cập nhật thông tin</a>
-                <a href="/online-booking-check.html" className="btn btn-outline-secondary w-100 mb-2">Lịch sử giao dịch online</a>
-                <a href="/chinh-sach/chinh-sach-thanh-toan-4.html" className="btn btn-outline-secondary w-100 mb-2">Chính sách thanh toán</a>
-                <a href="/chinh-sach/dieu-khoan-bao-mat-1.html" className="btn btn-outline-secondary w-100">Chính sách thành viên</a>
+                <a className="btn btn-outline-secondary w-100 mb-2" style={choose === 1 && {backgroundColor: "#6c757d", color: "white"} || {}} onClick={() => setChoose(1)}>Đổi mật khẩu</a>
+                <a className="btn btn-outline-secondary w-100 mb-2" style={choose === 2 && {backgroundColor: "#6c757d", color: "white"} || {}} onClick={() => setChoose(2)}>Cập nhật thông tin</a>
+                <a className="btn btn-outline-secondary w-100 mb-2" style={choose === 3 && {backgroundColor: "#6c757d", color: "white"} || {}} onClick={() => setChoose(3)}>Lịch sử giao dịch online</a>
+                <a className="btn btn-outline-secondary w-100 mb-2" style={choose === 4 && {backgroundColor: "#6c757d", color: "white"} || {}} onClick={() => setChoose(4)}>Lịch sử điểm thưởng</a>
               </div>
             </div>
           </div>
 
           {/* Lịch sử giao dịch */}
           <div className="col-lg-6 mt-4 mt-lg-0">
-            <div className="card p-4 shadow-sm">
-              <h3 className="fw-bold mb-3">Lịch sử giao dịch</h3>
-              <div className="table-responsive">
-                <table className="table table-bordered">
-                  <thead className="table-danger text-center">
-                    <tr>
-                      <th>Rạp</th>
-                      <th>Tên phim</th>
-                      <th>Tổng tiền</th>
-                      <th>Điểm thưởng</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>RIO Liên Chiểu Đà Nẵng</td>
-                      <td>(T16) BỘ TỨ BÁO THỦ</td>
-                      <td>340.000</td>
-                      <td>10.2</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            {switchModule(choose)}
           </div>
         </div>
       </div>
