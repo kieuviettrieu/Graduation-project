@@ -1,170 +1,143 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { Form, Input, Radio, DatePicker, Button, message, Card, Space } from "antd";
+import { callAPI } from "../../../axios/axiosInstance";
+import { API_COMMON, generateUrl } from "../../Constant";
+import { useSelector } from "react-redux";
+import { useLoading } from "../../../../LoadingProvider";
+import dayjs from "dayjs";
 
 const AccountInfo = () => {
-  const [formData, setFormData] = useState({
-    id: "",
-    fullName: "",
-    gender: true,
-    birthday: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-    cardId: "",
-  });
+  const { user } = useSelector((state) => state.auth);
+  const { setLoading } = useLoading();
+  const [form] = Form.useForm();
+  const [loading, setFormLoading] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  // Gọi API lấy dữ liệu tài khoản
   useEffect(() => {
-    axios
-      .get("https://api.example.com/user") // Thay thế URL API thật
-      .then((response) => {
-        const data = response.data;
-        setFormData({
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        const data = await callAPI(
+          "get",
+          generateUrl(API_COMMON.public.getUser, { username: user?.username })
+        );
+        form.setFieldsValue({
           id: data.id,
           fullName: data.fullName,
           gender: data.gender,
-          birthday: data.birthday.split("T")[0], // Chuyển định dạng ngày
+          birthday: dayjs(data.birthday), // Chuyển đổi ngày
           email: data.email,
           phoneNumber: data.phoneNumber,
           address: data.address,
           cardId: data.cardId,
         });
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy dữ liệu:", error);
-      })
-      .finally(() => {
-        setLoading(false);
+      } catch (err) {
+        message.error("Lỗi khi tải dữ liệu!");
+        console.error("Error fetching user:", err);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [form, setLoading]);
+
+  const handleSubmit = async (values) => {
+    setFormLoading(true);
+    try {
+      await callAPI("put", API_COMMON.public.updateUserInfo, {
+        ...values,
+        birthday: values.birthday.format("YYYY-MM-DD"), // Chuyển đổi ngày tháng về định dạng chuẩn
       });
-  }, []);
-
-  // Xử lý thay đổi input
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "radio" ? value === "true" : value,
-    });
+      message.success("Cập nhật thành công!");
+    } catch (err) {
+      message.error("Đã có lỗi xảy ra!");
+      console.error("Error:", err);
+    }
+    setFormLoading(false);
   };
-
-  // Xử lý cập nhật dữ liệu
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSaving(true);
-
-    axios
-      .post("https://api.example.com/user/update", formData) // Thay thế URL API thật
-      .then(() => {
-        alert("Cập nhật thành công!");
-      })
-      .catch((error) => {
-        console.error("Lỗi khi cập nhật:", error);
-        alert("Cập nhật thất bại!");
-      })
-      .finally(() => {
-        setSaving(false);
-      });
-  };
-
-  if (loading) {
-    return <p>Đang tải dữ liệu...</p>;
-  }
 
   return (
-    <div className="card">
-      <div className="bg-light card-header shadow p-3 mb-4 text-uppercase font-weight-bold">
-        <h5>THÔNG TIN TÀI KHOẢN</h5>
-      </div>
-      <div className="card-body divider my-3">
-        <form onSubmit={handleSubmit}>
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label text-end">Mã thành viên</label>
-            <div className="col-sm-4">
-              <input className="form-control" name="id" value={formData.id} readOnly />
-            </div>
-          </div>
+    <Card title="THÔNG TIN TÀI KHOẢN" className="shadow">
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+      >
+        <Form.Item label="Mã thành viên" name="id">
+          <Input disabled />
+        </Form.Item>
 
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label text-end">
-              Họ Tên<span style={{ color: "red" }}> *</span>
-            </label>
-            <div className="col-sm-4">
-              <input className="form-control" name="fullName" value={formData.fullName} onChange={handleChange} />
-            </div>
-          </div>
+        <Form.Item
+          label="Họ và tên"
+          name="fullName"
+          rules={[{ required: true, message: "Vui lòng nhập họ tên!" }]}
+        >
+          <Input placeholder="Nhập họ và tên" />
+        </Form.Item>
 
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label text-end">
-              Ngày Sinh<span style={{ color: "red" }}> *</span>
-            </label>
-            <div className="col-sm-4">
-              <input className="form-control" type="date" name="birthday" value={formData.birthday} onChange={handleChange} />
-            </div>
-          </div>
+        <Form.Item
+          label="Ngày sinh"
+          name="birthday"
+          rules={[{ required: true, message: "Vui lòng chọn ngày sinh!" }]}
+        >
+          <DatePicker format="DD/MM/YYYY" className="w-100" />
+        </Form.Item>
 
-          <div className="row mb-3">
-            <legend className="col-form-label col-sm-3 text-end">
-              Giới Tính<span style={{ color: "red" }}> *</span>
-            </legend>
-            <div className="col-sm-4 text-start">
-              <input type="radio" name="gender" value="true" checked={formData.gender === true} onChange={handleChange} /> Nam
-              <input type="radio" name="gender" value="false" checked={formData.gender === false} onChange={handleChange} style={{ marginLeft: "10px" }} /> Nữ
-            </div>
-          </div>
+        <Form.Item label="Giới tính" name="gender">
+          <Radio.Group>
+            <Radio value={true}>Nam</Radio>
+            <Radio value={false}>Nữ</Radio>
+          </Radio.Group>
+        </Form.Item>
 
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label text-end">
-              CMND<span style={{ color: "red" }}> *</span>
-            </label>
-            <div className="col-sm-4">
-              <input className="form-control" name="cardId" value={formData.cardId} onChange={handleChange} />
-            </div>
-          </div>
+        <Form.Item
+          label="CMND"
+          name="cardId"
+          rules={[{ required: true, message: "Vui lòng nhập CMND!" }, { pattern: /^\d{9}$/, message: "CCCD phải có 9 chữ số" }]}
+        >
+          <Input placeholder="Nhập số CMND" />
+        </Form.Item>
 
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label text-end">
-              Email<span style={{ color: "red" }}> *</span>
-            </label>
-            <div className="col-sm-4">
-              <input className="form-control" name="email" value={formData.email} onChange={handleChange} />
-            </div>
-          </div>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: "Vui lòng nhập email!" },
+            { type: "email", message: "Email không hợp lệ!" },
+          ]}
+        >
+          <Input placeholder="Nhập email" />
+        </Form.Item>
 
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label text-end">
-              Địa Chỉ<span style={{ color: "red" }}> *</span>
-            </label>
-            <div className="col-sm-4">
-              <input className="form-control" name="address" value={formData.address} onChange={handleChange} />
-            </div>
-          </div>
+        <Form.Item
+          label="Địa chỉ"
+          name="address"
+          rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
+        >
+          <Input placeholder="Nhập địa chỉ" />
+        </Form.Item>
 
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label text-end">
-              Số Điện Thoại<span style={{ color: "red" }}> *</span>
-            </label>
-            <div className="col-sm-4">
-              <input className="form-control" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
-            </div>
-          </div>
+        <Form.Item
+          label="Số điện thoại"
+          name="phoneNumber"
+          rules={[
+            { required: true, message: "Vui lòng nhập số điện thoại!" },
+            { pattern: /^[0-9]{10}$/, message: "Số điện thoại không hợp lệ!" },
+          ]}
+        >
+          <Input placeholder="Nhập số điện thoại" />
+        </Form.Item>
 
-          <div className="row mb-3">
-            <label className="col-sm-3 col-form-label"></label>
-            <div className="col-sm-9 text-start">
-              <button className="btn btn-primary border-0" style={{ backgroundColor: "#f26b38" }} type="submit" disabled={saving}>
-                {saving ? "Đang lưu..." : "Cập nhật"}
-              </button>
-              <button className="btn btn-secondary border-0" style={{ marginLeft: "5px" }} type="button">
-                <a href="/" style={{ color: "#eeeeee", textDecoration: "none" }}>Quay lại</a>
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+        <Form.Item>
+          <Space>
+            <Button type="primary" htmlType="submit" loading={loading}>
+              Cập nhật
+            </Button>
+            <Button>
+              <a href="/">Quay lại</a>
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
 

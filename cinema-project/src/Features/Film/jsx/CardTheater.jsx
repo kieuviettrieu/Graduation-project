@@ -76,7 +76,7 @@ const CardTheater = ({ cinemas, tabs, filmId }) => {
             className={`tab ${activeTab === tab.id ? "active-tab" : ""}`}
           >
             <div className="content">
-              <p>{tab.content}</p>
+              <p>{tab?.content}</p>
             </div>
           </div>
         ))}
@@ -92,8 +92,6 @@ const CardTheater = ({ cinemas, tabs, filmId }) => {
                 className={`acc-btn ${activeIndex === index ? "active" : ""}`}
               >
                 <div className="icon-outer" onClick={() => handleToggle(cinema?.id, index)}>
-                  {/* <span className="icon icon-plus fa fa-plus"></span> */}
-                  {/* <span className="icon icon-minus fa fa-minus"></span> */}
                   <FaPlus className="icon icon-plus" />
                   <FaMinus className="icon icon-minus" />
                 </div>

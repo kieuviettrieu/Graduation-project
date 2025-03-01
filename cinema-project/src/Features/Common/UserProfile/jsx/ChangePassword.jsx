@@ -1,0 +1,95 @@
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, Card, message } from "antd";
+import { callAPI } from "../../../axios/axiosInstance";
+import { API_COMMON } from "../../Constant";
+import { useSelector } from "react-redux";
+
+const ChangePassword = () => {
+  const { user } = useSelector((state) => state.auth);
+  const [form] = Form.useForm();
+  const username = user?.username || "";
+  console.log(user, "user")
+  const [passWord, setPassWord] = useState("");
+  const [isPassWordConfirm, setIsPassWordConfirm] = useState(true);
+
+  useEffect(() => {
+    form.setFieldsValue({
+        nowPass: "",
+        password: "",
+        confirmPassword: "",
+      });
+    }, [form]);
+
+  const handleSubmit = async (values) => {
+    try {
+      const { nowPass, password, confirmPassword } = values;
+
+      if (password !== confirmPassword) {
+        message.error("Mật khẩu mới và nhập lại mật khẩu không khớp!");
+        return;
+      }
+
+      await callAPI("put", API_COMMON.public.changePassword, {
+        username,
+        oldPassword: nowPass,
+        password: password,
+        confirmPassword: password
+      });
+
+      message.success("Đổi mật khẩu thành công!");
+      form.resetFields();
+    } catch (error) {
+      message.error("Đã có lỗi xảy ra khi đổi mật khẩu!");
+    }
+  };
+
+  return (
+    <Card title="THÔNG TIN ĐĂNG NHẬP" className="shadow" initialValues={{
+        nowPass: "",
+        password: "",
+        confirmPassword: "",
+      }}>
+      <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form.Item label="Tài Khoản">
+          <Input value={username} readOnly />
+        </Form.Item>
+
+        <Form.Item
+          label="Mật khẩu"
+          name="nowPass"
+          rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item
+          label="Mật khẩu mới"
+          name="password"
+          rules={[
+            { required: true, message: "Vui lòng nhập mật khẩu mới!" },
+            { min: 6, message: "Mật khẩu phải có ít nhất 6 ký tự!" },
+          ]}
+        >
+          <Input.Password onChange={(item) => setPassWord(item?.target?.value)}/>
+        </Form.Item>
+
+        <Form.Item
+          label="Nhập lại mật khẩu"
+          name="confirmPassword"
+          rules={[{ required: true, message: "Vui lòng nhập lại mật khẩu!" }]}
+          help={!isPassWordConfirm ? "Mật khẩu xác nhận không khớp" : ""}
+        >
+          <Input.Password onChange={(e) => setIsPassWordConfirm(e.target.value === passWord)}/>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" style={{ backgroundColor: "#f26b38", border: "none" }}>
+            Đổi mật khẩu
+          </Button>
+        </Form.Item>
+      </Form>
+    </Card>
+  );
+};
+
+export default ChangePassword;

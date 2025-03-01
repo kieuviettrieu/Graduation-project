@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {
-  AppstoreOutlined,
+  PlayCircleOutlined,
   MailOutlined,
-  SettingOutlined,
+  AreaChartOutlined,
   ContainerOutlined,
   DesktopOutlined,
   PieChartOutlined,
@@ -17,6 +17,10 @@ const maps = [
   { path: "/dashboard/manage/tickets", name: "QL vé" },
   { path: "/dashboard/manage/cinemas", name: "QL rạp" },
   { path: "/dashboard/manage/showtimes", name: "QL suất chiếu" },
+  { path: "/dashboard/manage/statistics/film", name: "Thống kê phim" },
+  { path: "/dashboard/manage/statistics/customer", name: "Thống kê thành viên" },
+  { path: "/dashboard/manage/statistics/filmtype", name: "Thống kê thể loại phim" },
+  { path: "/dashboard/manage/statistics/showtime", name: "Thống kê suất chiếu" },
 ];
 
 
@@ -33,7 +37,7 @@ const items = [
   },
   {
     key: "QL phim",
-    icon: <ContainerOutlined />,
+    icon: <PlayCircleOutlined />,
     label: "QL phim",
   },
   {
@@ -51,6 +55,16 @@ const items = [
     label: "QL rạp",
     icon: <MailOutlined />,
   },
+  {
+    key: 'Thống kê',
+    label: 'Thống kê',
+    icon: <AreaChartOutlined />,
+    children: [
+      { key: 'Thống kê phim', label: 'Thống kê phim' },
+      { key: 'Thống kê thành viên', label: 'Thống kê thành viên' },
+      { key: 'Thống kê thể loại phim', label: 'Thống kê thể loại phim' },
+    ],
+  }
 ];
 
 const getLevelKeys = (items1) => {

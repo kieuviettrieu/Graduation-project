@@ -20,11 +20,14 @@ export const API_COMMON = {
     getRoom: API_BASE_URL_ORIGIN + "/user/room/check-room/{idShowTime}", 
     getTicketByRoomAndShowTime: API_BASE_URL_ORIGIN + "/user/ticket/list-ticket-by-rom-showtime/{idRoom}/{idShowTime}",
     getUser: API_BASE_URL_ORIGIN + "/user/findByUsername/{username}",
+    updateUserInfo: API_BASE_URL_ORIGIN + "/user/edit",
     addTicketCheckList: API_BASE_URL_ORIGIN + "/ticket/addTicketCheckList/{ticketId}",
     getClearTicketList: API_BASE_URL_ORIGIN + "/ticket/clearTicketCheckList",
     bookingTicket: API_BASE_URL_ORIGIN + "/user/booking-ticket",
     getTicketHistory: API_BASE_URL_ORIGIN + "/user/ticket",
-    getPointHistory: API_BASE_URL_ORIGIN + "/user/point"
+    getPointHistory: API_BASE_URL_ORIGIN + "/user/point",
+    changePassword: API_BASE_URL_ORIGIN + "/user/do-reset-password",
+    sumPoint: API_BASE_URL_ORIGIN + "/user/sum-point",
   }
   
 };

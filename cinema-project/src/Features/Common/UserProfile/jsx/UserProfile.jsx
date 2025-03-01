@@ -1,15 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TicketHistory from "./TicketHistory";
 import PointHistory from "./PointHistory";
 import AccountInfo from "./AccountInfo";
+import ChangePassword from "./ChangePassword";
+import { API_COMMON, generateUrl } from "../../Constant";
+import { callAPI } from "../../../axios/axiosInstance";
+import { useSelector } from "react-redux";
+import { useLoading } from "../../../../LoadingProvider";
+import { message } from "antd";
 
 const UserProfile = () => {
-  const [choose, setChoose] = useState(3);
+  const { user } = useSelector((state) => state.auth);
+  const [choose, setChoose] = useState(0);
+  const { setLoading } = useLoading();
+  const [info, setInfo] = useState({
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    sumPoint: 0,
+  });
+  
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        const data = await callAPI(
+          "get",
+          generateUrl(API_COMMON.public.getUser, { username: user?.username })
+        );
+
+        const sumPoint = await callAPI(
+          "get", API_COMMON.public.sumPoint
+        );
+
+        setInfo({
+          fullName: data.fullName,
+          email: data.email,
+          phoneNumber: data.phoneNumber,
+          sumPoint: sumPoint,
+        })
+      } catch (err) {
+        message.error("Lỗi khi tải dữ liệu!");
+        console.error("Error fetching user:", err);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
   const switchModule = (value) => {
     switch (value) {
       case 1:
-        return 
-          <AccountInfo />
+        return <ChangePassword/>;
 
       case 2:
         return <AccountInfo />;
@@ -39,18 +81,14 @@ const UserProfile = () => {
           {/* Thông tin user */}
           <div className="col-lg-6">
             <div className="card p-4 shadow-sm text-center">
-              <h3 className="fw-bold">Kiều Việt Triều</h3>
-              <p className="text-muted">0943051861</p>
-              <p className="text-muted">viettrieu123123@gmail.com</p>
+              <h3 className="fw-bold">{info.fullName}</h3>
+              <p className="text-muted">{info.phoneNumber}</p>
+              <p className="text-muted">{info.email}</p>
 
               <div className="d-flex justify-content-between my-3">
                 <div className="text-center">
                   <p className="fw-bold text-orange-500">Điểm tích lũy</p>
-                  <p>340000</p>
-                </div>
-                <div className="text-center">
-                  <p className="fw-bold text-orange-500">Điểm thưởng</p>
-                  <p>10.2</p>
+                  <p>{info.sumPoint}</p>
                 </div>
               </div>
 

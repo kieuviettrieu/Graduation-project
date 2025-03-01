@@ -21,6 +21,9 @@ import UserProfile from './Features/Common/UserProfile/jsx/UserProfile';
 import ManageCinema from './Features/Admin/ManageCinema/jsx/ManageCinema';
 import { ACCOUNT_ROLE_STR } from './Features/Common/Constant';
 import ConfirmTicket from './Features/Booking/jsx/ConfirmTicket';
+import FilmStatistics from './Features/Admin/Statistical/jsx/FilmStatistics';
+import CustomerStatistics from './Features/Admin/Statistical/jsx/CustomerStatistics';
+import MovieTypeStatistics from './Features/Admin/Statistical/jsx/MovieTypeStatistics';
 
 function App() {
   return (
@@ -50,6 +53,10 @@ function App() {
             <Route index element={<ManageEmployees />} />
             <Route index path="manage/employees" element={<ManageEmployees />} />
             <Route path="statistical" element={<Statistical />} />
+            <Route path="manage/statistics/film" element={<FilmStatistics />} />
+            <Route path="manage/statistics/customer" element={<CustomerStatistics />} />
+            <Route path="manage/statistics/filmtype" element={<MovieTypeStatistics />} />
+
             <Route path="manage/customers" element={<ManageCustomers />} />
             <Route path="manage/films" element={<ManageFilms />} />
             <Route path="manage/tickets" element={<ManageTickets />} />

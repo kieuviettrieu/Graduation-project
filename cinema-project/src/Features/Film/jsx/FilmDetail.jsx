@@ -25,7 +25,7 @@ const FilmDetail = () => {
           {
             id: "prod-details",
             title: "Mô tả",
-            content: movieDetails?.description,
+            content: movieDetail?.description,
           },
         ];
         setTabs(tabs);
