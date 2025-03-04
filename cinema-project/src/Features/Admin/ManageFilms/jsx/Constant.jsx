@@ -11,4 +11,5 @@ export const API_FILM = {
   updateMovie: API_BASE_URL_ADMIN + "/movie/update",
   movieDetail: API_BASE_URL_ADMIN + "/movie/detail",
   deleteMovie: API_BASE_URL_ADMIN + "/movie",
+  moviesByCinemaDate: API_BASE_URL_PUBLIC + "/movie-by-cinema",
 };

@@ -1,14 +1,14 @@
 import React from "react";
 import '../Content/index.css';
 
-const CinemaCard = ({ name, address, phone, imgUrl, link }) => {
+const CinemaCard = ({ name, address, phone, image, link }) => {
   return (
     <div className="col-lg-6 col-md-6 col-sm-12 pd-right-0 pd-left-0">
       <div className="news-block-two">
         <div className="inner-box">
           <div className="image">
             <a href={link}>
-              <img src={imgUrl} alt={name} />
+              <img src={image} alt={name} />
             </a>
           </div>
           <div className="lower-content cine-content">

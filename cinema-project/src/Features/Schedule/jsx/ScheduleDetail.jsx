@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from "react";
 import "../Contents/ScheduleDetail.css";
 import ScheduleCards from "./CheduleCards";
+import { callAPI } from "../../axios/axiosInstance";
+import { API_CINEMA } from "../../Admin/ManageCinema/jsx/Constant";
+import { useParams } from "react-router-dom";
+import { generateWeekDates } from "../../Common/Constant";
+import { useLoading } from "../../../LoadingProvider";
 
 const ScheduleDetail = () => {
   const [scheduleData, setScheduleData] = useState([]);
+  const [cinemaData, setCinemaData] = useState([]);
+  const [date, setDate] = useState(null);
   const [tabDateIndex, setTabDateIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { scheduleId } = useParams();
+  const { setLoading } = useLoading();
 
-  // Fetch schedule data from API
   useEffect(() => {
     const fetchScheduleData = async () => {
+      setLoading(true);
       try {
-        // const response = await fetch("https://api.example.com/schedule"); // Replace with your API endpoint
-        // if (!response.ok) {
-        //   throw new Error("Failed to fetch schedule data");
-        // }
-        // const data = await response.json();
-        const mockData = [
-          { day: "Thứ Tư", date: "22/01/2025" },
-          { day: "Thứ Năm", date: "23/01/2025" },
-          { day: "Thứ Sáu", date: "24/01/2025" },
-          { day: "Thứ Bảy", date: "25/01/2025" },
-          { day: "Chủ Nhật", date: "26/01/2025" },
-          { day: "Thứ Hai", date: "27/01/2025" },
-        ];
+        const cinema = await callAPI(
+          "get",
+          `${API_CINEMA.getCinemaById}/${scheduleId}`
+        );
+        setCinemaData(cinema);
+        const mockData = generateWeekDates();
+        setDate(mockData[0]);
         setScheduleData(mockData); // Assuming the API returns an array of { day, date }
       } catch (err) {
         setError(err.message);
@@ -36,13 +38,11 @@ const ScheduleDetail = () => {
     fetchScheduleData();
   }, []);
 
-  const changeTabDateIndex = (index) => {
+  const changeTabDateIndex = (date, index) => {
+    setDate(date);
     setTabDateIndex(index);
-  }
+  };
 
-  if (loading) {
-    return <p>Loading schedule...</p>;
-  }
 
   if (error) {
     return <p>Error: {error}</p>;
@@ -75,7 +75,7 @@ const ScheduleDetail = () => {
                     fontSize: "20px",
                   }}
                 >
-                  RIO Liên Chiểu Đà Nẵng
+                  {cinemaData?.name}
                 </h3>
                 <p
                   style={{
@@ -85,7 +85,7 @@ const ScheduleDetail = () => {
                     fontSize: "14px",
                   }}
                 >
-                  0846.272.288
+                  {cinemaData?.phoneNumber}
                 </p>
                 <p
                   style={{
@@ -95,8 +95,7 @@ const ScheduleDetail = () => {
                     fontSize: "13px",
                   }}
                 >
-                  403 Tôn Đức Thắng - Phường Hòa Minh - Quận Liên Chiểu - TP. Đà
-                  Nẵng
+                  {cinemaData?.address}
                 </p>
               </div>
 
@@ -125,7 +124,7 @@ const ScheduleDetail = () => {
                             role="tab"
                             aria-controls={`pills-popular-${index}`}
                             aria-selected={index === 0}
-                            onClick={() => changeTabDateIndex(index)}
+                            onClick={() => changeTabDateIndex(tab, index)}
                           >
                             <p
                               style={{
@@ -144,7 +143,7 @@ const ScheduleDetail = () => {
                                 textAlign: "center",
                                 padding: "5px 15px",
                                 color: "#2b2b31",
-                                margin: '0px'
+                                margin: "0px",
                               }}
                             >
                               {tab.date}
@@ -154,7 +153,7 @@ const ScheduleDetail = () => {
                       ))}
                     </ul>
                   </div>
-                  <ScheduleCards />
+                  <ScheduleCards cinemaId={cinemaData?.id} date={date} />
                 </div>
               </div>
             </div>

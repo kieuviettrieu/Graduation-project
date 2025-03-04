@@ -137,3 +137,24 @@ export const formatTime = (time) => {
 }
 
 
+export const generateWeekDates = () => {
+  const daysOfWeek = [
+      "Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"
+  ];
+  const weekDates = [];
+
+  const today = new Date();
+
+  for (let i = 0; i < 6; i++) {
+      const currentDate = new Date();
+      currentDate.setDate(today.getDate() + i);
+
+      const dayOfWeek = daysOfWeek[currentDate.getDay()];
+      const formattedDate = currentDate.toLocaleDateString("vi-VN");
+
+      weekDates.push({ day: dayOfWeek, date: formattedDate });
+  }
+
+  return weekDates;
+}
+

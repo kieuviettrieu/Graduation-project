@@ -59,7 +59,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         name,
         address,
         phoneNumber,
-        imgUrl: imageLink,
+        image: imageLink,
       };
       onUpdate(updatedCinema);
       onClose();

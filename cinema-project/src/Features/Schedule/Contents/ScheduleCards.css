@@ -108,3 +108,15 @@ ul {
 ul > li + li {
   margin-left: 4px;
 }
+
+@media (max-width: 768px) {
+  .single-movie-list {
+      display: flex;
+      flex-direction: column;
+  }
+
+  .single-movie-list-left, 
+  .single-movie-list-right {
+      width: 100%;
+  }
+}

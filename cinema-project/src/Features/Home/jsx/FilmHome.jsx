@@ -17,6 +17,7 @@ import { Tabs } from "antd";
 import "../Contents/FilmHome.css";
 import { API_Film } from "./Constant";
 import { callAPI } from "../../axios/axiosInstance";
+import { useLoading } from "../../../LoadingProvider";
 
 const DraggableTabNode = ({ className, ...props }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -40,14 +41,18 @@ const DraggableTabNode = ({ className, ...props }) => {
 export function FilmHome(props) {
   const { moviesForYou, showingMovies, upcomingMovies } = props;
   const [moviesReal, setMoviesReal] = useState([]);
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
+        setLoading(true);
         const movieData = await callAPI("get", API_Film.showingMovies);
         setMoviesReal(movieData);
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching movies:", err);
+        setLoading(false);
       }
     };
 

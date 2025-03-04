@@ -17,6 +17,7 @@ import { Tabs } from "antd";
 import '../Contents/Film.css'
 import { API_Film } from "../../Home/jsx/Constant";
 import { callAPI } from "../../axios/axiosInstance";
+import { useLoading } from "../../../LoadingProvider";
 
 const DraggableTabNode = ({ className, ...props }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
@@ -38,18 +39,19 @@ const DraggableTabNode = ({ className, ...props }) => {
 
 const Film = () => {
   const [moviesReal, setMoviesReal] = useState([]);
+  const { setLoading } = useLoading();
 
   useEffect(() => {
-    // setLoading(true); 
     const fetchMovies = async () => {
       try {
+        setLoading(true);
         const movieData = await callAPI("get", API_Film.showingMovies);
         setMoviesReal(movieData); 
       } catch (err) {
         console.error(err);
       } finally {
+        setLoading(false);
       }
-      // setLoading(false);
     };
 
     fetchMovies();
