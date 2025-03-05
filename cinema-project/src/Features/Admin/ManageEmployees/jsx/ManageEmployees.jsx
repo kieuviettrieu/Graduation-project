@@ -7,6 +7,7 @@ import { API_EMPLOYEE } from "./Constant";
 import CreateEmployee from "./CreateEmployee";
 import EditEmployee from "./EditEmployee";
 import ViewEmployee from "./ViewEmployee";
+import { useLoading } from "../../../../LoadingProvider";
 const { Search } = Input;
 
 const ManageEmployees = () => {
@@ -20,14 +21,16 @@ const ManageEmployees = () => {
   const [isOpenView, setIsOpenView] = useState(false);
   const [idView, setIdView] = useState(null);
   const [isRender, setIsRender] = useState(false);
-  const [nameSearch, setNameSearch] = useState('');
+  const [nameSearch, setNameSearch] = useState("");
+  const { setLoading } = useLoading();
 
   const columns = [
     {
       title: "#",
       dataIndex: "index",
       key: "index",
-      render: (_text, _record, index) => (currentPage - 1) * pageSize + index + 1,
+      render: (_text, _record, index) =>
+        (currentPage - 1) * pageSize + index + 1,
     },
     {
       title: "Họ tên",
@@ -52,7 +55,9 @@ const ManageEmployees = () => {
           <Button type="dashed" onClick={() => handleEdit(record.id)}>
             Chỉnh sửa
           </Button>
-          <Button type="dashed" onClick={() => handleView(record.id)}>Chi tiết</Button>
+          <Button type="dashed" onClick={() => handleView(record.id)}>
+            Chi tiết
+          </Button>
           <Popconfirm
             title={`Bạn có muốn xóa "${record.fullName}"?`}
             description="Hành động này không thể hoàn tác!"
@@ -72,6 +77,7 @@ const ManageEmployees = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
+        setLoading(true);
         const data = await callAPI(
           "get",
           API_EMPLOYEE.showingEmployees + "?name=&positionId=-1&page=0"
@@ -86,6 +92,8 @@ const ManageEmployees = () => {
         setEmployees(employeesData);
       } catch (err) {
         console.error("Error fetching movies:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -99,9 +107,12 @@ const ManageEmployees = () => {
 
   const changePage = async (page, size) => {
     try {
+      setLoading(true);
       const data = await callAPI(
         "get",
-        `${API_EMPLOYEE.showingEmployees}?name=${nameSearch.trim()}&positionId=-1&page=${page - 1}`
+        `${
+          API_EMPLOYEE.showingEmployees
+        }?name=${nameSearch.trim()}&positionId=-1&page=${page - 1}`
       );
       const employeesData = updateItems(
         data.content,
@@ -113,6 +124,8 @@ const ManageEmployees = () => {
       setEmployees(employeesData);
     } catch (err) {
       console.error("Error fetching movies:", err);
+    } finally {
+      setLoading(false);
     }
     setCurrentPage(page);
     setPageSize(size);
@@ -120,23 +133,29 @@ const ManageEmployees = () => {
 
   const handleCreateEmployee = async (values) => {
     try {
+      setLoading(true);
       const respone = await callAPI("post", API_EMPLOYEE.addEmployee, values);
       setIsRender(!isRender);
       message.success("Nhân viên đã được tạo thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEditEmployee = async (values) => {
     try {
+      setLoading(true);
       const respone = await callAPI("put", API_EMPLOYEE.updateEmployee, values);
       setIsRender(!isRender);
       message.success("Nhân viên đã được cập nhật thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -147,6 +166,7 @@ const ManageEmployees = () => {
 
   const handleDelete = async (id) => {
     try {
+      setLoading(true);
       const response = await callAPI(
         "delete",
         `${API_EMPLOYEE.deleteEmployee}/${id}`
@@ -157,30 +177,35 @@ const ManageEmployees = () => {
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSearch = async (name) => {
     setNameSearch(name);
-        setCurrentPage(1);
-        try {
-          const data = await callAPI(
-            "get",
-            `${API_EMPLOYEE.showingEmployees}?name=${name}&positionId=-1&page=0`
-          );
+    setCurrentPage(1);
+    try {
+      setLoading(true);
+      const data = await callAPI(
+        "get",
+        `${API_EMPLOYEE.showingEmployees}?name=${name}&positionId=-1&page=0`
+      );
 
-          const employeeData = updateItems(
-            data.content,
-            pageSize,
-            1,
-            data.totalElements
-          );
-          setTotalItems(data.totalElements);
-          setEmployees(employeeData);
-        } catch (err) {
-          console.error("Error searching films:", err);
-        }
-      };
+      const employeeData = updateItems(
+        data.content,
+        pageSize,
+        1,
+        data.totalElements
+      );
+      setTotalItems(data.totalElements);
+      setEmployees(employeeData);
+    } catch (err) {
+      console.error("Error searching films:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="sidebar-page-container">
@@ -221,7 +246,11 @@ const ManageEmployees = () => {
         onUpdate={(values) => handleEditEmployee(values)}
         id={idEdit}
       />
-      <ViewEmployee open={isOpenView} onClose={() => setIsOpenView(false)} id={idView}/>
+      <ViewEmployee
+        open={isOpenView}
+        onClose={() => setIsOpenView(false)}
+        id={idView}
+      />
     </section>
   );
 };

@@ -10,6 +10,7 @@ import { API_FILM } from "./Constant";
 import dayjs from "dayjs";
 import { Option } from "antd/es/mentions";
 import ViewFilm from "./ViewFilm";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Search } = Input;
 
@@ -28,10 +29,12 @@ const ManageFilms = () => {
   const [timeDuration, setTimeDuration] = useState("");
   const [isOpenView, setIsOpenView] = useState(false);
   const [idView, setIdView] = useState(null);
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     const fetchFilms = async () => {
       try {
+        setLoading(true);
         const data = await callAPI(
           "get",
           `${API_FILM.getMovies}?name=&startDay=&studios=&timeAmount=&page=0`
@@ -46,6 +49,8 @@ const ManageFilms = () => {
         setFilms(filmsData);
       } catch (err) {
         console.error("Error fetching films:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -63,6 +68,7 @@ const ManageFilms = () => {
   const handleSearch = async () => {
     setCurrentPage(1);
     try {
+      setLoading(true);
       const data = await callAPI(
         "get",
         `${API_FILM.getMovies}?name=${name.trim()}&startDay=&studios=${studio.trim()}&timeAmount=${timeDuration}&page=0`
@@ -77,6 +83,8 @@ const ManageFilms = () => {
       setFilms(filmsData);
     } catch (err) {
       console.error("Error searching films:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -139,6 +147,7 @@ const ManageFilms = () => {
 
   const changePage = async (page, size) => {
     try {
+      setLoading(true);
       const data = await callAPI(
         "get",
         `${API_FILM.getMovies}?name=${name.trim()}&startDay=&studios=${studio.trim()}&timeAmount=${timeDuration}&page=${page - 1}`
@@ -153,6 +162,8 @@ const ManageFilms = () => {
       setFilms(filmsData);
     } catch (err) {
       console.error("Error fetching films:", err);
+    } finally {
+      setLoading(false);
     }
     setCurrentPage(page);
     setPageSize(size);
@@ -160,23 +171,29 @@ const ManageFilms = () => {
 
   const handleCreateFilm = async (values) => {
     try {
+      setLoading(true);
       await callAPI("post", API_FILM.createMovie, values);
       setIsRender(!isRender);
       message.success("Phim đã được tạo thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEditFilm = async (values) => {
     try {
+      setLoading(true);
       await callAPI("put", API_FILM.updateMovie, values);
       setIsRender(!isRender);
       message.success("Phim đã được cập nhật thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -187,6 +204,7 @@ const ManageFilms = () => {
 
   const handleDelete = async (id) => {
     try {
+      setLoading(true);
       await callAPI("delete", `${API_FILM.deleteMovie}/${id}`);
       setCurrentPage(1);
       setIsRender(!isRender);
@@ -194,6 +212,8 @@ const ManageFilms = () => {
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 

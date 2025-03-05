@@ -19,6 +19,7 @@ import useCommonFunctions from "../../Common/CommonFunction";
 import { callAPI } from "../../axios/axiosInstance";
 import "../Contents/Booking.css";
 import { saveTickeInfo } from "../../../Redux/Actions";
+import { useLoading } from "../../../LoadingProvider";
 
 const SeatSelector = ({ showTimeId }) => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const SeatSelector = ({ showTimeId }) => {
   const [selecteds, setSelecteds] = useState([]);
   const [zoomLevel, setZoomLevel] = useState(zoomLevelInit);
   const [isMobile, setIsMobile] = useState(isMobileInit);
+  const { setLoading } = useLoading();
 
   const convertTickets = (arr) => {
     const groupedBookings = Object.values(
@@ -131,6 +133,7 @@ const SeatSelector = ({ showTimeId }) => {
     checkPageLogin();
     const fetchData = async () => {
       try {
+        setLoading(true);
         const showTimeData = await callAPI(
           "get",
           generateUrl(API_COMMON.public.getShowTime, { id: showTimeId })
@@ -151,6 +154,8 @@ const SeatSelector = ({ showTimeId }) => {
         setTickets(convertTickets(ticketData));
       } catch (err) {
         console.error("Error fetching movies:", err);
+      } finally {
+        setLoading(false);
       }
     };
 

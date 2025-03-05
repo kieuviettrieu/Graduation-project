@@ -3,10 +3,11 @@ import { Drawer, Form, Input, Button, message, Upload } from "antd";
 import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
 import { UploadOutlined } from "@ant-design/icons";
+import { useLoading } from "../../../../LoadingProvider";
 
 const CreateCinema = ({ open, onClose, onCreate }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [image, setImage] = useState(null);
   const [imgUrl, setImgUrl] = useState("");
 
@@ -106,7 +107,7 @@ const CreateCinema = ({ open, onClose, onCreate }) => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Thêm rạp
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

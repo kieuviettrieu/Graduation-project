@@ -7,6 +7,7 @@ import CreateCinema from "./CreateCinema";
 import EditCinema from "./EditCinema";
 import { API_CINEMA } from "./Constant";
 import Search from "antd/es/input/Search";
+import { useLoading } from "../../../../LoadingProvider";
 
 const ManageCinema = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +19,7 @@ const ManageCinema = () => {
   const [idEdit, setIdEdit] = useState(null);
   const [isRender, setIsRender] = useState(false);
   const [nameSearch, setNameSearch] = useState('');
+  const { setLoading } = useLoading();
 
   const columns = [
     {
@@ -68,6 +70,7 @@ const ManageCinema = () => {
   useEffect(() => {
     const fetchCinemas = async () => {
       try {
+        setLoading(true);
         const data = await callAPI("get", `${API_CINEMA.showingCinema}?name=&?page=0`);
         const cinemaData = updateItems(
           data.content,
@@ -79,6 +82,8 @@ const ManageCinema = () => {
         setCinemas(cinemaData);
       } catch (err) {
         console.error("Error fetching cinemas:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCinemas();
@@ -86,12 +91,15 @@ const ManageCinema = () => {
 
   const changePage = async (page, size) => {
     try {
+      setLoading(true);
       const data = await callAPI("get", `${API_CINEMA.showingCinema}?name=${nameSearch.trim()}&page=${page - 1}`);
       const cinemaData = updateItems(data.content, size, page, data.totalElements);
       setTotalItems(data.totalElements);
       setCinemas(cinemaData);
     } catch (err) {
       console.error("Error fetching cinemas:", err);
+    } finally {
+      setLoading(false);
     }
     setCurrentPage(page);
     setPageSize(size);
@@ -99,23 +107,29 @@ const ManageCinema = () => {
 
   const handleCreateCinema = async (values) => {
     try {
+      setLoading(true);
       await callAPI("post", API_CINEMA.addCinema, values);
       setIsRender(!isRender);
       message.success("Rạp chiếu phim đã được tạo thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEditCinema = async (values) => {
     try {
+      setLoading(true);
       await callAPI("put", API_CINEMA.updateCinema + "/" + idEdit, values);
       setIsRender(!isRender);
       message.success("Rạp chiếu phim đã được cập nhật thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,6 +140,7 @@ const ManageCinema = () => {
 
   const handleDelete = async (id) => {
     try {
+      setLoading(true);
       await callAPI("delete", `${API_CINEMA.deleteCinema}/${id}`);
       setCurrentPage(1);
       setIsRender(!isRender);
@@ -133,6 +148,8 @@ const ManageCinema = () => {
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,6 +157,7 @@ const ManageCinema = () => {
       setNameSearch(name);
       setCurrentPage(1);
       try {
+        setLoading(true);
         const data = await callAPI("get", `${API_CINEMA.showingCinema}?name=${name.trim()}&page=0`
         );
         const cinemaData = updateItems(
@@ -152,6 +170,8 @@ const ManageCinema = () => {
         setCinemas(cinemaData);
       } catch (err) {
         console.error("Error searching films:", err);
+      } finally {
+        setLoading(false);
       }
     };
 

@@ -2,10 +2,12 @@ import { useState } from "react";
 import { uploadImageToCloudinary } from "../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../Common/Constant";
 import "../Contents/Event.css";
+import { useLoading } from "../../../LoadingProvider";
 
 const Event = (props) => {
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  const { setLoading } = useLoading();
 
   // Xử lý khi chọn ảnh
   const handleImageChange = (event) => {
@@ -15,6 +17,7 @@ const Event = (props) => {
   // Gửi ảnh lên Cloudinary
   const handleUpload = async () => {
     try {
+      setLoading(true);
       const url = await uploadImageToCloudinary(
         image,
         Cloud_Name,
@@ -24,6 +27,8 @@ const Event = (props) => {
       alert("Upload thành công!");
     } catch (error) {
       alert("Upload thất bại!");
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -4,6 +4,7 @@ import { callAPI } from "../../../axios/axiosInstance";
 import Search from "antd/es/input/Search";
 import useCommonFunctions from "../../../Common/CommonFunction";
 import { API_TICKET, TICKET_STATUS_STR } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const ManageTickets = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -12,6 +13,7 @@ const ManageTickets = () => {
   const [tickets, setTickets] = useState([]);
   const [isRender, setIsRender] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const { setLoading } = useLoading();
 
   const { updateItems } = useCommonFunctions();
 
@@ -113,6 +115,7 @@ const ManageTickets = () => {
 
   const fetchTickets = async () => {
     try {
+      setLoading(true);
       const data = await callAPI(
         "get",
         `${API_TICKET.showingTicket}?nameSearch=${searchTerm.trim()}&page=0`
@@ -127,16 +130,21 @@ const ManageTickets = () => {
       setTickets(ticketData);
     } catch (err) {
       console.error("Error fetching tickets:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async (ticketId) => {
     try {
+      setLoading(true);
       await callAPI("delete", `/api/tickets/${ticketId}`);
       setIsRender(!isRender);
       message.success("Vé đã bị xoá thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,6 +152,7 @@ const ManageTickets = () => {
     setSearchTerm(name);
     setCurrentPage(1);
     try {
+      setLoading(true);
       const data = await callAPI(
         "get",
         `${API_TICKET.showingTicket}?nameSearch=${name.trim()}&page=0`
@@ -160,11 +169,14 @@ const ManageTickets = () => {
       setTotalItems(0);
       setTickets([]);
       message.error("Thông tin tìm kiếm không chính xác!");
+    } finally {
+      setLoading(false);
     }
   };
 
   const changePage = async (page, size) => {
     try {
+      setLoading(true);
       const data = await callAPI(
         "get",
         `${API_TICKET.showingTicket}?nameSearch=${searchTerm.trim()}&page=${
@@ -181,6 +193,8 @@ const ManageTickets = () => {
       setTickets(ticketData);
     } catch (err) {
       console.error("Error fetching cinemas:", err);
+    } finally {
+      setLoading(false);
     }
     setCurrentPage(page);
     setPageSize(size);

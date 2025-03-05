@@ -49,9 +49,9 @@ export function FilmHome(props) {
         setLoading(true);
         const movieData = await callAPI("get", API_Film.showingMovies);
         setMoviesReal(movieData);
-        setLoading(false);
       } catch (err) {
         console.error("Error fetching movies:", err);
+      } finally {
         setLoading(false);
       }
     };

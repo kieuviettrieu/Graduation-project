@@ -3,9 +3,10 @@ import { Drawer, Descriptions, Spin, message } from "antd";
 import dayjs from "dayjs";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_CUSTOMER } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const ViewCustomer = ({ open, onClose, id }) => {
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [customer, setCustomer] = useState(null);
 
   useEffect(() => {
@@ -29,9 +30,7 @@ const ViewCustomer = ({ open, onClose, id }) => {
 
   return (
     <Drawer title="Thông tin khách hàng" width={680} onClose={onClose} open={open}>
-      {loading ? (
-        <Spin size="large" />
-      ) : customer ? (
+      {customer ? (
         <Descriptions column={1} bordered>
           <Descriptions.Item label="Họ tên">{customer.fullName}</Descriptions.Item>
           <Descriptions.Item label="Ngày sinh">

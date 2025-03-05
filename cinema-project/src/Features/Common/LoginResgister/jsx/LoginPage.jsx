@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { loginAction } from "../../../../Redux/Actions";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_COMMON, ROUTER_PATHS } from "../../Constant";
-import { type } from "@testing-library/user-event/dist/type";
 import { message } from "antd";
 import useCommonFunctions from "../../CommonFunction";
+import { useLoading } from "../../../../LoadingProvider";
 
 const LoginPage = () => {
   const { redirectToPath } = useCommonFunctions();
@@ -13,9 +13,11 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [isErrorLogin, setIsErrorLogin] = useState(false);
   const dispatch = useDispatch();
+  const { setLoading } = useLoading();
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
       const response = await callAPI("post", API_COMMON.public.login, {
         username: email.trim(),
         password: password.trim(),
@@ -40,6 +42,8 @@ const LoginPage = () => {
       message.error("Thông tin đăng nhập không chính xác.");
       setIsErrorLogin(true);
       console.error("Login failed", error);
+    } finally {
+      setLoading(false);
     }
   };
 

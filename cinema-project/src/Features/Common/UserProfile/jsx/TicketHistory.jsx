@@ -3,6 +3,7 @@ import { Table, Tag } from "antd";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_COMMON } from "../../Constant";
 import useCommonFunctions from "../../CommonFunction";
+import { useLoading } from "../../../../LoadingProvider";
 
 const TicketHistory = ({isPoint}) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,6 +11,7 @@ const TicketHistory = ({isPoint}) => {
   const [totalItems, setTotalItems] = useState(0);
   const [bookings, setBookings] = useState([]);
   const { updateItems } = useCommonFunctions();
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     fetchBookings(currentPage, pageSize);
@@ -17,6 +19,7 @@ const TicketHistory = ({isPoint}) => {
 
   const fetchBookings = async (page, size) => {
     try {
+      setLoading(true);
       const response = await callAPI("get", `${API_COMMON.public.getTicketHistory}/${page-1}`);
       const tickets = updateItems(
         response.content,
@@ -28,6 +31,8 @@ const TicketHistory = ({isPoint}) => {
       setTotalItems(response.totalItems);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách vé:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -15,6 +15,7 @@ import { callAPI } from "../../../axios/axiosInstance";
 import { API_EMPLOYEE } from "./Constant";
 import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Option } = Select;
 
@@ -23,7 +24,7 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
   const [passWord, setPassWord] = useState("");
   const [confirmPassWord, setConfirmPassWord] = useState("");
   const [isPassWordConfirm, setIsPassWordConfirm] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [positions, setPositions] = useState([]);
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -67,8 +68,10 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
     };
 
     if (open) {
+      setLoading(true);
       fetchPositions();
       fetchEmployee();
+      setLoading(false);
     }
   }, [id, open, form]);
 
@@ -298,7 +301,7 @@ const EditEmployee = ({ open, onClose, onUpdate, id }) => {
           <Input.TextArea rows={3} placeholder="Nhập địa chỉ" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Cập nhật
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

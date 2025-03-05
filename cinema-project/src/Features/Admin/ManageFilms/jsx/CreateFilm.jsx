@@ -14,12 +14,13 @@ import { callAPI } from "../../../axios/axiosInstance";
 import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
 import { API_FILM } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Option } = Select;
 
 const CreateFilm = ({ open, onClose, onCreate }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [movieTypes, setMovieTypes] = useState([]);
   const [actors, setActors] = useState([]);
   const [directors, setDirectors] = useState([]);
@@ -31,6 +32,7 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
+        setLoading(true);
         const actorList = await callAPI("get", API_FILM.getMovieActors);
         const directorList = await callAPI("get", API_FILM.getMovieDirectors);
         const types = await callAPI("get", API_FILM.getMovieTypes);
@@ -41,12 +43,14 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
         setStudios(studioList);
       } catch (err) {
         console.error("Error fetching movie data:", err);
+      } finally {
+        setLoading(false);
       }
     };
     if (open) {
-      // form.resetFields();
-      // setImage(null);
-      // setImageUrl("");
+      form.resetFields();
+      setImage(null);
+      setImageUrl("");
       fetchMovieData();
     }
   }, [open]);
@@ -241,7 +245,7 @@ const CreateFilm = ({ open, onClose, onCreate }) => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Thêm phim
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

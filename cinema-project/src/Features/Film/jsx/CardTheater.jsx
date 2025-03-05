@@ -5,12 +5,13 @@ import "../Contents/CardTheater.css";
 import { API_COMMON, generateUrl, ROUTER_PATHS } from "../../Common/Constant";
 import { useNavigate } from "react-router-dom";
 import { callAPI } from "../../axios/axiosInstance";
+import { useLoading } from "../../../LoadingProvider";
 
 const CardTheater = ({ cinemas, tabs, filmId }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [showTimes, setShowTimes] = useState([]);
   const [activeTab, setActiveTab] = useState(tabs[0]?.id || "");
-  const navigate = useNavigate();
+  const { setLoading } = useLoading();
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
@@ -43,6 +44,7 @@ const CardTheater = ({ cinemas, tabs, filmId }) => {
   }
 
   const handleToggle = async (cinemaId, index) => {
+    setLoading(true);
     const showTimeData = await callAPI(
       "get",
       generateUrl(API_COMMON.public.getShowTimeByMovieAndCinema, {
@@ -50,6 +52,7 @@ const CardTheater = ({ cinemas, tabs, filmId }) => {
         idCinema: cinemaId,
       })
     );
+    setLoading(false);
     setShowTimes(formatShowTimes(showTimeData));
     setActiveIndex(activeIndex === index ? null : index);
   };

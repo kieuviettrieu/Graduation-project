@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Descriptions, Spin, message } from "antd";
+import { Drawer, Descriptions, message } from "antd";
 import dayjs from "dayjs";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_EMPLOYEE } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const ViewEmployee = ({ open, onClose, id }) => {
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [employee, setEmployee] = useState(null);
 
   useEffect(() => {
@@ -34,9 +35,7 @@ const ViewEmployee = ({ open, onClose, id }) => {
       onClose={onClose}
       open={open}
     >
-      {loading ? (
-        <Spin size="large" />
-      ) : employee ? (
+      {employee ? (
         <Descriptions column={1} bordered>
           <Descriptions.Item label="Hình ảnh">
             {employee?.image ? (

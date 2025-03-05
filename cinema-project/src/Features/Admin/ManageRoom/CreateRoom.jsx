@@ -2,21 +2,25 @@ import React, { useState, useEffect } from "react";
 import { Drawer, Form, Input, Select, Button, message } from "antd";
 import { API_ROOM, API_CINEMA } from "./Constant";
 import { callAPI } from "../../../axios/axiosInstance";
+import { useLoading } from "../../../LoadingProvider";
 
 const { Option } = Select;
 
 const CreateRoom = ({ open, onClose, onCreate }) => {
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [form] = Form.useForm();
   const [cinemas, setCinemas] = useState([]);
 
   useEffect(() => {
     const fetchCinemas = async () => {
       try {
+        setLoading(true);
         const data = await callAPI("get", API_CINEMA.list);
         setCinemas(data);
       } catch (err) {
         console.error("Error fetching cinemas:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -74,7 +78,7 @@ const CreateRoom = ({ open, onClose, onCreate }) => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" loading={loading} onClick={handleCreate}>
+          <Button type="primary" onClick={handleCreate}>
             Tạo phòng
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

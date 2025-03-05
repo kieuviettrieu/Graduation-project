@@ -5,10 +5,11 @@ import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
 import { API_EMPLOYEE } from "../../ManageEmployees/jsx/Constant";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_CINEMA } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const EditCinema = ({ open, onClose, onUpdate, id }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [image, setImage] = useState(null);
   const [imgUrl, setImgUrl] = useState("");
   const [cinema, setCinema] = useState(null);
@@ -17,6 +18,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
     const fetchCinema = async () => {
       try {
         if (!id) return;
+        setLoading(true);
         const cinema = await callAPI(
           "get",
           `${API_CINEMA.getCinema}/${id}`
@@ -31,6 +33,8 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         setImgUrl(cinema?.image);
       } catch (error) {
         console.error("Error fetching employee:", error);
+      } finally {
+        setLoading(false);
       }
     };
     if (open) {
@@ -124,7 +128,7 @@ const EditCinema = ({ open, onClose, onUpdate, id }) => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Cập nhật rạp
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

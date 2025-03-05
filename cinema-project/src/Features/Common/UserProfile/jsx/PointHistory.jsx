@@ -3,6 +3,7 @@ import { Table } from "antd";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_COMMON } from "../../Constant";
 import useCommonFunctions from "../../CommonFunction";
+import { useLoading } from "../../../../LoadingProvider";
 
 const PointHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,6 +11,7 @@ const PointHistory = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [pointHistory, setPointHistory] = useState([]);
   const { updateItems } = useCommonFunctions();
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     fetchPointHistory(currentPage, pageSize);
@@ -17,6 +19,7 @@ const PointHistory = () => {
 
   const fetchPointHistory = async (page, size) => {
     try {
+      setLoading(true);
       const response = await callAPI("get", `${API_COMMON.public.getPointHistory}/${page - 1}`);
       const points = updateItems(
         response.content,
@@ -28,6 +31,8 @@ const PointHistory = () => {
       setTotalItems(response.totalElements);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách điểm thưởng:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

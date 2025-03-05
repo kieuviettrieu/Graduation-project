@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginRegisterButton from "../../LoginResgister/jsx/LoginRegisterButton";
-import { ThemeSwitch } from "../../ThemeSwitch/ThemeSwitch";
 import "../Contents/index.css";
 import { ACCOUNT_ROLE, ROUTER_PATHS } from "../../Constant";
+import logo_cinema from '../../../../Media/img/logo_cinema.png'
+import { Dropdown, Menu } from "antd";
 
 const maps = [
-  // { path: ROUTER_PATHS.HOME, name: "Nature Cinema" },
+  { path: ROUTER_PATHS.HOME, name: "Trang chủ" },
   { path: ROUTER_PATHS.FILM, name: "Phim" },
   { path: ROUTER_PATHS.FILM_SCHEDULE, name: "Lịch chiếu" },
   { path: ROUTER_PATHS.CORNER, name: "Góc điện ảnh" },
@@ -18,6 +19,7 @@ export function Header(props) {
   const [isDropDownFilm, setIsDropDownFilm] = useState(false);
   const [accountRole, setAccountRole] = useState(2);
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
 
   const redirectToPath = (path) => {
     navigate(path);
@@ -56,7 +58,7 @@ export function Header(props) {
         <ul>
           <li>
             <div onClick={() => redirectToPathMobile(ROUTER_PATHS.HOME)}>
-              <span>Nature Cinema</span>
+              <span>Trang chủ</span>
             </div>
           </li>
           <li>
@@ -110,6 +112,22 @@ export function Header(props) {
 
   const handleClose = () => {};
 
+  const menu = (
+    <Menu
+      onClick={(e) => {
+        console.log("Chọn:", e.key);
+        setVisible(false); 
+      }}
+    >
+      <Menu.Item key="option1">
+        <Link to={ROUTER_PATHS.FILM}>Phim Đang Chiếu</Link>
+      </Menu.Item>
+      <Menu.Item key="option2">
+        <Link to={ROUTER_PATHS.FILM}>Phim Sắp Chiếu</Link>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <>
       {isMenuOpen && renderNavbar()}
@@ -124,10 +142,8 @@ export function Header(props) {
               onClick={() => handleNavbarMobileToggle()}
             ></i>
           </div>
-          <h3 className="logo">
-            <a href="/" className="site">
-              Nature Cinema
-            </a>
+          <h3>
+            <img className="logo" src={logo_cinema} alt="Cinema logo" />
           </h3>
           <div
             id="navbar"
@@ -137,6 +153,31 @@ export function Header(props) {
               const url = window.location.href;
               const currentPath = url.substring(url.lastIndexOf("/") + 1);
               const p = path.split("/")?.[1];
+              if (name === 'Phim') {
+                return (
+                  <div key={name} className="me-4 py-4">
+                  <Dropdown
+                    overlay={menu}
+                    trigger={["click"]}
+                    placement="bottomLeft"
+                    onVisibleChange={(v) => setVisible(v)}
+                    visible={visible}
+                  >
+                    <Link
+                      className={`nav-link scrollto ${currentPath === p ? "active" : ""}`}
+                      onClick={(e) => {
+                        e.preventDefault(); 
+                        setVisible(!visible); 
+                        handleClose();
+                      }}
+                      to={path}
+                    >
+                      {name}
+                    </Link>
+                  </Dropdown>
+                </div>
+                )
+              }
               return (
                 <div key={name} className="me-4 py-4">
                   <Link

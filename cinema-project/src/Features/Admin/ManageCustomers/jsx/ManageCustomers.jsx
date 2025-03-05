@@ -5,6 +5,7 @@ import { callAPI } from "../../../axios/axiosInstance";
 import { API_CUSTOMER } from "./Constant";
 import EditCustomer from "./EditCustomer";
 import ViewCustomer from "./ViewCustomer";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Search } = Input;
 
@@ -19,6 +20,7 @@ const ManageCustomers = () => {
   const [idView, setIdView] = useState(null);
   const [isRender, setIsRender] = useState(false);
   const [nameSearch, setNameSearch] = useState('');
+  const { setLoading } = useLoading();
 
   const columns = [
     {
@@ -92,6 +94,7 @@ const ManageCustomers = () => {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
+        setLoading(true);
         const data = await callAPI("get", `${API_CUSTOMER.showingCustomers}?page=0`);
         const customersData = updateItems(
           data.content,
@@ -103,6 +106,8 @@ const ManageCustomers = () => {
         setCustomers(customersData);
       } catch (err) {
         console.error("Error fetching customers:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCustomers();
@@ -110,12 +115,15 @@ const ManageCustomers = () => {
 
   const changePage = async (page, size) => {
     try {
+      setLoading(true);
       const data = await callAPI("get", `${API_CUSTOMER.showingCustomers}?search=${nameSearch.trim()}&page=${page - 1}`);
       const customersData = updateItems(data.content, pageSize, page, data.totalElements);
       setTotalItems(data.totalElements);
       setCustomers(customersData);
     } catch (err) {
       console.error("Error fetching customers:", err);
+    } finally {
+      setLoading(false);
     }
     setCurrentPage(page);
     setPageSize(size);
@@ -124,12 +132,15 @@ const ManageCustomers = () => {
 
   const handleEditCustomer = async (values) => {
     try {
+      setLoading(true);
       await callAPI("put", API_CUSTOMER.updateCustomer, values);
       setIsRender(!isRender);
       message.success("Khách hàng đã được cập nhật thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -145,6 +156,7 @@ const ManageCustomers = () => {
 
   const handleDelete = async (id) => {
     try {
+      setLoading(true);
       await callAPI("delete", `${API_CUSTOMER.deleteCustomer}/${id}`);
       setCurrentPage(1);
       setIsRender(!isRender);
@@ -152,6 +164,8 @@ const ManageCustomers = () => {
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 

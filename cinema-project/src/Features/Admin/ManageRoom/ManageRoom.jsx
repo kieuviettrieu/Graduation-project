@@ -5,6 +5,7 @@ import useCommonFunctions from "../../../Common/CommonFunction";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_ROOM } from "./Constant";
 import CreateRoom from "./CreateRoom";
+import { useLoading } from "../../../LoadingProvider";
 // import EditRoom from "./EditRoom";
 const { Search } = Input;
 
@@ -17,6 +18,7 @@ const ManageRoom = () => {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
   const [isRender, setIsRender] = useState(false);
+  const { setLoading } = useLoading();
 
   const columns = [
     {
@@ -73,12 +75,15 @@ const ManageRoom = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
+        setLoading(true);
         const data = await callAPI("get", API_ROOM.showingRooms + "?name=&status=all&page=0");
         const roomsData = updateItems(data.content, pageSize, 1, data.totalElements);
         setTotalItems(data.totalElements);
         setRooms(roomsData);
       } catch (err) {
         console.error("Error fetching rooms:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -87,12 +92,15 @@ const ManageRoom = () => {
 
   const changePage = async (page, size) => {
     try {
+      setLoading(true);
       const data = await callAPI("get", `${API_ROOM.showingRooms}?name=&status=all&page=${page - 1}`);
       const roomsData = updateItems(data.content, pageSize, page, data.totalElements);
       setTotalItems(data.totalElements);
       setRooms(roomsData);
     } catch (err) {
       console.error("Error fetching rooms:", err);
+    } finally {
+      setLoading(false);
     }
     setCurrentPage(page);
     setPageSize(size);
@@ -100,23 +108,29 @@ const ManageRoom = () => {
 
   const handleCreateRoom = async (values) => {
     try {
+      setLoading(true);
       await callAPI("post", API_ROOM.addRoom, values);
       setIsRender(!isRender);
       message.success("Phòng đã được tạo thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEditRoom = async (values) => {
     try {
+      setLoading(true);
       await callAPI("put", API_ROOM.updateRoom, values);
       setIsRender(!isRender);
       message.success("Phòng đã được cập nhật thành công!");
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,6 +141,7 @@ const ManageRoom = () => {
 
   const handleDelete = async (id) => {
     try {
+      setLoading(true);
       await callAPI("delete", `${API_ROOM.deleteRoom}/${id}`);
       setCurrentPage(1);
       setIsRender(!isRender);
@@ -134,6 +149,8 @@ const ManageRoom = () => {
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
 

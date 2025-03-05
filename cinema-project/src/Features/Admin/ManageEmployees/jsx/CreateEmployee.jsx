@@ -6,21 +6,20 @@ import {
   Button,
   Select,
   DatePicker,
-  Upload,
   message,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import "../Contents/CreateEmployee.css";
 import dayjs from "dayjs";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_EMPLOYEE } from "./Constant";
 import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Option } = Select;
 const CreateEmployee = ({ open, onClose, onCreate }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [passWord, setPassWord] = useState(false);
   const [isPassWordConfirm, setIsPassWordConfirm] = useState(true);
   const [positions, setPositions] = useState([]);
@@ -30,10 +29,13 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
+        setLoading(true);
         const data = await callAPI("get", API_EMPLOYEE.position);
         setPositions(data);
       } catch (err) {
         console.error("Error fetching movies:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -268,7 +270,7 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Thêm nhân viên
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

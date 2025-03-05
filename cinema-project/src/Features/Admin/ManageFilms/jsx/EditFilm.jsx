@@ -6,12 +6,13 @@ import { uploadImageToCloudinary } from "../../../../uploadImage";
 import { Cloud_Name, Upload_Preset } from "../../../Common/Constant";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_FILM } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Option } = Select;
 
 const EditFilm = ({ open, onClose, onUpdate, id }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [movieTypes, setMovieTypes] = useState([]);
@@ -22,6 +23,7 @@ const EditFilm = ({ open, onClose, onUpdate, id }) => {
     const fetchFilm = async () => {
       try {
         if (!id) return;
+        setLoading(true);
         const { data } = await callAPI("get", `${API_FILM.getMovies}/${id}`);
         form.setFieldsValue({
           name: data.name,
@@ -36,11 +38,14 @@ const EditFilm = ({ open, onClose, onUpdate, id }) => {
         setImageUrl(data.image);
       } catch (error) {
         console.error("Error fetching film:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     const fetchOptions = async () => {
       try {
+        setLoading(true);
         const typesRes = await callAPI("get", API_FILM.getMovieTypes);
         const actorsRes = await callAPI("get", API_FILM.getMovieActors);
         const directorsRes = await callAPI("get", API_FILM.getMovieDirectors);
@@ -49,6 +54,8 @@ const EditFilm = ({ open, onClose, onUpdate, id }) => {
         setMovieDirectors(directorsRes.data);
       } catch (error) {
         console.error("Error fetching options:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -210,7 +217,7 @@ const EditFilm = ({ open, onClose, onUpdate, id }) => {
           />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Cập nhật phim
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

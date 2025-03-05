@@ -3,12 +3,13 @@ import { Drawer, Form, Input, Button, Select, DatePicker, message } from "antd";
 import dayjs from "dayjs";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_CUSTOMER } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Option } = Select;
 
 const EditCustomer = ({ open, onClose, onUpdate, id }) => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [customer, setCustomer] = useState(null);
   const [confirmPassWord, setConfirmPassWord] = useState("");
   const [isPassWordConfirm, setIsPassWordConfirm] = useState(true);
@@ -18,6 +19,7 @@ const EditCustomer = ({ open, onClose, onUpdate, id }) => {
     const fetchCustomer = async () => {
       try {
         if (!id) return;
+        setLoading(true);
         const data = await callAPI("get", `${API_CUSTOMER.getCustomer}/${id}`);
         form.setFieldsValue({
           address: data.address,
@@ -32,6 +34,8 @@ const EditCustomer = ({ open, onClose, onUpdate, id }) => {
         setCustomer(data);
       } catch (error) {
         console.error("Error fetching Customer:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -200,7 +204,7 @@ const EditCustomer = ({ open, onClose, onUpdate, id }) => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             Cập nhật khách hàng
           </Button>
           <Button onClick={onClose} style={{ marginLeft: 10 }}>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Descriptions, Spin, message } from "antd";
+import { Drawer, Descriptions, message } from "antd";
 import dayjs from "dayjs";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_FILM } from "./Constant";
+import { useLoading } from "../../../../LoadingProvider";
 
 const ViewFilm = ({ open, onClose, id }) => {
-  const [loading, setLoading] = useState(false);
+  const { setLoading } = useLoading();
   const [film, setFilm] = useState(null);
 
   useEffect(() => {
@@ -29,9 +30,7 @@ const ViewFilm = ({ open, onClose, id }) => {
 
   return (
     <Drawer title="Chi tiết phim" width={680} onClose={onClose} open={open}>
-      {loading ? (
-        <Spin size="large" />
-      ) : film ? (
+      {film ? (
         <Descriptions column={1} bordered>
           <Descriptions.Item label="Hình ảnh">
             {film?.image ? <img src={film.image} alt="phim" width="150px" /> : "Không có ảnh"}

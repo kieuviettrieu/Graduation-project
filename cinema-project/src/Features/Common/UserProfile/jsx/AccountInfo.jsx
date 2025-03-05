@@ -41,6 +41,7 @@ const AccountInfo = () => {
 
   const handleSubmit = async (values) => {
     setFormLoading(true);
+    setLoading(true);
     try {
       await callAPI("put", API_COMMON.public.updateUserInfo, {
         ...values,
@@ -50,6 +51,8 @@ const AccountInfo = () => {
     } catch (err) {
       message.error("Đã có lỗi xảy ra!");
       console.error("Error:", err);
+    } finally {
+      setLoading(false);
     }
     setFormLoading(false);
   };

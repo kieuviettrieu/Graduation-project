@@ -34,9 +34,10 @@ const CustomerStatistics = () => {
       );
       setCustomers(dataList);
       setTotalItems(data.totalElements);
-      setLoading(false);
     } catch (err) {
       console.error("Error fetching customer statistics:", err);
+    } finally {
+      setLoading(false);
     }
   };
 

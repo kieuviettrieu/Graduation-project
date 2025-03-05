@@ -6,6 +6,7 @@ import { API_COMMON, generateUrl, ROUTER_PATHS } from "../../Common/Constant";
 import { callAPI } from "../../axios/axiosInstance";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { message } from "antd";
+import { useLoading } from "../../../LoadingProvider";
 
 const ConfirmTicket = () => {
   const { redirectToPath } = useCommonFunctions();
@@ -17,6 +18,7 @@ const ConfirmTicket = () => {
   const [timeLeft, setTimeLeft] = useState(5 * 60); // 5 phút = 300 giây
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
+  const { setLoading } = useLoading();
 
   useEffect(() => {
     if (timeLeft <= 0) return; // Dừng đếm khi hết thời gian
@@ -34,6 +36,7 @@ const ConfirmTicket = () => {
     checkPageLogin();
     const fetchData = async () => {
       try {
+        setLoading(true);
         const info = await callAPI(
           "get",
           generateUrl(API_COMMON.public.getUser, { username: user?.username })
@@ -41,6 +44,8 @@ const ConfirmTicket = () => {
         setUserData(info);
       } catch (err) {
         console.error("Error fetching user:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -60,6 +65,7 @@ const ConfirmTicket = () => {
   // Xử lý thanh toán PayPal
   const createOrder = async () => {
     try {
+      setLoading(true);
       const rateUSD = await fetch(
         "https://v6.exchangerate-api.com/v6/5630f4c8f4bb2280d85582d9/latest/USD"
       );
@@ -75,6 +81,8 @@ const ConfirmTicket = () => {
       return response;
     } catch (error) {
       console.error("Lỗi tạo đơn hàng:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,6 +90,7 @@ const ConfirmTicket = () => {
     const { seats } = ticketData;
     const ticketIds = seats.map(item => item?.id); 
     try {
+      setLoading(true);
       const response = await callAPI(
         "post",
         `http://localhost:8080/api/paypal/capture-payment/${data.orderID}`
@@ -100,6 +109,8 @@ const ConfirmTicket = () => {
     } catch (error) {
       console.error("Lỗi khi xác nhận thanh toán:", error);
       message.error("Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại!");
+    } finally {
+      setLoading(false);
     }
   };
 
