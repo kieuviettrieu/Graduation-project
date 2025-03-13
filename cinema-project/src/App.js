@@ -37,7 +37,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="schedule" element={<Schedule />} />
             <Route path="schedule/detail/:scheduleId" element={<ScheduleDetail />} />
-            <Route path="film" element={<Film />} />
+            <Route path="film/:movieType" element={<Film />} />
             <Route path="film/detail/:filmId" element={<FilmDetail />} />
             <Route path="corner" element={<Film />} />
             <Route path="event" element={<Event />} />

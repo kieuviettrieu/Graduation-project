@@ -20,6 +20,7 @@ import { callAPI } from "../../axios/axiosInstance";
 import "../Contents/Booking.css";
 import { saveTickeInfo } from "../../../Redux/Actions";
 import { useLoading } from "../../../LoadingProvider";
+import useWebSocket from "../../Common/WebSocket";
 
 const SeatSelector = ({ showTimeId }) => {
   const dispatch = useDispatch();
@@ -34,6 +35,8 @@ const SeatSelector = ({ showTimeId }) => {
   const [zoomLevel, setZoomLevel] = useState(zoomLevelInit);
   const [isMobile, setIsMobile] = useState(isMobileInit);
   const { setLoading } = useLoading();
+  const { seatStatus } = useWebSocket();
+  const [seatHolding, setSeatHolding] = useState([]);
 
   const convertTickets = (arr) => {
     const groupedBookings = Object.values(
@@ -72,14 +75,42 @@ const SeatSelector = ({ showTimeId }) => {
   };
 
   useEffect(() => {
+    setSeatHolding(seatStatus);
+    console.log(seatStatus, "seatStatus")
+  }, [seatStatus]);
+
+  useEffect(() => {
     const ticketData = ticKets.map((subArray) =>
       subArray.map((item) => ({
         ...item,
-        status: selecteds.includes(item.id) ? SeatType.Selected : item?.status === SeatType.Selected ? 0 : item?.status,
+        status: selecteds.includes(item.id)
+          ? SeatType.Selected
+          : item?.status === SeatType.Selected
+          ? 0
+          : item?.status,
       }))
-    )
+    );
     setTickets(ticketData);
   }, [selecteds]);
+
+  const getStatusById = (id) => {
+    const ticket = seatHolding.find((ticket) => ticket.idTicket === id);
+    return ticket ? ticket.status : null;
+  };
+
+  useEffect(() => {
+    const ticketData = ticKets.map((subArray) =>
+      subArray.map((item) => ({
+        ...item,
+        status: item?.status === SeatType.Sold ? SeatType.Sold : getStatusById(item?.id) === "HOLD"
+          ? SeatType.Selected
+          : getStatusById(item?.id) === "SOLD"
+          ? SeatType.Sold
+          : getStatusById(item?.id) === "AVAILABLE" ? SeatType.Normal : item?.status,
+      }))
+    );
+    setTickets(ticketData);
+  }, [seatHolding]);
 
   const getTotalCost = (arr) => {
     return arr
@@ -149,9 +180,14 @@ const SeatSelector = ({ showTimeId }) => {
             idShowTime: showTimeId,
           })
         );
+        const statusList = await callAPI(
+          "get",
+          generateUrl(API_COMMON.public.getSeatStatus)
+        );
         setShowTime(showTimeData);
         setRoom(roomData);
         setTickets(convertTickets(ticketData));
+        setSeatHolding(statusList);
       } catch (err) {
         console.error("Error fetching movies:", err);
       } finally {
@@ -237,7 +273,6 @@ const SeatSelector = ({ showTimeId }) => {
                   key={seatIndex}
                   data-row={seat?.id}
                   data-index={seat?.id}
-                  // data-type={seat.available ? "True" : "False"}
                   className="chair"
                   style={{
                     padding: "0px",
@@ -255,12 +290,12 @@ const SeatSelector = ({ showTimeId }) => {
                     fontSize: "xx-small",
                     lineHeight: "35px",
                     cursor:
-                      seat?.status == SeatType.Sold ? "not-allowed" : "pointer",
+                      seat?.status == SeatType.Sold || getStatusById(seat?.id) === "SOLD" ||  getStatusById(seat?.id) === "HOLD" ? "not-allowed" : "pointer",
                     userSelect:
-                      seat?.status == SeatType.Sold ? "none" : "default",
+                      seat?.status == SeatType.Sold || getStatusById(seat?.id) === "SOLD" || getStatusById(seat?.id) === "HOLD" ? "none" : "default",
                   }}
                   onClick={() =>
-                    seat?.status != SeatType.Sold && handleSeatClick(seat)
+                    seat?.status != SeatType.Sold && !getStatusById(seat?.id) && handleSeatClick(seat)
                   }
                 >
                   {seat?.chairRoom?.chair?.name}
@@ -381,8 +416,11 @@ const SeatSelector = ({ showTimeId }) => {
               </li>
             </ul>
           </div>
-          <div style={{ width: "100px" }} className={selecteds?.length > 0 ? "" : "disabled"}>
-            <a href="#" onClick={(e) => handleNextStep(e)} >
+          <div
+            style={{ width: "100px" }}
+            className={selecteds?.length > 0 ? "" : "disabled"}
+          >
+            <a href="#" onClick={(e) => handleNextStep(e)}>
               <p
                 style={{
                   width: "100%",

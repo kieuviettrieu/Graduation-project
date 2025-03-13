@@ -132,6 +132,8 @@
 .time.past {
   opacity: .3;
   background-color: #2b2b31;
+  cursor: not-allowed;
+  user-select: none;
 }
 
 .date {

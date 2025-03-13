@@ -107,7 +107,7 @@ const AccountInfo = () => {
             { type: "email", message: "Email không hợp lệ!" },
           ]}
         >
-          <Input placeholder="Nhập email" />
+          <Input placeholder="Nhập email" disabled />
         </Form.Item>
 
         <Form.Item

@@ -18,7 +18,37 @@
     opacity: 0.7;
 }
 
-/* .ant-tabs-tab-active {
-  border-color: #fff;
-  background: #fff;
-} */
+.mixitup-gallery .nav {
+    border: none;
+    justify-content: center;
+}
+
+.mixitup-gallery .nav li {
+    min-width: 150px;
+    max-width: 45%;
+    text-align: center;
+}
+
+.mixitup-gallery .nav li a.active {
+    border: none;
+    background: #fc1b1b !important;
+    color: #fff !important;
+}
+
+.mixitup-gallery .nav li a {
+    background: #271f2d;
+    color: #fff;
+    border: none !important;
+    font-size: 16px;
+    height: 45px;
+    font-weight: bold;
+    border-radius: 4px 4px 0 0;
+    margin-top: 3px;
+}
+
+@media only screen and (max-width: 767px) {
+    .mixitup-gallery .nav li a {
+        font-size: 15px;
+    }
+}
+

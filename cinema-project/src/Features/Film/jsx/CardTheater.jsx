@@ -57,6 +57,16 @@ const CardTheater = ({ cinemas, tabs, filmId }) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
+  const isDateTimeGreaterThanNow = (timeString, dateString) => {
+    const [inputHours, inputMinutes] = timeString.split(":").map(Number);
+    const [day, month, year] = dateString.split("/").map(Number);
+
+    const inputDateTime = new Date(year, month - 1, day, inputHours, inputMinutes);
+    const now = new Date();
+
+    return inputDateTime > now;
+};
+
   return (
     <div className="prod-tabs tabs-box">
       <ul className="tab-btns tab-buttons clearfix">
@@ -112,17 +122,19 @@ const CardTheater = ({ cinemas, tabs, filmId }) => {
                   showTimes.map((date, i) => (
                     <div className="content" key={`${date.date}-${i}`}>
                       <span className="time date" style={{backgroundColor: "#444444"}}>{date.date}</span>
-                      {date.times.map((time) => (
+                      {date.times.map((time) => {
+                        const isAllowed = isDateTimeGreaterThanNow(time.time, date.date);
+                        return (
                         <a
-                          href={generateUrl(ROUTER_PATHS.BOOKING, {
+                          href={isAllowed && generateUrl(ROUTER_PATHS.BOOKING, {
                             timeId: time?.id
                           })}
                           className="time-link"
                           key={time.id}
                         >
-                          <span className="time item">{time.time}</span>
+                          <span className={isAllowed ? "time item" : "time past item"}>{time.time}</span>
                         </a>
-                      ))}
+                      )})}
                       {i < showTimes.length - 1 && <hr />}
                     </div>
                   ))}

@@ -11,7 +11,7 @@ import { message } from "antd";
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.auth);
-  const [choose, setChoose] = useState(0);
+  const [choose, setChoose] = useState(3);
   const { setLoading } = useLoading();
   const [info, setInfo] = useState({
     fullName: "",

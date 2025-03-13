@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import useCommonFunctions from "../../Common/CommonFunction";
-import { generatePath } from "react-router-dom";
 import { API_COMMON, generateUrl, ROUTER_PATHS } from "../../Common/Constant";
 import { callAPI } from "../../axios/axiosInstance";
 import { PayPalButtons } from "@paypal/react-paypal-js";
@@ -19,18 +18,17 @@ const ConfirmTicket = () => {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
   const { setLoading } = useLoading();
+  const [seatIds, setSeatIds] = useState([]);  
 
   useEffect(() => {
-    if (timeLeft <= 0) return; // Dừng đếm khi hết thời gian
+    if (timeLeft <= 0) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
 
-    return () => clearInterval(timer); // Dọn dẹp interval khi component unmount
+    return () => clearInterval(timer);
   }, [timeLeft]);
-
-  
 
   useEffect(() => {
     checkPageLogin();
@@ -51,6 +49,39 @@ const ConfirmTicket = () => {
     fetchData();
     setTicketData(ticketInfo?.infoConfirm);
   }, []);
+
+  useEffect(() => {
+    if (ticketData) {
+      const ticketIds = ticketData?.seats?.map((i) => i?.id);
+      setSeatIds(ticketIds);
+    }
+  }, [ticketData]);
+
+  const holdSeats = async (selectedSeats) => {
+    const ticketData = selectedSeats.map((seat) => ({
+      idTicket: seat,
+      username: user?.username,
+      status: "HOLD",
+    }));
+    const apiHold = "http://localhost:8080/api/user/seats/hold";
+
+    await callAPI("post", apiHold, ticketData)
+  };
+
+  const releaseSeats = async (selectedSeats) => {
+    const api_release = "http://localhost:8080/api/user/seats/release";
+
+    await callAPI("delete", api_release, selectedSeats);
+  };
+
+  useEffect(() => {
+    if (seatIds.length > 0) {
+      holdSeats(seatIds);
+    }
+    return () => {
+      releaseSeats(seatIds);
+    };
+  }, [seatIds]);
 
   if (!ticketData) return <p>Không có dữ liệu vé!</p>;
 
@@ -75,7 +106,7 @@ const ConfirmTicket = () => {
         "post",
         "http://localhost:8080/api/paypal/create-order",
         {
-          amount: Number((totalAmount / usdToVndRate).toFixed(2))
+          amount: Number((totalAmount / usdToVndRate).toFixed(2)),
         }
       );
       return response;
@@ -88,19 +119,16 @@ const ConfirmTicket = () => {
 
   const onApprove = async (data) => {
     const { seats } = ticketData;
-    const ticketIds = seats.map(item => item?.id); 
+    const ticketIds = seats.map((item) => item?.id);
     try {
       setLoading(true);
       const response = await callAPI(
         "post",
         `http://localhost:8080/api/paypal/capture-payment/${data.orderID}`
       );
-    
+
       if (response?.status === "COMPLETED") {
-        await callAPI(
-          "post",
-          API_COMMON.public.bookingTicket, ticketIds
-        );
+        await callAPI("post", API_COMMON.public.bookingTicket, ticketIds);
         message.success("Đặt vé thành công");
         redirectToPath(ROUTER_PATHS.USER_PROFILE);
       } else {
@@ -200,7 +228,10 @@ const ConfirmTicket = () => {
             </div>
 
             {/* Nút hành động */}
-              <div style={{color: "rgb(242, 107, 56)"}}>Vui lòng hoàn tất thủ tục thanh toán trong {minutes}:{seconds.toString().padStart(2, "0")}</div>
+            <div style={{ color: "rgb(242, 107, 56)" }}>
+              Vui lòng hoàn tất thủ tục thanh toán trong {minutes}:
+              {seconds.toString().padStart(2, "0")}
+            </div>
             <div className="btn-active py-3 d-flex">
               {!showPaymentButton ? (
                 <>

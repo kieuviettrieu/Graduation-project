@@ -38,16 +38,26 @@ const DraggableTabNode = ({ className, ...props }) => {
   });
 };
 
-export function FilmHome(props) {
-  const { moviesForYou, showingMovies, upcomingMovies } = props;
+export function FilmHome() {
   const [moviesReal, setMoviesReal] = useState([]);
   const { setLoading } = useLoading();
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const movieData = await callAPI("get", API_Film.showingMovies);
+        let apiStr = API_Film.showingMovies;
+        if (activeTab === 1) {
+          apiStr = API_Film.showingMovies;
+        } else if (activeTab === 2) {
+          apiStr = API_Film.upComingg;
+        }
+        const movieData = await callAPI("get", apiStr);
         setMoviesReal(movieData);
       } catch (err) {
         console.error("Error fetching movies:", err);
@@ -57,72 +67,79 @@ export function FilmHome(props) {
     };
 
     fetchMovies();
-  }, []);
+  }, [activeTab]);
 
-  const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    const newItems = [
-      {
-        key: "1",
-        label: moviesForYou.title,
-        children: <CardList movies={moviesReal} />,
-      },
-      {
-        key: "2",
-        label: showingMovies.title,
-        children: <CardList movies={moviesReal} />,
-      },
-      {
-        key: "3",
-        label: upcomingMovies.title,
-        children: <CardList movies={moviesReal} />,
-      },
-    ];
-    setItems(newItems);
-  }, [moviesReal]);
-
-  const sensor = useSensor(PointerSensor, {
-    activationConstraint: {
-      distance: 10,
-    },
-  });
-
-  const onDragEnd = ({ active, over }) => {
-    if (active.id !== over?.id) {
-      setItems((prev) => {
-        const activeIndex = prev.findIndex((i) => i.key === active.id);
-        const overIndex = prev.findIndex((i) => i.key === over?.id);
-        return arrayMove(prev, activeIndex, overIndex);
-      });
-    }
-  };
+  // useEffect(() => {
+  //   const newItems = [
+  //     {
+  //       key: "1",
+  //       label: moviesForYou.title,
+  //       children: <CardList movies={moviesReal} />,
+  //     },
+  //     {
+  //       key: "2",
+  //       label: showingMovies.title,
+  //       children: <CardList movies={moviesReal} />,
+  //     },
+  //     {
+  //       key: "3",
+  //       label: upcomingMovies.title,
+  //       children: <CardList movies={moviesReal} />,
+  //     },
+  //   ];
+  //   setItems(newItems);
+  // }, [moviesReal]);
 
   return (
     <div>
-      <Tabs
-        items={items}
-        renderTabBar={(tabBarProps, DefaultTabBar) => (
-          <DndContext
-            sensors={[sensor]}
-            onDragEnd={onDragEnd}
-            collisionDetection={closestCenter}
+      <div className="mixitup-gallery">
+      <ul className="nav nav-tabs">
+      <li>
+          <a
+            data-toggle="tab"
+            className={activeTab === 0 ? "active" : ""}
+            href="#suggest"
+            onClick={(e) => {
+              e.preventDefault();
+              handleTabClick(0);
+            }}
           >
-            <SortableContext
-              items={items.map((i) => i.key)}
-              strategy={horizontalListSortingStrategy}
-            >
-              <DefaultTabBar {...tabBarProps}>
-                {(node) => (
-                  <DraggableTabNode {...node.props} key={node.key}>
-                    {node}
-                  </DraggableTabNode>
-                )}
-              </DefaultTabBar>
-            </SortableContext>
-          </DndContext>
-        )}
-      />
+            Gợi ý
+          </a>
+        </li>
+        <li>
+          <a
+            data-toggle="tab"
+            className={activeTab === 1 ? "active" : ""}
+            href="#current"
+            onClick={(e) => {
+              e.preventDefault();
+              handleTabClick(1);
+            }}
+          >
+            Phim Đang chiếu
+          </a>
+        </li>
+        <li>
+          <a
+            data-toggle="tab"
+            className={activeTab === 2 ? "active" : ""}
+            href="#comming"
+            onClick={(e) => {
+              e.preventDefault();
+              handleTabClick(2);
+            }}
+          >
+            Phim Sắp chiếu
+          </a>
+        </li>
+      </ul>
+
+      <div className="tab-content">
+        <CardList movies={moviesReal} />
+      </div>
+    </div>
     </div>
   );
 }
+

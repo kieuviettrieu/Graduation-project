@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LoginRegisterButton from "../../LoginResgister/jsx/LoginRegisterButton";
 import "../Contents/index.css";
 import { ACCOUNT_ROLE, ROUTER_PATHS } from "../../Constant";
-import logo_cinema from '../../../../Media/img/logo_cinema.png'
+import logo_cinema from '../../../../Media/img/logo_cinema.png';
 import { Dropdown, Menu } from "antd";
 
 const maps = [
@@ -74,10 +74,10 @@ export function Header(props) {
           </li>
           {isDropDownFilm && (
             <>
-              <li className="drop-down">
-                <span>Phim đang chiếu</span>
+              <li className="drop-down" onClick={() => redirectToPathMobile("/film/1")}>
+                <span >Phim đang chiếu</span>
               </li>
-              <li className="drop-down">
+              <li className="drop-down" onClick={() => redirectToPathMobile("/film/2")}>
                 <span>Phim sắp chiếu</span>
               </li>
             </>
@@ -115,15 +115,14 @@ export function Header(props) {
   const menu = (
     <Menu
       onClick={(e) => {
-        console.log("Chọn:", e.key);
         setVisible(false); 
       }}
     >
       <Menu.Item key="option1">
-        <Link to={ROUTER_PATHS.FILM}>Phim Đang Chiếu</Link>
+        <Link to={"/film/1"}>Phim Đang Chiếu</Link>
       </Menu.Item>
       <Menu.Item key="option2">
-        <Link to={ROUTER_PATHS.FILM}>Phim Sắp Chiếu</Link>
+        <Link to={"/film/2"}>Phim Sắp Chiếu</Link>
       </Menu.Item>
     </Menu>
   );
@@ -143,7 +142,7 @@ export function Header(props) {
             ></i>
           </div>
           <h3>
-            <img className="logo" src={logo_cinema} alt="Cinema logo" />
+            <img style={{cursor: 'pointer'}} className="logo" src={logo_cinema} alt="Cinema logo" onClick={() => redirectToPath(ROUTER_PATHS.HOME)}/>
           </h3>
           <div
             id="navbar"
@@ -154,6 +153,7 @@ export function Header(props) {
               const currentPath = url.substring(url.lastIndexOf("/") + 1);
               const p = path.split("/")?.[1];
               if (name === 'Phim') {
+                const match = url.match(/\/(\w+)\/\d+$/);
                 return (
                   <div key={name} className="me-4 py-4">
                   <Dropdown
@@ -164,7 +164,7 @@ export function Header(props) {
                     visible={visible}
                   >
                     <Link
-                      className={`nav-link scrollto ${currentPath === p ? "active" : ""}`}
+                      className={`nav-link scrollto ${currentPath === p || (match?.length >=2 && match[1] === p) ? "active" : ""}`}
                       onClick={(e) => {
                         e.preventDefault(); 
                         setVisible(!visible); 
@@ -204,9 +204,6 @@ export function Header(props) {
             )}
           </div>
           <LoginRegisterButton />
-          {/* <div className="mobile-cover">
-            <ThemeSwitch />
-          </div> */}
         </div>
       </header>
     </>

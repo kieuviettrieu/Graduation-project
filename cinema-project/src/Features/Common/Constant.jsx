@@ -12,6 +12,7 @@ export const API_BASE_URL_ORIGIN = "http://localhost:8080/api";
 
 export const API_COMMON = {
   public: {
+    register: API_BASE_URL_PUBLIC + "/signup",
     movieDetail: API_BASE_URL_PUBLIC + "/movie/detail/{id}",
     getCinemaByMovieId: API_BASE_URL_PUBLIC + "/cinemas-by-movie/{id}",
     getShowTimeByMovieAndCinema: API_BASE_URL_PUBLIC + "/showtime/showtime-by-movie-cinema/{idMovie}/{idCinema}",
@@ -28,6 +29,9 @@ export const API_COMMON = {
     getPointHistory: API_BASE_URL_ORIGIN + "/user/point",
     changePassword: API_BASE_URL_ORIGIN + "/user/do-reset-password",
     sumPoint: API_BASE_URL_ORIGIN + "/user/sum-point",
+    holdTicket: API_BASE_URL_ORIGIN + "/user/seats/hold",
+    releaseSeatStatus: API_BASE_URL_ORIGIN + "/user/seats/release",
+    getSeatStatus: API_BASE_URL_ORIGIN + "/user/seats/status",
   }
   
 };
@@ -70,8 +74,8 @@ export const ROUTER_PATHS = {
   //HOME
   HOME: "/",
   //FILM
-  FILM: "/film",
-  FILM_DETAIL: "film/detail/{filmId}",
+  FILM: "/film/{movieType}",
+  FILM_DETAIL: "/film/detail/{filmId}",
   //BOOKING
   FILM_SCHEDULE: "/schedule",
   FILM_SCHEDULE_DETAIL: "/schedule/detail/{scheduleId}",

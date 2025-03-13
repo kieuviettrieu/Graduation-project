@@ -120,7 +120,7 @@ const ScheduleDetail = () => {
                             }`}
                             id={`pills-popular-tab-${index}`}
                             data-toggle="pill"
-                            href={`#pills-popular-${index}`}
+                            // href={`#pills-popular-${index}`}
                             role="tab"
                             aria-controls={`pills-popular-${index}`}
                             aria-selected={index === 0}
