@@ -229,6 +229,7 @@ const ManageEmployees = () => {
           columns={columns}
           dataSource={employees}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             onChange: (page, size) => changePage(page, size),

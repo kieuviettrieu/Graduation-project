@@ -9,4 +9,6 @@ export const API_CINEMA = {
 
     getCinemaById: API_BASE_URL_PUBLIC + "/cinema",
     scheduleCinema: API_BASE_URL_PUBLIC + "/cinemas",
+
+    getCinemaAll: API_BASE_URL_ADMIN + "/cinema/all",
   };

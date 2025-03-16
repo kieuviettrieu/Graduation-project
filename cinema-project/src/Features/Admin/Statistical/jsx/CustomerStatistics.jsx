@@ -105,6 +105,7 @@ const CustomerStatistics = () => {
           columns={columns}
           dataSource={customers}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             total: totalItems,

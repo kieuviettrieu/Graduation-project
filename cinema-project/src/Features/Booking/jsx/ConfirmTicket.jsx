@@ -21,7 +21,10 @@ const ConfirmTicket = () => {
   const [seatIds, setSeatIds] = useState([]);  
 
   useEffect(() => {
-    if (timeLeft <= 0) return;
+    if (timeLeft <= 0) {
+      redirectToPath(ROUTER_PATHS.HOME);
+      return;
+    };
 
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => prevTime - 1);
@@ -130,7 +133,9 @@ const ConfirmTicket = () => {
       if (response?.status === "COMPLETED") {
         await callAPI("post", API_COMMON.public.bookingTicket, ticketIds);
         message.success("Đặt vé thành công");
-        redirectToPath(ROUTER_PATHS.USER_PROFILE);
+        setTimeout(() => {
+          redirectToPath(ROUTER_PATHS.USER_PROFILE);
+      }, 300);
       } else {
         message.error("Thanh toán chưa hoàn tất. Vui lòng thử lại!");
       }

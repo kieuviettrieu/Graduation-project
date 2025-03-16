@@ -62,13 +62,13 @@ const ChangePassword = () => {
           <Input value={username} readOnly />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           label="Mật khẩu"
           name="nowPass"
           rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
         >
           <Input.Password />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           label="Mật khẩu mới"

@@ -70,6 +70,7 @@ const MovieTypeStatistics = () => {
           columns={columns}
           dataSource={genres}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             total: totalItems,

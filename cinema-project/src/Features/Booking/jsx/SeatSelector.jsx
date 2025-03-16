@@ -21,6 +21,7 @@ import "../Contents/Booking.css";
 import { saveTickeInfo } from "../../../Redux/Actions";
 import { useLoading } from "../../../LoadingProvider";
 import useWebSocket from "../../Common/WebSocket";
+import { message } from "antd";
 
 const SeatSelector = ({ showTimeId }) => {
   const dispatch = useDispatch();
@@ -208,7 +209,14 @@ const SeatSelector = ({ showTimeId }) => {
     };
   }, []);
 
-  const handleNextStep = (e) => {
+  const handleNextStep = async (e) => {
+    const apiHold = "http://localhost:8080/api/user/seats/check-availability";
+    const isValid = await callAPI("post", apiHold, selecteds);
+    if(!isValid) {
+      setSelecteds([]);
+      message.warning("Ghế này hiện không khả dụng, vui lòng thay đổi để tiếp tục!");
+      return;
+    };
     const ticketInfo = {
       movie: {
         title: showTime?.movie?.name,

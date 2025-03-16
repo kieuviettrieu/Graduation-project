@@ -32,6 +32,7 @@ export const API_COMMON = {
     holdTicket: API_BASE_URL_ORIGIN + "/user/seats/hold",
     releaseSeatStatus: API_BASE_URL_ORIGIN + "/user/seats/release",
     getSeatStatus: API_BASE_URL_ORIGIN + "/user/seats/status",
+    getRoomsByCinemaId: API_BASE_URL_ADMIN + "/room/byCinemaId/{cinemaId}"
   }
   
 };
@@ -116,8 +117,7 @@ export const ACCOUNT_ROLE = {
 export const ACCOUNT_ROLE_STR = {
   USER_ROLE: "1",
   ADMIN_ROLE: "2",
-  SUPER_ADMIN: "ROLE_ADMIN"
-,
+  SUPER_ADMIN: "ROLE_ADMIN",
 };
 
 export const formatDate = (dateString) => {

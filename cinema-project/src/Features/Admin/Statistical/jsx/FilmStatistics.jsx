@@ -96,6 +96,7 @@ const FilmStatistics = () => {
           columns={columns}
           dataSource={films}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             total: totalItems,

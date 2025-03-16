@@ -173,6 +173,7 @@ const ManageRoom = () => {
           columns={columns}
           dataSource={rooms}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             onChange: (page, size) => changePage(page, size),

@@ -6,6 +6,7 @@ import { API_CUSTOMER } from "./Constant";
 import EditCustomer from "./EditCustomer";
 import ViewCustomer from "./ViewCustomer";
 import { useLoading } from "../../../../LoadingProvider";
+import dayjs from "dayjs";
 
 const { Search } = Input;
 
@@ -44,7 +45,7 @@ const ManageCustomers = () => {
       title: "Ngày sinh",
       dataIndex: "birthday",
       key: "birthday",
-      render: (birthday) => new Date(birthday).toLocaleDateString("vi-VN"),
+      render: (text) => dayjs(text).format("YYYY-MM-DD"),
     },
     {
       title: "Email",
@@ -199,6 +200,7 @@ const ManageCustomers = () => {
           columns={columns}
           dataSource={customers}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             onChange: (page, size) => changePage(page, size),

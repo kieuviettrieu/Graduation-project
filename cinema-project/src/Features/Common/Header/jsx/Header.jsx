@@ -5,6 +5,7 @@ import "../Contents/index.css";
 import { ACCOUNT_ROLE, ROUTER_PATHS } from "../../Constant";
 import logo_cinema from '../../../../Media/img/logo_cinema.png';
 import { Dropdown, Menu } from "antd";
+import useCommonFunctions from "../../CommonFunction";
 
 const maps = [
   { path: ROUTER_PATHS.HOME, name: "Trang chủ" },
@@ -20,6 +21,7 @@ export function Header(props) {
   const [accountRole, setAccountRole] = useState(2);
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
+  const { isAdmin } = useCommonFunctions();
 
   const redirectToPath = (path) => {
     navigate(path);
@@ -100,11 +102,13 @@ export function Header(props) {
               <span>Sự kiện</span>
             </div>
           </li>
-          <li>
-            <div onClick={() => redirectToPathMobile(ROUTER_PATHS.DASHBOARD)}>
-              <span>Dashboard</span>
-            </div>
-          </li>
+          {isAdmin() &&
+            <li>
+              <div onClick={() => redirectToPathMobile(ROUTER_PATHS.DASHBOARD)}>
+                <span>Dashboard</span>
+              </div>
+            </li>
+          }
         </ul>
       </div>
     );
@@ -192,7 +196,7 @@ export function Header(props) {
                 </div>
               );
             })}
-            {accountRole === ACCOUNT_ROLE.ADMIN_ROLE && (
+            {isAdmin() && (
               <div className="mobile-cover">
                 <Link
                   className={`dashboard-button active}`}

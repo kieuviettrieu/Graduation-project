@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 
 // Tạo một instance của axios
@@ -46,6 +47,10 @@ export const callAPI = async (method, url, data = null, params = null) => {
     });
     return response.data;
   } catch (error) {
+    if(error?.status === 401 || error?.status === 403) {
+      message.error("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại!");
+      logout();
+    }
     console.error(`Error calling API ${url}:`, error);
     throw error;
   }

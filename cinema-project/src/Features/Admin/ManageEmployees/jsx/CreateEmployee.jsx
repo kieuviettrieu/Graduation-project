@@ -88,6 +88,8 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
       };
       onCreate(employee);
       form.resetFields();
+      setImage(null);
+      setImageUrl("");
       onClose();
     } catch (error) {
       message.error("Đã có lỗi xảy ra!");
@@ -182,7 +184,7 @@ const CreateEmployee = ({ open, onClose, onCreate }) => {
         >
           <Select placeholder="Chọn vị trí">
             {positions.map((item) => (
-              <Option value={item.id}>{item.name}</Option>
+              <Option value={item.id} key={item.id}>{item.name}</Option>
             ))}
           </Select>
         </Form.Item>

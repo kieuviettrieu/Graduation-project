@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ROUTER_PATHS } from "./Constant";
+import { ACCOUNT_ROLE_STR, ROUTER_PATHS } from "./Constant";
 import { useSelector } from 'react-redux';
 
 const useCommonFunctions = () => {
@@ -35,16 +35,21 @@ const useCommonFunctions = () => {
 
   const checkPageLogin = () => {
     const isLogin = isAuthenticated || user;
-    console.log(isLogin, "isLogin");
     if (!isLogin) {
       redirectToPath(ROUTER_PATHS.LOGIN);
     } 
   }
 
+
+ const isAdmin = () => {
+  return user && (user.roles.includes(ACCOUNT_ROLE_STR.SUPER_ADMIN) || user.roles.includes(ACCOUNT_ROLE_STR.ADMIN_ROLE))
+}
+
   return {
     redirectToPath,
     updateItems,
     checkPageLogin,
+    isAdmin,
   };
 };
 

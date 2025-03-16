@@ -114,6 +114,7 @@ const TicketHistory = ({isPoint}) => {
         columns={isPoint ? columnPointHistory : columns}
         dataSource={bookings}
         pagination={{
+          showSizeChanger: false,
           current: currentPage,
           pageSize: pageSize,
           onChange: (page, size) => changePage(page, size),

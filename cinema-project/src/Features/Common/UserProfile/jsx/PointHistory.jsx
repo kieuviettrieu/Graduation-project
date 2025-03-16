@@ -73,6 +73,7 @@ const PointHistory = () => {
         columns={columns}
         dataSource={pointHistory}
         pagination={{
+          showSizeChanger: false,
           current: currentPage,
           pageSize: pageSize,
           total: totalItems,

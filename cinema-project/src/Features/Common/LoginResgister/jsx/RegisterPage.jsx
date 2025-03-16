@@ -35,7 +35,7 @@ const RegisterPage = () => {
       redirectToPath("/login");
       form.resetFields();
     } catch (error) {
-      message.error("Lỗi kết nối đến máy chủ!");
+      message.error("Tài khoản/email đã tồn tại!");
     } finally {
       setLoading(false);
     }

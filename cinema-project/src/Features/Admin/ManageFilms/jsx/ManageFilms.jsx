@@ -122,9 +122,9 @@ const ManageFilms = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="dashed" onClick={() => handleEdit(record.id)}>
+          {/* <Button type="dashed" onClick={() => handleEdit(record.id)}>
             Chỉnh sửa
-          </Button>
+          </Button> */}
           <Button type="dashed" onClick={() => handleView(record.id)}>Chi tiết</Button>
           <Popconfirm
             title={`Bạn có muốn xóa "${record.name}"?`}
@@ -263,6 +263,7 @@ const ManageFilms = () => {
           columns={columns}
           dataSource={films}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             onChange: (page, size) => changePage(page, size),

@@ -216,6 +216,7 @@ const ManageTickets = () => {
           columns={columns}
           dataSource={tickets}
           pagination={{
+            showSizeChanger: false,
             current: currentPage,
             pageSize: pageSize,
             onChange: (page, size) => changePage(page, size),
