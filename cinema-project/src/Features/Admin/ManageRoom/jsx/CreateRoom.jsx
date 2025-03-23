@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Drawer, Form, Input, Select, Button, message } from "antd";
-import { API_ROOM, API_CINEMA } from "./Constant";
-import { callAPI } from "../../../axios/axiosInstance";
-import { useLoading } from "../../../LoadingProvider";
+import { useLoading } from "../../../../LoadingProvider";
 
 const { Option } = Select;
 
-const CreateRoom = ({ open, onClose, onCreate }) => {
+const CreateRoom = ({ open, onClose, onCreate, cinemaData }) => {
   const { setLoading } = useLoading();
   const [form] = Form.useForm();
   const [cinemas, setCinemas] = useState([]);
@@ -15,8 +13,7 @@ const CreateRoom = ({ open, onClose, onCreate }) => {
     const fetchCinemas = async () => {
       try {
         setLoading(true);
-        const data = await callAPI("get", API_CINEMA.list);
-        setCinemas(data);
+        setCinemas(cinemaData);
       } catch (err) {
         console.error("Error fetching cinemas:", err);
       } finally {
@@ -25,17 +22,14 @@ const CreateRoom = ({ open, onClose, onCreate }) => {
     };
 
     fetchCinemas();
-  }, []);
+  }, [cinemaData]);
 
   const handleCreate = async () => {
     try {
       setLoading(true);
       const values = await form.validateFields();
-      await callAPI("post", API_ROOM.addRoom, values);
-      message.success("Phòng đã được tạo thành công!");
+      onCreate(values);
       form.resetFields();
-      onCreate();
-      onClose();
     } catch (error) {
       message.error("Đã có lỗi xảy ra khi tạo phòng!");
       console.error("Error creating room:", error);

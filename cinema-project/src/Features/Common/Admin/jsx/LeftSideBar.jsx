@@ -6,6 +6,8 @@ import {
   ContainerOutlined,
   DesktopOutlined,
   PieChartOutlined,
+  TableOutlined,
+  BankOutlined
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +19,7 @@ const maps = [
   { path: "/dashboard/manage/tickets", name: "QL vé" },
   { path: "/dashboard/manage/cinemas", name: "QL rạp" },
   { path: "/dashboard/manage/showtimes", name: "QL suất chiếu" },
+  { path: "/dashboard/manage/rooms", name: "QL phòng" },
   { path: "/dashboard/manage/statistics/film", name: "Thống kê phim" },
   { path: "/dashboard/manage/statistics/customer", name: "Thống kê thành viên" },
   { path: "/dashboard/manage/statistics/filmtype", name: "Thống kê thể loại phim" },
@@ -53,7 +56,12 @@ const items = [
   {
     key: "QL rạp",
     label: "QL rạp",
-    icon: <MailOutlined />,
+    icon: <BankOutlined />,
+  },
+  {
+    key: "QL phòng",
+    label: "QL phòng",
+    icon: <TableOutlined />,
   },
   {
     key: 'Thống kê',

@@ -20,10 +20,8 @@ export const LoadingProvider = ({ children }) => {
   );
 };
 
-// Hook để sử dụng LoadingContext
 export const useLoading = () => useContext(LoadingContext);
 
-// Style overlay khi loading
 const styles = {
   overlay: {
     position: "fixed",

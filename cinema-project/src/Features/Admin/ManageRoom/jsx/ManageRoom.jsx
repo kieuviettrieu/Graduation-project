@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Space, Table, Tag, Input, Button, message, Popconfirm } from "antd";
-import { IoMdPersonAdd } from "react-icons/io";
+import { Space, Table, Tag, Input, Button, message, Popconfirm, Select } from "antd";
+import { IoMdAddCircle } from "react-icons/io";
+import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import useCommonFunctions from "../../../Common/CommonFunction";
 import { callAPI } from "../../../axios/axiosInstance";
 import { API_ROOM } from "./Constant";
 import CreateRoom from "./CreateRoom";
-import { useLoading } from "../../../LoadingProvider";
+import { useLoading } from "../../../../LoadingProvider";
+import { Option } from "antd/es/mentions";
+import { API_CINEMA } from "../../ManageCinema/jsx/Constant";
+import EditRoom from "./EditRoom";
 // import EditRoom from "./EditRoom";
 const { Search } = Input;
 
@@ -14,11 +18,14 @@ const ManageRoom = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalItems, setTotalItems] = useState(0);
   const [rooms, setRooms] = useState([]);
+  const [cinemas, setCinemas] = useState([]);
+  const [cinemaId, setCinemaId] = useState(-1);
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [idEdit, setIdEdit] = useState(null);
   const [isRender, setIsRender] = useState(false);
   const { setLoading } = useLoading();
+  const { updateItems } = useCommonFunctions();
 
   const columns = [
     {
@@ -39,44 +46,37 @@ const ManageRoom = () => {
     },
     {
       title: "Rạp phim",
-      dataIndex: "cinemaName",
-      key: "cinemaName",
+      dataIndex: "cinema",
+      key: "cinema",
+      render: (item) => <span>{item?.name}</span>,
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => <Tag color={status === "active" ? "green" : "red"}>{status}</Tag>,
+      render: (status) => <Tag color={"green"}>{"Đang hoạt động"}</Tag>,
     },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="dashed" onClick={() => handleEdit(record.id)}>
+          <Button type="dashed" onClick={() => handleEdit(record)}>
             Chỉnh sửa
           </Button>
-          <Popconfirm
-            title={`Bạn có muốn xóa "${record.name}"?`}
-            description="Hành động này không thể hoàn tác!"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button type="primary">Xoá</Button>
-          </Popconfirm>
         </Space>
       ),
     },
   ];
 
-  const { updateItems } = useCommonFunctions();
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         setLoading(true);
-        const data = await callAPI("get", API_ROOM.showingRooms + "?name=&status=all&page=0");
+        const data = await callAPI("get", API_ROOM.showingRooms + "?id=-1&page=0");
+        const cinemaData = await callAPI("get", API_CINEMA.getCinemaAll);
+        setCinemas(cinemaData);
         const roomsData = updateItems(data.content, pageSize, 1, data.totalElements);
         setTotalItems(data.totalElements);
         setRooms(roomsData);
@@ -88,12 +88,12 @@ const ManageRoom = () => {
     };
 
     fetchRooms();
-  }, [isRender, updateItems, pageSize]);
+  }, [isRender, pageSize]);
 
   const changePage = async (page, size) => {
     try {
       setLoading(true);
-      const data = await callAPI("get", `${API_ROOM.showingRooms}?name=&status=all&page=${page - 1}`);
+      const data = await callAPI("get", `${API_ROOM.showingRooms}?id=${cinemaId}&page=${page - 1}`);
       const roomsData = updateItems(data.content, pageSize, page, data.totalElements);
       setTotalItems(data.totalElements);
       setRooms(roomsData);
@@ -110,6 +110,7 @@ const ManageRoom = () => {
     try {
       setLoading(true);
       await callAPI("post", API_ROOM.addRoom, values);
+      setIsOpenCreate(false);
       setIsRender(!isRender);
       message.success("Phòng đã được tạo thành công!");
     } catch (err) {
@@ -123,7 +124,7 @@ const ManageRoom = () => {
   const handleEditRoom = async (values) => {
     try {
       setLoading(true);
-      await callAPI("put", API_ROOM.updateRoom, values);
+      await callAPI("put", API_ROOM.updateRoom + "/" + idEdit?.id, values);
       setIsRender(!isRender);
       message.success("Phòng đã được cập nhật thành công!");
     } catch (err) {
@@ -154,20 +155,57 @@ const ManageRoom = () => {
     }
   };
 
+  const handleSearch = async () => {
+    setCurrentPage(1);
+    try {
+      setLoading(true);
+      const data = await callAPI(
+        "get",
+        `${API_ROOM.showingRooms}?id=${cinemaId}&page=${0}`
+      );
+      const roomData = updateItems(
+        data.content,
+        pageSize,
+        1,
+        data.totalElements
+      );
+      setTotalItems(data.totalElements);
+      setRooms(roomData);
+    } catch (err) {
+      console.error("Error searching rooms:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setCurrentPage(1);
+    setIsRender(!isRender);
+  };
+
   return (
     <section className="sidebar-page-container">
       <div className="auto-container">
         <h5 className="manage-title">Danh sách phòng</h5>
         <div>
-          <Search
-            placeholder="Tìm kiếm phòng..."
-            allowClear
-            onSearch={() => {}}
-            style={{ width: 200, marginRight: "10px" }}
+        <Space className="mb-3" wrap>
+        <Select placeholder="Chọn rạp phim" onChange={(e) => setCinemaId(e)}>
+            {cinemas.map((item) => (
+              <Option value={item.id} key={item.id}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={() => handleSearch()}
           />
+          <Button icon={<UndoOutlined />} onClick={() => handleReset()} />
           <Button type="primary" onClick={() => setIsOpenCreate(true)}>
-            <IoMdPersonAdd fontSize={16} />
+            <IoMdAddCircle fontSize={16} /> Thêm phòng
           </Button>
+          </Space>
         </div>
         <Table
           columns={columns}
@@ -180,8 +218,8 @@ const ManageRoom = () => {
           }}
         />
       </div>
-      <CreateRoom open={isOpenCreate} onClose={() => setIsOpenCreate(false)} onCreate={handleCreateRoom} />
-      {/* <EditRoom open={isOpenEdit} onClose={() => setIsOpenEdit(false)} onUpdate={handleEditRoom} id={idEdit} /> */}
+      <CreateRoom open={isOpenCreate} onClose={() => setIsOpenCreate(false)} onCreate={handleCreateRoom} cinemaData={cinemas}/>
+      <EditRoom open={isOpenEdit} onClose={() => setIsOpenEdit(false)} onEdit={handleEditRoom} roomData={idEdit} />
     </section>
   );
 };

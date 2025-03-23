@@ -39,6 +39,14 @@ const SeatSelector = ({ showTimeId }) => {
   const { seatStatus } = useWebSocket();
   const [seatHolding, setSeatHolding] = useState([]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      redirectToPath(ROUTER_PATHS.HOME);
+    }, 5 * 60 * 1000); 
+
+    return () => clearTimeout(timeout); 
+  }, []);
+
   const convertTickets = (arr) => {
     const groupedBookings = Object.values(
       arr.reduce((acc, booking) => {
@@ -77,7 +85,6 @@ const SeatSelector = ({ showTimeId }) => {
 
   useEffect(() => {
     setSeatHolding(seatStatus);
-    console.log(seatStatus, "seatStatus")
   }, [seatStatus]);
 
   useEffect(() => {

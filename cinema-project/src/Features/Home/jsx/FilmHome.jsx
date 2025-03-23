@@ -40,6 +40,7 @@ const DraggableTabNode = ({ className, ...props }) => {
 
 export function FilmHome() {
   const [moviesReal, setMoviesReal] = useState([]);
+  const [isDisplaySuggestion, setIsDisplaySuggestion] = useState(false);
   const { setLoading } = useLoading();
   const [activeTab, setActiveTab] = useState(0);
 
@@ -51,14 +52,26 @@ export function FilmHome() {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        let apiStr = API_Film.showingMovies;
+        let apiStr = API_Film.suggession;
         if (activeTab === 1) {
           apiStr = API_Film.showingMovies;
         } else if (activeTab === 2) {
           apiStr = API_Film.upComingg;
         }
-        const movieData = await callAPI("get", apiStr);
-        setMoviesReal(movieData);
+        if (activeTab === 0) {
+          let suggessionData = await callAPI("get", API_Film.suggession);
+          if (suggessionData.length === 0) {
+            setIsDisplaySuggestion(false);
+            setActiveTab(1);
+          } else {
+            setIsDisplaySuggestion(true);
+            setMoviesReal(suggessionData);
+          }
+        }
+        if (activeTab !== 0) {
+          const movieData = await callAPI("get", apiStr);
+          setMoviesReal(movieData);
+        }
       } catch (err) {
         console.error("Error fetching movies:", err);
       } finally {
@@ -93,53 +106,55 @@ export function FilmHome() {
   return (
     <div>
       <div className="mixitup-gallery">
-      <ul className="nav nav-tabs">
-      <li>
-          <a
-            data-toggle="tab"
-            className={activeTab === 0 ? "active" : ""}
-            href="#suggest"
-            onClick={(e) => {
-              e.preventDefault();
-              handleTabClick(0);
-            }}
-          >
-            Gợi ý
-          </a>
-        </li>
-        <li>
-          <a
-            data-toggle="tab"
-            className={activeTab === 1 ? "active" : ""}
-            href="#current"
-            onClick={(e) => {
-              e.preventDefault();
-              handleTabClick(1);
-            }}
-          >
-            Phim Đang chiếu
-          </a>
-        </li>
-        <li>
-          <a
-            data-toggle="tab"
-            className={activeTab === 2 ? "active" : ""}
-            href="#comming"
-            onClick={(e) => {
-              e.preventDefault();
-              handleTabClick(2);
-            }}
-          >
-            Phim Sắp chiếu
-          </a>
-        </li>
-      </ul>
+        <ul className="nav nav-tabs">
+          {
+            isDisplaySuggestion && 
+            <li>
+              <a
+                data-toggle="tab"
+                className={activeTab === 0 ? "active" : ""}
+                href="#suggest"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleTabClick(0);
+                }}
+              >
+                Gợi ý
+              </a>
+            </li>
+          }
+          <li>
+            <a
+              data-toggle="tab"
+              className={activeTab === 1 ? "active" : ""}
+              href="#current"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabClick(1);
+              }}
+            >
+              Phim Đang chiếu
+            </a>
+          </li>
+          <li>
+            <a
+              data-toggle="tab"
+              className={activeTab === 2 ? "active" : ""}
+              href="#comming"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabClick(2);
+              }}
+            >
+              Phim Sắp chiếu
+            </a>
+          </li>
+        </ul>
 
-      <div className="tab-content">
-        <CardList movies={moviesReal} />
+        <div className="tab-content">
+          <CardList movies={moviesReal} />
+        </div>
       </div>
-    </div>
     </div>
   );
 }
-

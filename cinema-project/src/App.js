@@ -25,6 +25,7 @@ import FilmStatistics from './Features/Admin/Statistical/jsx/FilmStatistics';
 import CustomerStatistics from './Features/Admin/Statistical/jsx/CustomerStatistics';
 import MovieTypeStatistics from './Features/Admin/Statistical/jsx/MovieTypeStatistics';
 import ManageShowtimes from './Features/Admin/ManageShowTime/jsx/ManageShowtimes';
+import ManageRoom from './Features/Admin/ManageRoom/jsx/ManageRoom';
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
             <Route path="manage/tickets" element={<ManageTickets />} />
             <Route path="manage/cinemas" element={<ManageCinema />} />
             <Route path="manage/showtimes" element={<ManageShowtimes />} />
+            <Route path="manage/rooms" element={<ManageRoom />} />
           </Route>
         </Route>
       </Routes>
