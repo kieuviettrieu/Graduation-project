@@ -144,7 +144,7 @@ import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { useDispatch } from "react-redux";
 import { loginAction } from "../../../../Redux/Actions";
-import { callAPI } from "../../../axios/axiosInstance";
+import { callAPILogin } from "../../../axios/axiosInstance";
 import { API_COMMON, ROUTER_PATHS } from "../../Constant";
 import useCommonFunctions from "../../CommonFunction";
 import { useLoading } from "../../../../LoadingProvider";
@@ -158,7 +158,7 @@ const LoginPage = () => {
   const handleLogin = async (values) => {
     try {
       setLoading(true);
-      const response = await callAPI("post", API_COMMON.public.login, {
+      const response = await callAPILogin("post", API_COMMON.public.login, {
         username: values.email.trim(),
         password: values.password.trim(),
       });

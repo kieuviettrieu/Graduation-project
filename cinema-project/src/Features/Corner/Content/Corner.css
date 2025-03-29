@@ -1,0 +1,228 @@
+/* Corner.css */
+
+/* Layout styles */
+.corner-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.corner-container .content-side {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding: 0 15px;
+}
+
+.corner-container .sidebar-side {
+  flex: 0 0 75%;
+  max-width: 75%;
+  padding: 0 15px;
+}
+
+/* Sidebar styles */
+.corner-container .list-sidebar {
+  margin-top: 20px;
+}
+
+.corner-container .left-widget-tag {
+  list-style: none;
+  padding: 0;
+}
+
+.corner-container .left-widget-tag li {
+  margin-bottom: 10px;
+}
+
+.corner-container .left-widget-tag a {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  text-decoration: none;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.corner-container .left-widget-tag a:hover,
+.corner-container .left-widget-tag a.active {
+  color: #fff !important;
+  background-color: #df2d1a;
+}
+
+/* Accordion styles */
+.corner-container .accordion {
+  margin-bottom: 20px;
+}
+
+.corner-container .card {
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.corner-container .card-header {
+  padding: 0;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.corner-container .card-header h2 {
+  margin: 0;
+}
+
+.corner-container .btn-link {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  color: #333;
+  text-align: left;
+  text-decoration: none;
+  border: none;
+  background: none;
+}
+
+.corner-container .btn-link:hover {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.corner-container .accordion-icon {
+  margin-right: 10px;
+}
+
+.corner-container .collapse.show {
+  display: block;
+}
+
+.corner-container .card-body {
+  padding: 20px;
+}
+
+/* Text styles */
+.corner-container .cinema-text {
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.corner-container .cinema-text-bold {
+  font-weight: 600;
+  color: #000;
+}
+
+.corner-container .cinema-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.corner-container .cinema-link:hover {
+  text-decoration: underline;
+}
+
+.corner-container .regulation-list {
+  padding-left: 20px;
+  color: #333;
+}
+
+.corner-container .regulation-list li {
+  margin-bottom: 10px;
+}
+
+.corner-container .spacer {
+  height: 15px;
+}
+
+.corner-container .left-wibget-tag li a {
+  background: no-repeat scroll left center #ccc;
+  color: #000;
+  height: 34px;
+  padding: 9px 25px;
+  float: left;
+  width: 100%;
+  margin: 2px 0;
+  line-height: 21px;
+  font-size: 15px;
+}
+
+.corner-container .left-wibget-tag li a.active {
+  background: no-repeat scroll left center #df2d1a;
+  color: #fff;
+  height: 34px;
+  padding: 9px 25px;
+  float: left;
+  width: 100%;
+  margin: 2px 0;
+  line-height: 21px;
+  font-size: 15px;
+}
+
+.corner-container .sidebar-side {
+  margin-top: 13px;
+  margin-bottom: 40px;
+}
+
+.corner-container .sidebar-page-container .sidebar-side .sidebar {
+  padding-left: var(--padding-left-20);
+}
+.corner-container .sticky-top {
+  z-index: 10;
+  top: 120px;
+}
+.corner-container .accordion .card:first-of-type {
+  border-bottom: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.corner-container .accordion .card {
+  margin: 5px 0;
+}
+
+.corner-container .card {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+}
+
+.corner-container .accordion .card-header {
+  padding: 0 !important;
+}
+.corner-container .accordion h2 {
+  margin: 0;
+}
+
+.corner-container .accordion .btn.btn-link[aria-expanded="true"] {
+  background: #f16a39;
+  color: white;
+}
+.corner-container .accordion .btn.btn-link {
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+  background: #e7e7e7;
+  color: #1c1c1c;
+}
+
+.corner-container .collapse {
+  visibility: unset;
+}
+
+@media (max-width: 992px) {
+  .corner-container .content-side,
+  .corner-container .sidebar-side {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .corner-container .content-side {
+    margin-bottom: 30px;
+  }
+}

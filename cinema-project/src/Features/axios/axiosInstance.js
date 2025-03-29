@@ -56,6 +56,25 @@ export const callAPI = async (method, url, data = null, params = null) => {
   }
 };
 
+export const callAPILogin = async (method, url, data = null, params = null) => {
+  try {
+    const token = localStorage.getItem("token");
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await axiosInstance({
+      method,
+      url,
+      data,
+      params,
+      headers,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error calling API ${url}:`, error);
+    throw error;
+  }
+};
+
 export const logout = () => {
   localStorage.removeItem("token");
   window.location.href = "/login";

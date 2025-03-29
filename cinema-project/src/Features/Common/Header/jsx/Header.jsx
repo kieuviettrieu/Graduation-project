@@ -11,8 +11,8 @@ const maps = [
   { path: ROUTER_PATHS.HOME, name: "Trang chủ" },
   { path: ROUTER_PATHS.FILM, name: "Phim" },
   { path: ROUTER_PATHS.FILM_SCHEDULE, name: "Lịch chiếu" },
-  { path: ROUTER_PATHS.CORNER, name: "Góc điện ảnh" },
-  { path: ROUTER_PATHS.EVENT, name: "Sự kiện" },
+  { path: ROUTER_PATHS.CORNER, name: "Hỗ trợ khách hàng" },
+  // { path: ROUTER_PATHS.EVENT, name: "Sự kiện" },
 ];
 
 export function Header(props) {
@@ -93,15 +93,15 @@ export function Header(props) {
           </li>
           <li>
             <div onClick={() => redirectToPathMobile(ROUTER_PATHS.CORNER)}>
-              <span>Góc điện ảnh</span>
+              <span>Hỗ trợ khách hàng</span>
             </div>
           </li>
 
-          <li>
+          {/* <li>
             <div onClick={() => redirectToPathMobile(ROUTER_PATHS.EVENT)}>
               <span>Sự kiện</span>
             </div>
-          </li>
+          </li> */}
           {isAdmin() &&
             <li>
               <div onClick={() => redirectToPathMobile(ROUTER_PATHS.DASHBOARD)}>

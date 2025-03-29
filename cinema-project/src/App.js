@@ -26,6 +26,7 @@ import CustomerStatistics from './Features/Admin/Statistical/jsx/CustomerStatist
 import MovieTypeStatistics from './Features/Admin/Statistical/jsx/MovieTypeStatistics';
 import ManageShowtimes from './Features/Admin/ManageShowTime/jsx/ManageShowtimes';
 import ManageRoom from './Features/Admin/ManageRoom/jsx/ManageRoom';
+import Corner from './Features/Corner/jsx/Corner';
 
 function App() {
   return (
@@ -41,7 +42,7 @@ function App() {
             <Route path="schedule/detail/:scheduleId" element={<ScheduleDetail />} />
             <Route path="film/:movieType" element={<Film />} />
             <Route path="film/detail/:filmId" element={<FilmDetail />} />
-            <Route path="corner" element={<Film />} />
+            <Route path="corner" element={<Corner />} />
             <Route path="event" element={<Event />} />
             <Route path="user/profile" element={<UserProfile />} />
             <Route path="booking/:timeId" element={<Booking />} />
