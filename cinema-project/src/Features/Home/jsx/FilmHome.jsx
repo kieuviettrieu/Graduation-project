@@ -42,7 +42,7 @@ export function FilmHome() {
   const [moviesReal, setMoviesReal] = useState([]);
   const [isDisplaySuggestion, setIsDisplaySuggestion] = useState(false);
   const { setLoading } = useLoading();
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(1);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
